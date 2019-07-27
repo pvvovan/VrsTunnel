@@ -23,7 +23,7 @@ namespace VrsTunnel::Ntrip
         return "$GPGGA,";
     }
 
-    static std::string getChecksum(std::string data);
+    static uint8_t checksum(std::string_view data);
     
     };    
 }

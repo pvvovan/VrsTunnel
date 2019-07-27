@@ -15,5 +15,6 @@ int main(int argc, char** argv) {
 
     // VrsTunnel::Ntrip::Nmea nm{};
     cout << VrsTunnel::Ntrip::nmea::getGGA(VrsTunnel::Ntrip::location()) << endl;
-    cout << VrsTunnel::Ntrip::nmea::getChecksum("GPGGA,172814.0,3723.46587704,N,12202.26957864,W,2,6,1.2,18.893,M,-25.669,M,2.0,0031") << endl;
+    string ggada {"GPGGA,172814.0,3723.46587704,N,12202.26957864,W,2,6,1.2,18.893,M,-25.669,M,2.0,0031"};
+    cout << VrsTunnel::Ntrip::nmea::checksum(ggada) << endl;
 }

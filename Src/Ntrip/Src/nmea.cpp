@@ -1,20 +1,16 @@
 #include <string>
-#include <cstdio>
 
 #include <nmea.hpp>
 
 
 namespace VrsTunnel::Ntrip
 {
-    std::string nmea::getChecksum(std::string data) {
-        const char* str = data.c_str();
+    uint8_t nmea::checksum(std::string_view data) {
         int len = data.length();
-        uint16_t checksum = *str++;
+        uint8_t checksum = data[0];
         for(int i = 1; i < len; ++i) {
-            checksum ^= *str++;
+            checksum ^= data[i];
         }
-        char cs[] = {"00"};
-        sprintf(cs, "%02X", checksum);
-        return cs;
+        return checksum;
     }
 }

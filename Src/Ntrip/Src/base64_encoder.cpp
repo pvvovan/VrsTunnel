@@ -1,10 +1,10 @@
 #include "base64_encoder.hpp"
 #include <iostream>
 
-static const std::string base64_chars = 
+static const std::string base64_chars {
              "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
              "abcdefghijklmnopqrstuvwxyz"
-             "0123456789+/";
+             "0123456789+/" };
 
 namespace VrsTunnel::Ntrip
 {

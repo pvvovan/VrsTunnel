@@ -15,7 +15,7 @@ set(CMAKE_CXX_STANDARD 17)
 # SET (CMAKE_OBJDUMP "/usr/bin/llvm-objdump")
 # SET (CMAKE_RANLIB  "/usr/bin/llvm-ranlib")
 
-set(ntrip_source Ntrip/Src/login_encode.cpp Ntrip/Src/base64_encoder.cpp)
+set(ntrip_source Ntrip/Src/login_encode.cpp Ntrip/Src/base64_encoder.cpp Ntrip/Src/nmea.cpp)
 
 include_directories(Ntrip/Inc)
 # add_library(Ntrip Ntrip/Src/login_encode.cpp)
@@ -23,12 +23,21 @@ add_executable(prog main.cpp ${ntrip_source})
 
 enable_testing()
 
-set(test1_source Tests/RunAllTests.cpp Tests/test1.cpp Tests/TestEncoder.cpp Tests/TestNmea.cpp ${ntrip_source})
-add_executable(test1CppU ${test1_source})
-
+set(test1cppu_source Tests/RunAllTests.cpp Tests/testU1.cpp Tests/TestEncoder.cpp Tests/TestNmea.cpp ${ntrip_source})
+add_executable(test1CppU ${test1cppu_source})
 target_link_libraries(test1CppU CppUTest pthread)
+add_test(NAME Test1cppu COMMAND test1CppU)
 
-add_test(NAME Test1 COMMAND test1CppU)
+# gtbuild is output directory of googletest build
+link_directories(../gtest/googletest-release-1.8.1/gtbuild/)
+set(test2gsui_source Tests/testGoo1.cpp Tests/gtestNmea.cpp ${ntrip_source})
+add_executable(test2gsui ${test2gsui_source})
+# include directory from googletest source
+target_include_directories(test2gsui PUBLIC ../gtest/googletest-release-1.8.1/googletest/include/)
+target_link_libraries(test2gsui gtest gtest_main pthread)
+add_test(NAME Test2Gglt COMMAND test2gsui)
+
+
 
 # Makefile generation
 # cmake -DCMAKE_BUILD_TYPE=Debug ../Src/

@@ -1,20 +1,16 @@
-#include "lefe_encoder.hpp"
+#include "base64_encoder.hpp"
 #include <iostream>
+
+static const std::string base64_chars = 
+             "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+             "abcdefghijklmnopqrstuvwxyz"
+             "0123456789+/";
 
 namespace VrsTunnel::Ntrip
 {
     using namespace std;
 
-    // lefe_encoder::lefe_encoder() {
-    //     // cout << "lefe ctr\n";
-    // }
-
-    string lefe_encoder::get(string name, string password) {
-
-        const std::string base64_chars = 
-             "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-             "abcdefghijklmnopqrstuvwxyz"
-             "0123456789+/";
+    string base64_encoder::get(string name, string password) {
 
         string combined = name + ":" + password;
         char const* bytes_to_encode = combined.c_str();
@@ -59,7 +55,7 @@ namespace VrsTunnel::Ntrip
         return ret;
     };
 
-    unique_ptr<lefe_encoder> lefe_encoder::make() {
-        return make_unique<lefe_encoder>();
+    unique_ptr<login_encode> base64_encoder::make_instance() {
+        return make_unique<base64_encoder>();
     }
 }

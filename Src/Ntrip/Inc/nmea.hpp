@@ -8,10 +8,10 @@
 
 namespace VrsTunnel::Ntrip
 {
-    class Nmea
+    class nmea
     {
     private:
-        constexpr Nmea() noexcept { };
+        constexpr nmea() noexcept { };
     
     public:
     static std::string getGGA(location location) {
@@ -24,6 +24,7 @@ namespace VrsTunnel::Ntrip
     }
 
     static std::string getChecksum(std::string data);
+    
     };    
 }
 #endif

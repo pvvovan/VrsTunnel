@@ -3,6 +3,7 @@
 #include <base64_encoder.hpp>
 #include <location.hpp>
 #include <nmea.hpp>
+#include <chrono>
 
 int main(int argc, char** argv) {
     using namespace std;
@@ -14,7 +15,9 @@ int main(int argc, char** argv) {
     cout << loc.Elevation << endl;
 
     // VrsTunnel::Ntrip::Nmea nm{};
-    cout << VrsTunnel::Ntrip::nmea::getGGA(VrsTunnel::Ntrip::location()) << endl;
-    string ggada {"GPGGA,172814.0,3723.46587704,N,12202.26957864,W,2,6,1.2,18.893,M,-25.669,M,2.0,0031"};
-    cout << VrsTunnel::Ntrip::nmea::checksum(ggada) << endl;
+    cout << std::get<std::string>(VrsTunnel::Ntrip::nmea::getGGA(VrsTunnel::Ntrip::location(-1.1, 2.2, 3.3), 
+            std::chrono::system_clock::now())) << endl;
+
+
+
 }

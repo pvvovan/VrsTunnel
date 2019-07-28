@@ -14,38 +14,52 @@ namespace VrsTunnel::Ntrip
         return checksum;
     }
 
-    std::string nmea::getGGA(location location, std::chrono::system_clock::time_point time) {
-        char buffer[256] = { 0 };
-        auto duration = time.time_since_epoch();
+    // NMEA GGA message generation based on provided location and time
+    // speed is assumed to be 0, correction source is RTK, 12 satellies,
+    // DOP 0.9, age of DGPS data record and reference station ID are 0,
+    // both heights are equal to elevetion
+    [[nodiscard]] std::variant<std::string, nmea::ErrorCode>
+    nmea::getGGA(location location, std::chrono::system_clock::time_point time) {
+        constexpr int bsize = 256;
+        char buf[bsize] = { 0 };
+        auto span = time.time_since_epoch();
 
         using namespace std;
-        chrono::hours h = chrono::duration_cast<chrono::hours>(duration);
-        chrono::minutes m = chrono::duration_cast<chrono::minutes>(duration - h);
-        chrono::seconds s = chrono::duration_cast<chrono::seconds>(duration - h - m);
-        chrono::milliseconds ms = chrono::duration_cast<chrono::milliseconds>(duration - h - m - s);
-        int centiseconds = ms.count() / 10;
+        using chrono_days = chrono::duration<long, std::ratio<86400>>;
+        chrono_days days = chrono::duration_cast<chrono_days>(span);
+        chrono::hours hours = chrono::duration_cast<chrono::hours>(span -= days);
+        chrono::minutes minutes = chrono::duration_cast<chrono::minutes>(span -= hours);
+        chrono::seconds seconds = chrono::duration_cast<chrono::seconds>(span -= minutes);
+        chrono::milliseconds milliseconds = chrono::duration_cast<chrono::milliseconds>(span -= seconds);
+        int centiseconds = milliseconds.count() / 10;
 
-        const char* N = "N";
+        const char* NS = "N";
         if (location.Latitude < 0) {
-            N = "S";
+            NS = "S";
             location.Latitude = -location.Latitude;
         }
-        const char* E = "E";
+        const char* EW = "E";
         if (location.Longitude < 0) {
-            E = "W";
+            EW = "W";
             location.Longitude = -location.Longitude;
         }
 
-        sprintf(buffer, "$GPGGA,%02ld%02ld%02ld.%02d,%02d%09.6f,%s,%03d%09.6f,%s,", 
-            h.count(), m.count(), s.count(), centiseconds,
-            static_cast<int>(location.Latitude), (location.Latitude - static_cast<int>(location.Latitude))*60, N,
-            static_cast<int>(location.Longitude), (location.Longitude - static_cast<int>(location.Longitude))*60, E);
+        int print_res = snprintf(buf, bsize, "GPGGA,%02ld%02ld%02ld.%02d,%02d%011.8f,%s,%03d%011.8f,%s,4,12,0.9,%.3f,M,%.3f,M,0,0000", 
+            hours.count(), minutes.count(), seconds.count(), centiseconds,
+            static_cast<int>(location.Latitude), (location.Latitude - static_cast<int>(location.Latitude))*60, NS,
+            static_cast<int>(location.Longitude), (location.Longitude - static_cast<int>(location.Longitude))*60, EW,
+            location.Elevation, location.Elevation);
 
-        std::string str { "xxxxxxxx" };
-        const int value = 1986;
-        const auto res = std::to_chars(str.data(),
-            str.data() + str.size(),
-            value);
-        return buffer;
+        if(print_res < 0) {
+            return nmea::ErrorCode::Undefined;
+        }
+
+        char gga[bsize] = { 0 };
+        print_res = snprintf(gga, bsize, "$%s*%X", buf, nmea::checksum(std::string{buf}));
+        if(print_res < 0) {
+            return nmea::ErrorCode::Undefined;
+        }
+
+        return gga;
     }
 }

@@ -1,6 +1,6 @@
 #include <string>
 
-#include <nmea.hpp>
+#include "nmea.hpp"
 
 
 namespace VrsTunnel::Ntrip

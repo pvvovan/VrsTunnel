@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <string>
-#include <nmea.hpp>
+
+#include "nmea.hpp"
 
 TEST(testNmea, testChecksum)
 {

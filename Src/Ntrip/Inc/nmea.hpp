@@ -13,8 +13,8 @@ namespace VrsTunnel::Ntrip
     class nmea
     {
     private:
-        constexpr nmea() noexcept { };
-    
+    constexpr nmea() noexcept { };
+
     public:
     enum class [[nodiscard]] ErrorCode
     {
@@ -24,7 +24,7 @@ namespace VrsTunnel::Ntrip
     [[nodiscard]] static std::variant<std::string, nmea::ErrorCode>
     getGGA(location location, std::chrono::system_clock::time_point time);
     static uint8_t checksum(std::string_view data);
-    
+
     };    
 }
 #endif

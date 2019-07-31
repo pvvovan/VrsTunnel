@@ -12,7 +12,6 @@ namespace VrsTunnel::Ntrip
     {
     private:
         constexpr base64_encoder() noexcept { };
-        // friend unique_ptr<lefe_encoder> make_unique<lefe_encoder>();
         friend std::unique_ptr<VrsTunnel::Ntrip::base64_encoder> std::make_unique<VrsTunnel::Ntrip::base64_encoder>();
 
     public:        

@@ -17,6 +17,7 @@ set(CMAKE_EXE_LINKER_FLAGS          "-lrt")
 # SET (CMAKE_RANLIB  "/usr/bin/llvm-ranlib")
 
 set(ntrip_source Ntrip/Src/login_encode.cpp Ntrip/Src/base64_encoder.cpp Ntrip/Src/nmea.cpp)
+set(ntrip_source ${ntrip_source} Ntrip/Src/async_io.cpp Ntrip/Src/tcp_client.cpp)
 
 include_directories(Ntrip/Inc)
 # add_library(Ntrip Ntrip/Src/login_encode.cpp)

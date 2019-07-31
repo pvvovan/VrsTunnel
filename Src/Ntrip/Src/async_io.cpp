@@ -41,8 +41,16 @@ namespace VrsTunnel::Ntrip
     int async_io::Available() noexcept
     {
         int n_bytes_avail = 0;
-        ioctl(m_read_cb.aio_fildes, FIONREAD, &n_bytes_avail);
-        return n_bytes_avail;
+        int res = ioctl(m_read_cb.aio_fildes, FIONREAD, &n_bytes_avail);
+        if (res == 0) {
+            return n_bytes_avail;
+        }
+        else if (res > 0) {
+            return -res;
+        }
+        else {
+            return res;
+        }
     }
 
     std::unique_ptr<char[]> async_io::Read(int size)

@@ -1,25 +1,40 @@
 #include <functional>
 #include <charconv>
 #include <cmath>
+#include <memory>
 
 #include "NtripClient.hpp"
+#include "base64_encoder.hpp"
 
 namespace VrsTunnel::Ntrip
 {
     std::variant<std::vector<MountPoint>, io_status>
-    NtripClient::getMountPoints(std::string address, int tcpPort)
+    NtripClient::getMountPoints(std::string address, int tcpPort, 
+            std::string name, std::string password)
     {
         tcp_client tc{};
         tc.Connect(address, tcpPort);
         async_io aio{tc.get_sockfd()};
-        const char* request = "GET / HTTP/1.0\r\n"
+        const char* requestFormat = "GET / HTTP/1.0\r\n"
             "User-Agent: NTRIP PvvovanNTRIPClient/\r\n"
-            "Accept: */*\r\n" "Connection: close\r\n" "\r\n";
+            "Accept: */*\r\n" "Connection: close\r\n" 
+            "Authorization: Basic %s\r\n" "\r\n";
         
-        auto res = aio.Write(request, strlen(request));
+        std::unique_ptr<char[]> request;
+        std::string auth{""};
+        if (name.size() > 0) {
+            std::unique_ptr<login_encode> encoder = base64_encoder::make_instance();
+            auth = (*encoder).get(name, password);
+        }
+        request = std::make_unique<char[]>(strlen(requestFormat) + auth.length());
+        sprintf(request.get(), requestFormat, auth.c_str());
+        
+        
+        auto res = aio.Write(request.get(), strlen(request.get()));
         if (res != io_status::Success) {
             return res;
         }
+
         std::string responseRaw{};
         for(int i = 0; i < 50; i++) { // 5 seconds timeout
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -35,13 +50,12 @@ namespace VrsTunnel::Ntrip
                 }
             }
         }
+
         if (!this->hasTableEnding(responseRaw)) {
             return io_status::Error;
         }
-        MountPoint mp{};
-        mp.Raw = std::move(responseRaw);
-        std::vector<MountPoint> mps { mp };
-        return mps;
+
+        return parseTable(responseRaw);
     }
 
     bool NtripClient::hasTableEnding(std::string_view data)
@@ -90,15 +104,6 @@ namespace VrsTunnel::Ntrip
         }
         return "";
     }
-
-    // std::size_t NtripClient::find_nth(std::string_view haystack, std::size_t pos, std::string_view needle, std::size_t nth)
-    // {
-    //     std::size_t found_pos = haystack.find(needle, pos);
-    //     if(0 == nth || std::string::npos == found_pos) {
-    //         return found_pos;
-    //     }
-    //     return find_nth(haystack, found_pos+1, needle, nth-1);
-    // }
 
     location NtripClient::getReference(std::string_view line)
     {

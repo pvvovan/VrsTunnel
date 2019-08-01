@@ -87,3 +87,27 @@ TEST(testNtripClient, pasreTableTest1)
     EXPECT_DOUBLE_EQ( 0.00, table[4].Reference.Latitude);
     EXPECT_DOUBLE_EQ( 0.00, table[4].Reference.Longitude);
 }
+
+TEST(testNtripClient, getMountPointsTest1)
+{
+    VrsTunnel::Ntrip::NtripClient nc{};
+    auto resp = nc.getMountPoints("195.16.76.194", 2101);
+    auto mounts = std::get<std::vector<VrsTunnel::Ntrip::MountPoint>>(resp);
+    EXPECT_EQ("RTCM3_HUST0", mounts[0].Name);
+}
+
+TEST(testNtripClient, getMountPointsTest2)
+{
+    VrsTunnel::Ntrip::NtripClient nc{};
+    auto resp = nc.getMountPoints("195.16.76.194", 2101, "test", "test");
+    auto mounts = std::get<std::vector<VrsTunnel::Ntrip::MountPoint>>(resp);
+    EXPECT_EQ("RTCM3_HUST0", mounts[0].Name);
+}
+
+TEST(testNtripClient, getMountPointsTest3)
+{
+    VrsTunnel::Ntrip::NtripClient nc{};
+    auto resp = nc.getMountPoints("titanmachinery.ua", 8021, "test", "test");
+    auto mounts = std::get<std::vector<VrsTunnel::Ntrip::MountPoint>>(resp);
+    EXPECT_EQ("DynRTK", mounts[0].Name);
+}

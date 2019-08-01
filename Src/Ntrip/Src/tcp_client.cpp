@@ -61,6 +61,7 @@ namespace VrsTunnel::Ntrip
             if (res != 0) {
                 throw std::runtime_error("possible memory leak");
             }
+            m_sockfd = -1;
         }
     }
 

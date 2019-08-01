@@ -17,7 +17,7 @@ set(CMAKE_EXE_LINKER_FLAGS          "-lrt")
 # SET (CMAKE_RANLIB  "/usr/bin/llvm-ranlib")
 
 set(ntrip_source Ntrip/Src/login_encode.cpp Ntrip/Src/base64_encoder.cpp Ntrip/Src/nmea.cpp)
-set(ntrip_source ${ntrip_source} Ntrip/Src/async_io.cpp Ntrip/Src/tcp_client.cpp)
+set(ntrip_source ${ntrip_source} Ntrip/Src/async_io.cpp Ntrip/Src/tcp_client.cpp Ntrip/Src/NtripClient.cpp)
 
 include_directories(Ntrip/Inc)
 # add_library(Ntrip Ntrip/Src/login_encode.cpp)
@@ -25,14 +25,16 @@ add_executable(prog main.cpp ${ntrip_source})
 
 enable_testing()
 
-set(test1cppu_source Tests/RunAllTests.cpp Tests/testU1.cpp Tests/TestEncoder.cpp Tests/TestNmea.cpp ${ntrip_source})
+set(test1cppu_source Tests/RunAllTests.cpp Tests/testU1.cpp Tests/TestEncoder.cpp ${ntrip_source})
+set(test1cppu_source ${test1cppu_source} )
 add_executable(test1CppU ${test1cppu_source})
 target_link_libraries(test1CppU CppUTest pthread)
 add_test(NAME Test1cppu COMMAND test1CppU)
 
 # gtbuild is output directory of googletest build
 link_directories(../gtest/googletest-release-1.8.1/gtbuild/)
-set(test2gsui_source Tests/testGoo1.cpp Tests/gtestNmea.cpp Tests/TestNtripClient.cpp ${ntrip_source})
+set(test2gsui_source Tests/testGoo1.cpp Tests/gtestNmea.cpp Tests/gtestNtripClient.cpp ${ntrip_source})
+set(test2gsui_source ${test2gsui_source} Tests/gtestTcp.cpp)
 add_executable(test2gsui ${test2gsui_source})
 # include directory from googletest source
 target_include_directories(test2gsui PUBLIC ../gtest/googletest-release-1.8.1/googletest/include/)

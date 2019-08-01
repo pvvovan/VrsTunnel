@@ -23,7 +23,10 @@ namespace VrsTunnel::Ntrip
     class NtripClient
     {
     private:
-        /* data */
+        std::string getName(std::string_view line);
+        location getReference(std::string_view line);
+        // std::size_t find_nth(std::string_view haystack, std::size_t pos, std::string_view needle, std::size_t nth);
+
     public:
         NtripClient() = default;
         ~NtripClient() = default;

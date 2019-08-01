@@ -52,13 +52,23 @@ namespace VrsTunnel::Ntrip
         }
     }
 
-    // std::vector<MountPoint> NtripClient::parseTable(std::string_view data)
-    // {
-    //     auto mountPoints = std::vector<MountPoint>();
-    //     std::size_t found = data.find("\r\n\r\n");
-    //     if (found != std::string::npos) {
-
-    //     }
-    //     return mountPoints;
-    // }
+    std::vector<MountPoint> NtripClient::parseTable(std::string_view data)
+    {
+        auto mountPoints = std::vector<MountPoint>();
+        std::size_t tableStart = data.find("\r\n\r\n");
+        std::size_t rowStart = tableStart + 4;
+        if (tableStart != std::string::npos) {
+            std::size_t rowEnd = data.find("\r\n", rowStart);
+            while (rowEnd != std::string::npos) {
+                MountPoint mp{};
+                mp.Raw = data.substr(rowStart, rowEnd - rowStart);
+                if (mp.Raw != "ENDSOURCETABLE") {
+                    mountPoints.emplace_back(mp);
+                }
+                rowStart = rowEnd + 2;
+                rowEnd = data.find("\r\n", rowStart);
+            }
+        }
+        return mountPoints;
+    }
 }

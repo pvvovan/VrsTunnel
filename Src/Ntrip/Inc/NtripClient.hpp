@@ -33,7 +33,7 @@ namespace VrsTunnel::Ntrip
 
         bool hasTableEnding(std::string_view data);
 
-        // std::vector<MountPoint> parseTable(std::string_view data);
+        std::vector<MountPoint> parseTable(std::string_view data);
     };
 
 }

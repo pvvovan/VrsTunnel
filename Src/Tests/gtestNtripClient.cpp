@@ -61,8 +61,13 @@ TEST(testNtripClient, pasreTableTest1)
     VrsTunnel::Ntrip::NtripClient nc{};
     EXPECT_TRUE(nc.hasTableEnding(tbl));
 
-    // auto table = nc.parseTable(tbl);
-    // EXPECT_EQ(5, table.size());
+    auto table = nc.parseTable(tbl);
+    EXPECT_EQ(5, table.size());
+    EXPECT_EQ(table[0].Raw, "STR;RTCM3_HUST0;RTCM3_HUST0;RTCM 3;1004(1),1005/1007(5),PBS(10);2;GPS+GLONASS;ZAKPOS;UKR;48.18;23.29;0;0;Trimble GPSNet;None;B;Y;19200;ZAKPOS, Khust;");
+    EXPECT_EQ(table[1].Raw, "STR;RTCM3_RAHI0;RTCM3_RAHI0;RTCM 3;1004(1),1005/1007(5),PBS(10);2;GPS+GLONASS;ZAKPOS;UKR;48.05;24.2;0;0;Trimble GPSNet;None;B;Y;19200;ZAKPOS, Rakhiv;");
+    EXPECT_EQ(table[2].Raw, "STR;RTCM3_MUKA;RTCM3_MUKA;RTCM 3;1004(1),1005/1007(5),PBS(10);2;GPS+GLONASS;ZAKPOS;UKR;48.45;22.72;0;0;Trimble NetR5;None;B;Y;19200;ZAKPOS, Mukachevo;");
+    EXPECT_EQ(table[3].Raw, "STR;RAW_CRNI;RAW_CRNI;RAW;1004(1),1005/1007(5),PBS(10);2;GPS;ZAKPOS;UKR;0;0;0;0;Trimble 5700;None;B;Y;19200;ZAKPOS, Chernivtsi;");
+    EXPECT_EQ(table[4].Raw, "STR;RAW_VOLO;RAW_VOLO;RAW;1004(1),1005/1007(5),PBS(10);2;GPS+GLONASS;ZakPOS;UKR;0;0;0;0;Trimble GPSNet;None;B;Y;0;;");
     // EXPECT_EQ("RTCM3_HUST0", table[0].Name);
     // EXPECT_DOUBLE_EQ(48.18, table[0].Reference.Latitude);
     // EXPECT_DOUBLE_EQ(23.29, table[0].Reference.Longitude);

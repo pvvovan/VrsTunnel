@@ -1,13 +1,18 @@
 #include <iostream>
+#include <cstdlib>
 
 #include "CmdLine.hpp"
+#include "NtripClient.hpp"
 
 int print_usage() 
 {
-    std::cerr << "Usage: ntclient PARAMETERS..." << std::endl << std::endl;
+    std::cerr << "Usage: ntclient PARAMETERS..." << std::endl;
+    std::cerr << "'ntclient' writes RTK correction to standard output." << std::endl << std::endl;
     std::cerr << "Examples:" << std::endl;
-    std::cerr << "    ntclient -a caster.com -p 2101 -m CMR -u testname -pw password -la 30.0 -lo -50.0" << std::endl;
-    std::cerr << "    ntclient --address caster.com --port 2101 --mount CMR --user testname --password password --latitude 30.32 --longitude -52.365" << std::endl << std::endl;
+    std::cerr << "    ntclient -a caster.com -p 2101 -m CMR -u myname -pw myword -la 30.0 -lo -50.0" << std::endl;
+    std::cerr << "    ntclient --address rtk.com --port 2101 --mount CMR --user myname --password myword --latitude 30.32 --longitude -52.65" << std::endl;
+    std::cerr << "    ntclient -a caster.com -p 2101 -g y" << std::endl;
+    std::cerr << "    ntclient --address rtk.com --port 2101 --user myname --password myword --get yes" << std::endl << std::endl;
     std::cerr << "Parameters:" << std::endl;
     std::cerr << "    -a,  --address SERVER         NTRIP Caster address" << std::endl;
     std::cerr << "    -p,  --port PORT              NTRIP Caster port" << std::endl;
@@ -16,7 +21,28 @@ int print_usage()
     std::cerr << "    -pw, --password PASSWORD      NTRIP password" << std::endl;
     std::cerr << "    -la, --latitude LATITUDE      user location latitude" << std::endl;
     std::cerr << "    -lo, --longitude LONGITUDE    user location longitude" << std::endl;
+    std::cerr << "    -g,  --get (y/n, yes/no)      retrieve mount points" << std::endl;
     return 1;
+}
+
+int showMountPoints(std::string address, int port, std::string username, std::string password)
+{
+    if (address.size() == 0 || port == 0) {
+        return print_usage();
+    }
+    VrsTunnel::Ntrip::NtripClient nc{};
+    auto res = nc.getMountPoints(address, port, username, password);
+    if (std::holds_alternative<VrsTunnel::Ntrip::io_status>(res)) {
+        std::cerr << "Error retreiving mount points" << std::endl;
+    }
+    else {
+        auto mounts = std::get<std::vector<VrsTunnel::Ntrip::MountPoint>>(res);
+        for(const auto& m : mounts) {
+            std::cerr << m.Name << std::endl;
+        }
+    }
+    
+    return 0;
 }
 
 int main(int argc, const char* argv[])
@@ -24,50 +50,78 @@ int main(int argc, const char* argv[])
     if (argc == 1) {
         return print_usage();
     }
+
+    constexpr double noGeo = 1234536;
+    double latitude{noGeo}, longitude{noGeo};
+    std::string name{}, password{}, mount{}, address{}, yesno{};
+    int port{0};
+
     try
     {
         VrsTunnel::CmdLine cmdLine(argc, argv);
         if (auto arg = cmdLine.Find("-address"); arg) {
-            std::cout << "address is " << std::get<std::string>(*arg) << '\n';
+            address = std::get<std::string>(*arg);
+            // std::cout << "address is " << address << '\n';
         }
         if (auto arg = cmdLine.Find("a"); arg) {
-            std::cout << "address is " << std::get<std::string>(*arg) << '\n';
+            address = std::get<std::string>(*arg);
+            // std::cout << "address is " << address << '\n';
         }
         if (auto arg = cmdLine.Find("-port"); arg) {
-            std::cout << "port is " << std::get<int>(*arg) << '\n';
+            port = std::get<int>(*arg);
+            // std::cout << "port is " << port << '\n';
         }
         if (auto arg = cmdLine.Find("p"); arg) {
-            std::cout << "port is " << std::get<int>(*arg) << '\n';
+            port = std::get<int>(*arg);
+            // std::cout << "port is " << port << '\n';
         }
         if (auto arg = cmdLine.Find("-mount"); arg) {
-            std::cout << "mount point is " << std::get<std::string>(*arg) << '\n';
+            mount = std::get<std::string>(*arg);
+            // std::cout << "mount point is " << mount << '\n';
         }
         if (auto arg = cmdLine.Find("m"); arg) {
-            std::cout << "mount point is " << std::get<std::string>(*arg) << '\n';
+            mount = std::get<std::string>(*arg);
+            // std::cout << "mount point is " << mount << '\n';
         }
         if (auto arg = cmdLine.Find("-user"); arg) {
-            std::cout << "user name is " << std::get<std::string>(*arg) << '\n';
+            name = std::get<std::string>(*arg);
+            // std::cout << "user name is " << name << '\n';
         }
         if (auto arg = cmdLine.Find("u"); arg) {
-            std::cout << "user name is " << std::get<std::string>(*arg) << '\n';
+            name = std::get<std::string>(*arg);
+            // std::cout << "user name is " << name << '\n';
         }
         if (auto arg = cmdLine.Find("-password"); arg) {
-            std::cout << "password is " << std::get<std::string>(*arg) << '\n';
+            password = std::get<std::string>(*arg);
+            // std::cout << "password is " << password << '\n';
         }
         if (auto arg = cmdLine.Find("pw"); arg) {
-            std::cout << "password is " << std::get<std::string>(*arg) << '\n';
+            password = std::get<std::string>(*arg);
+            // std::cout << "password is " << password << '\n';
         }
         if (auto arg = cmdLine.Find("-latitude"); arg) {
-            std::cout << "latitude is " << std::get<std::string>(*arg) << '\n';
+            latitude = atof((std::get<std::string>(*arg)).data());
+            // std::cout << "latitude is " << latitude << '\n';
         }
         if (auto arg = cmdLine.Find("la"); arg) {
-            std::cout << "latitude is " << std::get<std::string>(*arg) << '\n';
+            latitude = atof((std::get<std::string>(*arg)).data());
+            // std::cout << "latitude is " << latitude << '\n';
         }
         if (auto arg = cmdLine.Find("-longitude"); arg) {
-            std::cout << "longitude is " << std::get<std::string>(*arg) << '\n';
+            longitude = atof((std::get<std::string>(*arg)).c_str());
+            // std::cout << "longitude is " << longitude << '\n';
         }
         if (auto arg = cmdLine.Find("lo"); arg) {
-            std::cout << "longitude is " << std::get<std::string>(*arg) << '\n';
+            longitude = atof((std::get<std::string>(*arg)).c_str());
+            // std::cout << "longitude is " << longitude << '\n';
+        }
+        if (auto arg = cmdLine.Find("g"); arg) {
+            yesno = std::get<std::string>(*arg);
+            // std::cerr << "get = " << yesno << std::endl;
+        }
+        if (auto arg = cmdLine.Find("-get"); arg) {
+            yesno = std::get<std::string>(*arg);
+            // std::cerr << "get = " << yesno << std::endl;
         }
         // if (auto arg = cmdLine.Find("paramInt"); arg) {
         //     std::cout << "paramInt is " << std::get<int>(*arg) << '\n';
@@ -94,6 +148,16 @@ int main(int argc, const char* argv[])
     catch (std::runtime_error &err)
     {
         std::cerr << " ...err: " << err.what() << std::endl;;
+        return print_usage();
+    }
+
+    if (yesno.compare("yes") == 0 || yesno.compare("y") == 0) {
+        return showMountPoints(address, port, name, password);
+    }
+
+    if (latitude == noGeo || longitude == noGeo || port == 0
+            || address.size() == 0 || mount.size() == 0
+            || name.size() == 0 || password.size() == 0) {
         return print_usage();
     }
 

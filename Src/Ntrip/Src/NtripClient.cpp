@@ -5,6 +5,7 @@
 
 #include "NtripClient.hpp"
 #include "base64_encoder.hpp"
+#include "nmea.hpp"
 
 namespace VrsTunnel::Ntrip
 {
@@ -198,18 +199,18 @@ namespace VrsTunnel::Ntrip
             }
         }
 
-        auto startsWith = [](std::string_view text, std::string_view start) -> bool
+        auto startsWith = [text = &responseText](std::string_view start) -> bool
         {
-            if (start.size() > text.size()) {
+            if (start.size() > text->size()) {
                 return false;
             }
-            return text.compare(0, start.size(), start) == 0;
+            return text->compare(0, start.size(), start) == 0;
         };
 
-        if (startsWith(responseText, "HTTP/1.1 401 Unauthorized\r\n")) {
+        if (startsWith("HTTP/1.1 401 Unauthorized\r\n")) {
             return NtripClient::status::authfailure;
         }
-        else if (startsWith(responseText, "ICY 200 OK\r\n")) {
+        else if (startsWith("ICY 200 OK\r\n")) {
             return NtripClient::status::ok;
         }
 
@@ -224,5 +225,14 @@ namespace VrsTunnel::Ntrip
     std::unique_ptr<char[]> NtripClient::receive(int size)
     {
         return m_aio->Read(size);
+    }
+
+    [[nodiscard]] io_status NtripClient::send_gga(location location, std::chrono::system_clock::time_point time)
+    {
+        if (!m_aio) {
+            throw std::runtime_error("no tcp connection");
+        }
+        std::string gga = std::get<std::string>(nmea::getGGA(location, time));
+        return m_aio->Write(gga.c_str(), gga.length());
     }
 }

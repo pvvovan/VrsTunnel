@@ -21,7 +21,7 @@ TEST(testNmea, TestGGA_1)
     time += std::chrono::minutes(22);
     time += std::chrono::hours(11);
     auto res = nmea::getGGA(location(33.123456789, 53.56, 456.235), time);
-    EXPECT_EQ("$GPGGA,112233.00,3307.40740734,N,05333.60000000,E,4,12,0.9,456.235,M,456.235,M,0,0000*63", std::get<std::string>(res));
+    EXPECT_EQ("$GPGGA,112233.00,3307.40740734,N,05333.60000000,E,4,12,0.9,456.235,M,456.235,M,0,0000*63\r\n", std::get<std::string>(res));
 }
 
 TEST(testNmea, TestGGA_2)
@@ -32,7 +32,7 @@ TEST(testNmea, TestGGA_2)
     time += std::chrono::minutes(2);
     time += std::chrono::hours(1);
     auto res = nmea::getGGA(location(1.213456, 53.56, 456.235), time);
-    std::string exp {"$GPGGA,010203.00,0112.80736000,N,05333.60000000,E,4,12,0.9,456.235,M,456.235,M,0,0000*6B"};
+    std::string exp {"$GPGGA,010203.00,0112.80736000,N,05333.60000000,E,4,12,0.9,456.235,M,456.235,M,0,0000*6B\r\n"};
     EXPECT_EQ(exp, std::get<std::string>(res));
 };
 
@@ -45,7 +45,7 @@ TEST(testNmea, TestGGA_3)
     time += std::chrono::minutes(24);
     time += std::chrono::hours(3);
     std::string res = std::get<std::string>(nmea::getGGA(location(1.821, 53.56, 46.5), time));
-    std::string exp {"$GPGGA,032459.15,0149.26000000,N,05333.60000000,E,4,12,0.9,46.500,M,46.500,M,0,0000*66"};
+    std::string exp {"$GPGGA,032459.15,0149.26000000,N,05333.60000000,E,4,12,0.9,46.500,M,46.500,M,0,0000*66\r\n"};
     EXPECT_EQ(exp, res);
 };
 
@@ -58,7 +58,7 @@ TEST(testNmea, TestGGA_4)
     time += std::chrono::minutes(24);
     time += std::chrono::hours(3 + 24*9);
     std::string res = std::get<std::string>(nmea::getGGA(location(-1.821, -179.56654789, 456.23), time));
-    std::string exr {"$GPGGA,032459.69,0149.26000000,S,17933.99287340,W,4,12,0.9,456.230,M,456.230,M,0,0000*67"};
+    std::string exr {"$GPGGA,032459.69,0149.26000000,S,17933.99287340,W,4,12,0.9,456.230,M,456.230,M,0,0000*67\r\n"};
     EXPECT_EQ(exr, res);
 };
 
@@ -73,7 +73,7 @@ TEST(testNmea, TestGGA_5)
     time += std::chrono::hours(11);
     location loc{41.980735612, -91.790694882, 255.74749};
     std::string res = std::get<std::string>(nmea::getGGA(loc, time));
-    std::string exp {"$GPGGA,115739.00,4158.84413672,N,09147.44169292,W,4,12,0.9,255.747,M,255.747,M,0,0000*74"};
+    std::string exp {"$GPGGA,115739.00,4158.84413672,N,09147.44169292,W,4,12,0.9,255.747,M,255.747,M,0,0000*74\r\n"};
     EXPECT_EQ(exp, res);
 };
 

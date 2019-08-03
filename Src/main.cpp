@@ -52,8 +52,8 @@ int main(int argc, char** argv) {
     }
 
     VrsTunnel::Ntrip::NtripClient ntclient{};
-    std::string ntaddress = "194.28.183.167"; // "194.28.183.167"; "94.153.224.194"
-    int ntport = 2101;
+    std::string ntaddress = "titanmachinery.ua"; // "194.28.183.167"; "94.153.224.194"
+    int ntport = 8021;
     auto mps = ntclient.getMountPoints(ntaddress, ntport);
     VrsTunnel::Ntrip::ntrip_login ntlogin{};
     ntlogin.address = ntaddress;
@@ -73,7 +73,18 @@ int main(int argc, char** argv) {
         return 1;
     }
 
+    int counter = 9;
     for(;;) {
+        ++counter;
+        if (counter == 10) {
+            counter = 0;
+            auto send_res = ntclient.send_gga(VrsTunnel::Ntrip::location(50, 30, 0),
+                    std::chrono::system_clock::now());
+            if (send_res != VrsTunnel::Ntrip::io_status::Success) {
+                cerr << "gga sending error\n";
+            }
+        }
+
         sleep(1);
         int avail = ntclient.available();
         if (avail > 0) {

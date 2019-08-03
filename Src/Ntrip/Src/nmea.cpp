@@ -55,7 +55,7 @@ namespace VrsTunnel::Ntrip
         }
 
         char gga[bsize] = { 0 };
-        print_res = snprintf(gga, bsize, "$%s*%X", buf, nmea::checksum(std::string{buf}));
+        print_res = snprintf(gga, bsize, "$%s*%X\r\n", buf, nmea::checksum(std::string{buf}));
         if(print_res < 0) {
             return nmea::ErrorCode::Undefined;
         }

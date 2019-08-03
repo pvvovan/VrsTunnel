@@ -12,7 +12,7 @@ namespace VrsTunnel::Ntrip
             std::string name, std::string password)
     {
         const char* requestFormat = "GET /%s HTTP/1.0\r\n"
-            "User-Agent: NTRIP PvvovanNTRIPClient/\r\n"
+            "User-Agent: NTRIP PvvovanNTRIPClient/1.0.0\r\n"
             "Accept: */*\r\n" "Connection: close\r\n" 
             "Authorization: Basic %s\r\n" "\r\n";
         
@@ -38,19 +38,6 @@ namespace VrsTunnel::Ntrip
         }
 
         async_io aio{tc.get_sockfd()};
-        // const char* requestFormat = "GET / HTTP/1.0\r\n"
-        //     "User-Agent: NTRIP PvvovanNTRIPClient/\r\n"
-        //     "Accept: */*\r\n" "Connection: close\r\n" 
-        //     "Authorization: Basic %s\r\n" "\r\n";
-        
-        // std::unique_ptr<char[]> request;
-        // std::string auth{""};
-        // if (name.size() > 0) {
-        //     std::unique_ptr<login_encode> encoder = base64_encoder::make_instance();
-        //     auth = (*encoder).get(name, password);
-        // }
-        // request = std::make_unique<char[]>(strlen(requestFormat) + auth.length());
-        // sprintf(request.get(), requestFormat, auth.c_str());
         std::unique_ptr<char[]> request = build_request("", name, password);
         
         auto res = aio.Write(request.get(), strlen(request.get()));
@@ -191,7 +178,42 @@ namespace VrsTunnel::Ntrip
         }
 
         // read authentication result
-        return NtripClient::status::ok;
+        std::string responseText{};
+        for(int i = 1; i < 50; ++i) { // 5 second timeout
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            auto avail = m_aio->Available();
+            if (avail < 0) {
+                return status::error;
+            }
+            else if (avail > 0) {
+                auto chunk = m_aio->Read(avail);
+                responseText.append(chunk.get(), avail);
+                const std::string ending {"\r\n\r\n"};
+                if (responseText.length() >= ending.length()) {
+                    if (responseText.compare(responseText.length() - ending.length(),
+                                ending.length(), ending) == 0) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        auto startsWith = [](std::string_view text, std::string_view start) -> bool
+        {
+            if (start.size() > text.size()) {
+                return false;
+            }
+            return text.compare(0, start.size(), start) == 0;
+        };
+
+        if (startsWith(responseText, "HTTP/1.1 401 Unauthorized\r\n")) {
+            return NtripClient::status::authfailure;
+        }
+        else if (startsWith(responseText, "ICY 200 OK\r\n")) {
+            return NtripClient::status::ok;
+        }
+
+        return NtripClient::status::error;
     }
 
     int NtripClient::available()

@@ -12,7 +12,10 @@
 TEST(TcpTestGroup, TestTcpClient)
 {
     VrsTunnel::Ntrip::tcp_client tc{};
-    tc.Connect("195.16.76.194", 2101);
+    auto con_res = tc.Connect("195.16.76.194", 2101);
+    if (con_res != VrsTunnel::Ntrip::io_status::Success) {
+        EXPECT_TRUE(false);
+    }
     VrsTunnel::Ntrip::NtripClient nc{};
     VrsTunnel::Ntrip::async_io aio{tc.get_sockfd()};
     const char* request = "GET / HTTP/1.0\r\n"

@@ -50,4 +50,38 @@ int main(int argc, char** argv) {
     if (std::holds_alternative<std::vector<VrsTunnel::Ntrip::MountPoint>>(r)) {
         cout << std::get<std::vector<VrsTunnel::Ntrip::MountPoint>>(r)[0].Raw << endl;
     }
+
+    VrsTunnel::Ntrip::NtripClient ntclient{};
+    std::string ntaddress = "194.28.183.167"; // "194.28.183.167"; "94.153.224.194"
+    int ntport = 2101;
+    auto mps = ntclient.getMountPoints(ntaddress, ntport);
+    VrsTunnel::Ntrip::ntrip_login ntlogin{};
+    ntlogin.address = ntaddress;
+    ntlogin.port = ntport;
+    ntlogin.location = VrsTunnel::Ntrip::location(51, 31, 0);
+    ntlogin.username = "test";
+    ntlogin.password = "test";
+    ntlogin.mountpoint = std::get<std::vector<VrsTunnel::Ntrip::MountPoint>>(mps)[0].Name;
+    cout << ntlogin.mountpoint << endl;
+    auto con_res = ntclient.connect(ntlogin);
+    if (con_res == VrsTunnel::Ntrip::NtripClient::status::error) {
+        cerr << "could not connect\n";
+        return 1;
+    }
+    else if (con_res == VrsTunnel::Ntrip::NtripClient::status::authfailure) {
+        cerr << "authentication failure\n";
+        return 1;
+    }
+
+    for(;;) {
+        sleep(1);
+        int avail = ntclient.available();
+        if (avail > 0) {
+            auto corr = ntclient.receive(avail);
+            fwrite(corr.get(), avail, 1, stdout);
+        }
+        else {
+            cerr << "nothing available\n";
+        }
+    }
 }

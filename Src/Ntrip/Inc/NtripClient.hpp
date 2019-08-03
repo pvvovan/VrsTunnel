@@ -10,6 +10,8 @@
 #include "location.hpp"
 #include "tcp_client.hpp"
 #include "async_io.hpp"
+#include "ntrip_login.hpp"
+#include "tcp_client.hpp"
 
 namespace VrsTunnel::Ntrip
 {
@@ -22,9 +24,17 @@ namespace VrsTunnel::Ntrip
     
     class NtripClient
     {
+    public:
+    enum class status { ok, error, authfailure };
+
     private:
         std::string getName(std::string_view line);
         location getReference(std::string_view line);
+        std::unique_ptr<async_io> m_aio {nullptr};
+        std::unique_ptr<tcp_client> m_tcp {nullptr};
+
+        std::unique_ptr<char[]> build_request(const char* mountpoint,
+                std::string name, std::string password);
 
     public:
         NtripClient() = default;
@@ -37,6 +47,10 @@ namespace VrsTunnel::Ntrip
         bool hasTableEnding(std::string_view data);
 
         std::vector<MountPoint> parseTable(std::string_view data);
+
+        [[nodiscard]] status connect(ntrip_login);
+        int available();
+        std::unique_ptr<char[]> receive(int size);
     };
 
 }

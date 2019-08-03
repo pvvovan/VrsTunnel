@@ -28,7 +28,7 @@ namespace VrsTunnel::Ntrip
 
         ~tcp_client();
         void Close();
-        io_status Connect(std::string addr, int port);
+        [[nodiscard]] io_status Connect(std::string addr, int port);
         int get_sockfd() noexcept;
     };
 }

@@ -13,6 +13,10 @@
 int main(int argc, char** argv) {
     using namespace std;
     cout << "OK " << (71^80) << endl;
+    std::string strnum{"123.123"};
+    std::size_t pos = 0;
+    cout << std::stod(strnum, &pos) << endl;
+    cout << pos << "-" << strnum.length() << endl;
 
     // cout << "enc=" << VrsTunnel::Ntrip::lefe_encoder{}.get("n", "p") << endl;
     cout << "enc=" << VrsTunnel::Ntrip::base64_encoder::make_instance()->get("n", "p") << endl;

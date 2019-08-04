@@ -37,7 +37,7 @@ add_test(NAME Test1cppu COMMAND test1CppU)
 # gtbuild is output directory of googletest build
 link_directories(../gtest/googletest-release-1.8.1/gtbuild/)
 set(test2gsui_source Tests/testGoo1.cpp Tests/gtestNmea.cpp Tests/gtestNtripClient.cpp ${ntrip_source})
-set(test2gsui_source ${test2gsui_source} Tests/gtestTcp.cpp)
+set(test2gsui_source ${test2gsui_source} Tests/gtestTcp.cpp Tests/gtest_cli.cpp)
 add_executable(test2gsui ${test2gsui_source})
 # include directory from googletest source
 target_include_directories(test2gsui PUBLIC ../gtest/googletest-release-1.8.1/googletest/include/)

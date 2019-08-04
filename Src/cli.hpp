@@ -17,11 +17,11 @@ class cli
 
     private:
     std::map<std::string, arg> mParsedArgs;
-    void parse_args(int argc, const char** argv);
+    void parse_args(int argc, const char* argv[]);
     arg try_parse(std::string_view sv);
 
     public:
-    explicit cli(int argc, const char** argv) 
+    explicit cli(int argc, const char* argv[]) 
     { 
         parse_args(argc, argv); 
     }
@@ -41,7 +41,11 @@ cli::arg cli::try_parse(std::string_view sv)
         // if not possible, then just assume it's a double
         std::string sparam{sv};
         try {
-            double value = std::stod(sparam);
+            std::size_t next = 0;
+            double value = std::stod(sparam, &next);
+            if (next != sparam.length()) { // not all text is a number
+                return sparam; // then just assume it's a string
+            }
             return value;
         }
         catch (...) { }
@@ -51,7 +55,7 @@ cli::arg cli::try_parse(std::string_view sv)
     return result;
 }
 
-void cli::parse_args(int argc, const char** argv)
+void cli::parse_args(int argc, const char* argv[])
 {
     // the form: -argName value -argName value
     for (int i = 1; i < argc; i+=2)

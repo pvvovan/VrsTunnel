@@ -20,10 +20,10 @@ set(ntrip_source Ntrip/Src/login_encode.cpp Ntrip/Src/base64_encoder.cpp Ntrip/S
 set(ntrip_source ${ntrip_source} Ntrip/Src/async_io.cpp Ntrip/Src/tcp_client.cpp Ntrip/Src/NtripClient.cpp)
 
 include_directories(Ntrip/Inc)
-#include <CmdLine.hpp>
+#include <cli.hpp>
 
 # add_library(Ntrip Ntrip/Src/login_encode.cpp)
-add_executable(prog main.cpp ${ntrip_source})
+add_executable(prog prog.cpp ${ntrip_source})
 add_executable(ntclient ntclient.cpp ${ntrip_source})
 
 enable_testing()

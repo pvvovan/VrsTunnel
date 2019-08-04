@@ -235,4 +235,16 @@ namespace VrsTunnel::Ntrip
         std::string gga = std::get<std::string>(nmea::getGGA(location, time));
         return m_aio->Write(gga.c_str(), gga.length());
     }
+
+    bool NtripClient::is_sending()
+    {
+        if (m_aio->Check() == io_status::InProgress) {
+            return true;
+        }
+        else if (m_aio->Check() == io_status::Success) {
+            m_aio->End();
+            return false;
+        }
+        throw std::runtime_error("error sending gga");
+    }
 }

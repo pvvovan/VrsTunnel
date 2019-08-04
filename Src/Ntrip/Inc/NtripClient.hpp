@@ -52,6 +52,7 @@ namespace VrsTunnel::Ntrip
         int available();
         std::unique_ptr<char[]> receive(int size);
         [[nodiscard]] io_status send_gga(location location, std::chrono::system_clock::time_point time);
+        bool is_sending();
     };
 
 }

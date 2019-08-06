@@ -8,7 +8,7 @@ namespace VrsTunnel::Ntrip
         m_read_cb.aio_sigevent.sigev_notify = SIGEV_SIGNAL;
     }
 
-    [[nodiscard]] io_status async_io::Check() noexcept
+    [[nodiscard]] io_status async_io::check() noexcept
     {
         int res = aio_error(&m_read_cb);
         if (res == EINPROGRESS) {
@@ -22,7 +22,7 @@ namespace VrsTunnel::Ntrip
         }
     };
 
-    [[nodiscard]] io_status async_io::Write(const char* data, int size)
+    [[nodiscard]] io_status async_io::write(const char* data, int size)
     {
         m_data = std::make_unique<char[]>(size);
         memcpy(m_data.get(), data, size);
@@ -38,7 +38,7 @@ namespace VrsTunnel::Ntrip
         }
     }
 
-    int async_io::Available() noexcept
+    int async_io::available() noexcept
     {
         int n_bytes_avail = 0;
         int res = ioctl(m_read_cb.aio_fildes, FIONREAD, &n_bytes_avail);
@@ -53,14 +53,14 @@ namespace VrsTunnel::Ntrip
         }
     }
 
-    std::unique_ptr<char[]> async_io::Read(int size)
+    std::unique_ptr<char[]> async_io::read(int size)
     {
         auto data = std::make_unique<char[]>(size);
-        read(m_read_cb.aio_fildes, data.get(), size);
+        ::read(m_read_cb.aio_fildes, data.get(), size);
         return data;
     }
 
-    ssize_t async_io::End() noexcept
+    ssize_t async_io::end() noexcept
     {
         return aio_return(&m_read_cb);
     }

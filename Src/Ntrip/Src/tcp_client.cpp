@@ -4,10 +4,10 @@ namespace VrsTunnel::Ntrip
 {
     tcp_client::~tcp_client()
     {
-        Close();
+        close();
     }
     
-    [[nodiscard]] io_status tcp_client::Connect(std::string address, int port)
+    [[nodiscard]] io_status tcp_client::connect(std::string address, int port)
     {
         struct addrinfo hints = { 0 };
         struct addrinfo *result, *rp;
@@ -38,11 +38,11 @@ namespace VrsTunnel::Ntrip
             if (sfd == -1)
                 continue;
 
-            if (connect(sfd, rp->ai_addr, rp->ai_addrlen) != -1) {
+            if (::connect(sfd, rp->ai_addr, rp->ai_addrlen) != -1) {
                 break;                  /* Success */
             }
 
-            close(sfd);
+            ::close(sfd);
         }
 
         if (rp == NULL) {               /* No address succeeded */
@@ -54,10 +54,10 @@ namespace VrsTunnel::Ntrip
         return io_status::Success;
     }
 
-    void tcp_client::Close()
+    void tcp_client::close()
     {
         if (m_sockfd != -1) {
-            int res = close(m_sockfd);
+            int res = ::close(m_sockfd);
             if (res != 0) {
                 throw std::runtime_error("possible memory leak");
             }

@@ -33,7 +33,7 @@ namespace VrsTunnel::Ntrip
             std::string name, std::string password)
     {
         tcp_client tc{};
-        auto con_res = tc.Connect(address, tcpPort);
+        auto con_res = tc.connect(address, tcpPort);
         if (con_res != io_status::Success) {
             return con_res;
         }
@@ -41,7 +41,7 @@ namespace VrsTunnel::Ntrip
         async_io aio{tc.get_sockfd()};
         std::unique_ptr<char[]> request = build_request("", name, password);
         
-        auto res = aio.Write(request.get(), strlen(request.get()));
+        auto res = aio.write(request.get(), strlen(request.get()));
         if (res != io_status::Success) {
             return res;
         }
@@ -49,12 +49,12 @@ namespace VrsTunnel::Ntrip
         std::string responseRaw{};
         for(int i = 0; i < 50; i++) { // 5 seconds timeout
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            auto avail = aio.Available();
+            auto avail = aio.available();
             if (avail < 0) {
                 return io_status::Error;
             }
             else if (avail > 0) {
-                auto chunk = aio.Read(avail);
+                auto chunk = aio.read(avail);
                 responseRaw.append(chunk.get(), avail);
                 if (this->hasTableEnding(responseRaw)) {
                     break;
@@ -166,14 +166,14 @@ namespace VrsTunnel::Ntrip
             throw std::runtime_error("tcp connection already created");
         }
         m_tcp = std::make_unique<tcp_client>();
-        auto con_res = m_tcp->Connect(nlogin.address, nlogin.port);
+        auto con_res = m_tcp->connect(nlogin.address, nlogin.port);
         if (con_res != io_status::Success) {
             m_tcp.reset();
             return NtripClient::status::error;
         }
         m_aio = std::make_unique<async_io>(m_tcp->get_sockfd());
         std::unique_ptr<char[]> request = build_request(nlogin.mountpoint.data(), nlogin.username, nlogin.password);
-        auto res = m_aio->Write(request.get(), strlen(request.get()));
+        auto res = m_aio->write(request.get(), strlen(request.get()));
         if (res != io_status::Success) {
             return NtripClient::status::error;
         }
@@ -182,12 +182,12 @@ namespace VrsTunnel::Ntrip
         std::string responseText{};
         for(int i = 1; i < 50; ++i) { // 5 second timeout
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            auto avail = m_aio->Available();
+            auto avail = m_aio->available();
             if (avail < 0) {
                 return status::error;
             }
             else if (avail > 0) {
-                auto chunk = m_aio->Read(avail);
+                auto chunk = m_aio->read(avail);
                 responseText.append(chunk.get(), avail);
                 const std::string ending {"\r\n\r\n"};
                 if (responseText.length() >= ending.length()) {
@@ -219,12 +219,12 @@ namespace VrsTunnel::Ntrip
 
     int NtripClient::available()
     {
-        return m_aio->Available();
+        return m_aio->available();
     }
 
     std::unique_ptr<char[]> NtripClient::receive(int size)
     {
-        return m_aio->Read(size);
+        return m_aio->read(size);
     }
 
     [[nodiscard]] io_status NtripClient::send_gga(location location, std::chrono::system_clock::time_point time)
@@ -233,16 +233,16 @@ namespace VrsTunnel::Ntrip
             throw std::runtime_error("no tcp connection");
         }
         std::string gga = std::get<std::string>(nmea::getGGA(location, time));
-        return m_aio->Write(gga.c_str(), gga.length());
+        return m_aio->write(gga.c_str(), gga.length());
     }
 
     bool NtripClient::is_sending()
     {
-        if (m_aio->Check() == io_status::InProgress) {
+        if (m_aio->check() == io_status::InProgress) {
             return true;
         }
-        else if (m_aio->Check() == io_status::Success) {
-            m_aio->End();
+        else if (m_aio->check() == io_status::Success) {
+            m_aio->end();
             return false;
         }
         throw std::runtime_error("error sending gga");

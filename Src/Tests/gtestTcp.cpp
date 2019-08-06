@@ -12,7 +12,7 @@
 TEST(TcpTestGroup, TestTcpClient)
 {
     VrsTunnel::Ntrip::tcp_client tc{};
-    auto con_res = tc.Connect("195.16.76.194", 2101);
+    auto con_res = tc.connect("195.16.76.194", 2101);
     if (con_res != VrsTunnel::Ntrip::io_status::Success) {
         EXPECT_TRUE(false);
     }
@@ -22,19 +22,19 @@ TEST(TcpTestGroup, TestTcpClient)
         "User-Agent: NTRIP PvvovanNTRIPClient/\r\n"
         "Accept: */*\r\n" "Connection: close\r\n" "\r\n";
     
-    auto res = aio.Write(request, strlen(request));
+    auto res = aio.write(request, strlen(request));
     if (res != VrsTunnel::Ntrip::io_status::Success) {
         EXPECT_TRUE(false);
     }
     std::string responseRaw{};
     for(int i = 0; i < 50; i++) { // 5 seconds timeout
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        auto avail = aio.Available();
+        auto avail = aio.available();
         if (avail < 0) {
             EXPECT_TRUE(false);
         }
         else if (avail > 0) {
-            auto chunk = aio.Read(avail);
+            auto chunk = aio.read(avail);
             responseRaw.append(chunk.get(), avail);
             if (nc.hasTableEnding(responseRaw)) {
                 break;
@@ -44,8 +44,8 @@ TEST(TcpTestGroup, TestTcpClient)
     if (!nc.hasTableEnding(responseRaw)) {
         EXPECT_TRUE(false);
     }
-    tc.Close();
+    tc.close();
     EXPECT_EQ(responseRaw.size(), 853);
-    tc.Close();
+    tc.close();
 };
 

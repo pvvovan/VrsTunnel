@@ -25,11 +25,11 @@ namespace VrsTunnel::Ntrip
 
         public:
         async_io(int sockfd) noexcept;
-        [[nodiscard]] io_status Check() noexcept;
-        [[nodiscard]] io_status Write(const char* data, int size);
-        int Available() noexcept;
-        std::unique_ptr<char[]> Read(int size);
-        ssize_t End() noexcept;
+        [[nodiscard]] io_status check() noexcept;
+        [[nodiscard]] io_status write(const char* data, int size);
+        int available() noexcept;
+        std::unique_ptr<char[]> read(int size);
+        ssize_t end() noexcept;
     };
 };
 

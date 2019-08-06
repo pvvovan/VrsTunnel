@@ -74,6 +74,7 @@ int output_correction(VrsTunnel::Ntrip::ntrip_login login)
         if (avail > 0) {
             auto corr = nc.receive(avail);
             fwrite(corr.get(), avail, 1, stdout);
+            fflush(stdout);
         }
     }
     return 0;

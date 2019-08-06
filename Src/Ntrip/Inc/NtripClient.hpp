@@ -25,13 +25,14 @@ namespace VrsTunnel::Ntrip
     class NtripClient
     {
     public:
-    enum class status { ok, error, authfailure };
+    enum class status { uninitialized, ok, error, authfailure };
 
     private:
         std::string getName(std::string_view line);
         location getReference(std::string_view line);
         std::unique_ptr<async_io> m_aio {nullptr};
         std::unique_ptr<tcp_client> m_tcp {nullptr};
+        status m_status {status::uninitialized};
 
         std::unique_ptr<char[]> build_request(const char* mountpoint,
                 std::string name, std::string password);
@@ -49,10 +50,12 @@ namespace VrsTunnel::Ntrip
         std::vector<MountPoint> parseTable(std::string_view data);
 
         [[nodiscard]] status connect(ntrip_login);
+        void disconnect();
         int available();
         std::unique_ptr<char[]> receive(int size);
         [[nodiscard]] io_status send_gga(location location, std::chrono::system_clock::time_point time);
         bool is_sending();
+        status get_status();
     };
 
 }

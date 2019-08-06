@@ -208,12 +208,14 @@ namespace VrsTunnel::Ntrip
         };
 
         if (startsWith("HTTP/1.1 401 Unauthorized\r\n")) {
+            m_status = status::authfailure;
             return NtripClient::status::authfailure;
         }
         else if (startsWith("ICY 200 OK\r\n")) {
+            m_status = status::ok;
             return NtripClient::status::ok;
         }
-
+        m_status = status::error;
         return NtripClient::status::error;
     }
 
@@ -241,10 +243,35 @@ namespace VrsTunnel::Ntrip
         if (m_aio->check() == io_status::InProgress) {
             return true;
         }
-        else if (m_aio->check() == io_status::Success) {
-            m_aio->end();
-            return false;
+        return false;
+        // else if (m_aio->check() == io_status::Success) {
+        //     m_aio->end();
+        //     return false;
+        // }
+        // throw std::runtime_error("error sending gga");
+    }
+
+    NtripClient::status NtripClient::get_status()
+    {
+        if (m_status == status::ok) {
+            io_status res = m_aio->check();
+            if (res == io_status::Success || res == io_status::InProgress) {
+                return status::ok;
+            }
+            else {
+                m_status = status::error;
+                return status::error;
+            }
+            
         }
-        throw std::runtime_error("error sending gga");
+        return m_status;
+    }
+
+    void NtripClient::disconnect()
+    {
+        while (m_aio->check() == io_status::InProgress) { } // timeout missing?
+        m_aio->end();
+        m_tcp->close();
+        m_status = status::uninitialized;
     }
 }

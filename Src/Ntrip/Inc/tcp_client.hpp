@@ -9,8 +9,6 @@
 
 #include "async_io.hpp"
 
-#include <iostream>
-
 namespace VrsTunnel::Ntrip
 {
     class tcp_client

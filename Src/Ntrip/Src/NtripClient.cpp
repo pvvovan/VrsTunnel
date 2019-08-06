@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "NtripClient.hpp"
-#include "base64_encoder.hpp"
+#include "login_encode.hpp"
 #include "nmea.hpp"
 
 namespace VrsTunnel::Ntrip
@@ -20,7 +20,7 @@ namespace VrsTunnel::Ntrip
         std::unique_ptr<char[]> request;
         std::string auth{""};
         if (name.size() > 0) {
-            std::unique_ptr<login_encode> encoder = base64_encoder::make_instance();
+            std::unique_ptr<login_encode> encoder = login_encode::make_instance();
             auth = (*encoder).get(name, password);
         }
         request = std::make_unique<char[]>(strlen(requestFormat) + strlen(mountpoint) + auth.length() + 2);

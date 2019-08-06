@@ -44,24 +44,26 @@ int showMountPoints(std::string address, int port, std::string username, std::st
     return 0;
 }
 
-int output_correction(VrsTunnel::Ntrip::ntrip_login login)
+void output_correction(VrsTunnel::Ntrip::ntrip_login login)
 {
     VrsTunnel::Ntrip::NtripClient nc{};
     auto res = nc.connect(login);
     if (res == VrsTunnel::Ntrip::NtripClient::status::authfailure) {
         std::cerr << "authentication failure" << std::endl;
-        return 1;
+        return;
     }
     else if (res == VrsTunnel::Ntrip::NtripClient::status::error) {
         std::cerr << "connection error" << std::endl;
-        return 1;
+        return;
     }
-    constexpr int timeout = 100; // 10 seconds (100 times 100ms)
-    int counter = timeout - 3;
+    constexpr int timeout_gga = 100; // 10 seconds (100 times 100ms)
+    constexpr int timeout_status = 300; // 30 seconds (300 times 100ms)
+    int time_gga = timeout_gga - 3;
+    int time_status = 0;
     for (;;) {
-        ++counter;
-        if (counter == timeout && !nc.is_sending()) {
-            counter = 0;
+        ++time_gga;
+        if (time_gga == timeout_gga && !nc.is_sending()) {
+            time_gga = 0;
             auto time = std::chrono::system_clock::now();
             auto send_res = nc.send_gga(login.location, time);
             if (send_res != VrsTunnel::Ntrip::io_status::Success) {
@@ -76,8 +78,17 @@ int output_correction(VrsTunnel::Ntrip::ntrip_login login)
             fwrite(corr.get(), avail, 1, stdout);
             fflush(stdout);
         }
+
+        ++time_status;
+        if (time_status == timeout_status) {
+            if (nc.get_status() != VrsTunnel::Ntrip::NtripClient::status::ok) {
+                std::cerr << "error" << std::endl;
+                nc.disconnect();
+                return;
+            }
+            time_status = 0;
+        }
     }
-    return 0;
 }
 
 int main(int argc, const char* argv[])
@@ -180,6 +191,11 @@ int main(int argc, const char* argv[])
     login.password = password;
     login.location.Latitude = latitude;
     login.location.Longitude = longitude;
-    return output_correction(login);
-
+    for (;;) {
+        output_correction(login);
+        int retry_period = 20;
+        std::cerr << "retrying in " << retry_period << " seconds" << std::endl;
+        sleep(retry_period);
+    }
+    return 0;
 }

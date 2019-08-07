@@ -1,11 +1,13 @@
 cmake_minimum_required (VERSION 3.10.2)
-project (ntrip)
 
 #SET (CMAKE_CXX_COMPILER             "/home/vovan/Desktop/uboot-x15/vanilla/toolchain/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf/bin/arm-linux-gnueabihf-g++")
 #SET (CMAKE_CXX_COMPILER             "clang++-8")
 #SET (CMAKE_CXX_COMPILER             "g++-8")
+
+project (ntrip)
+
 #SET (CMAKE_CXX_COMPILER             "/home/vovan/llvm-project/build/bin/clang++")
-set(CMAKE_CXX_FLAGS                "-Wall -Werror")
+set(CMAKE_CXX_FLAGS                "-Wall -Werror -Wno-psabi")
 #set(CMAKE_CXX_FLAGS_DEBUG          "-g -Og")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXE_LINKER_FLAGS          "-lrt")

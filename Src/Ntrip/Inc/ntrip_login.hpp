@@ -14,7 +14,7 @@ namespace VrsTunnel::Ntrip
         std::string username;
         std::string password;
         std::string mountpoint;
-        location location;
+        location position;
     };
     
 }

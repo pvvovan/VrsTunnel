@@ -62,7 +62,7 @@ int main(int argc, char** argv) {
     VrsTunnel::Ntrip::ntrip_login ntlogin{};
     ntlogin.address = ntaddress;
     ntlogin.port = ntport;
-    ntlogin.location = VrsTunnel::Ntrip::location(51, 31, 0);
+    ntlogin.position = VrsTunnel::Ntrip::location(51, 31, 0);
     ntlogin.username = "test";
     ntlogin.password = "test";
     ntlogin.mountpoint = std::get<std::vector<VrsTunnel::Ntrip::MountPoint>>(mps)[0].Name;

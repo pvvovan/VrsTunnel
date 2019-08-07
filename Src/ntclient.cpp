@@ -65,7 +65,7 @@ void output_correction(VrsTunnel::Ntrip::ntrip_login login)
         if (time_gga == timeout_gga && !nc.is_sending()) {
             time_gga = 0;
             auto time = std::chrono::system_clock::now();
-            auto send_res = nc.send_gga(login.location, time);
+            auto send_res = nc.send_gga(login.position, time);
             if (send_res != VrsTunnel::Ntrip::io_status::Success) {
                 std::cerr << "gga sending error" << std::endl;
             }
@@ -189,8 +189,8 @@ int main(int argc, const char* argv[])
     login.mountpoint = mount;
     login.username = name;
     login.password = password;
-    login.location.Latitude = latitude;
-    login.location.Longitude = longitude;
+    login.position.Latitude = latitude;
+    login.position.Longitude = longitude;
     for (;;) {
         output_correction(login);
         int retry_period = 20;

@@ -94,7 +94,7 @@ namespace VrsTunnel::Ntrip
                 if (mp.Raw != "ENDSOURCETABLE") {
                     mp.Name = getName(mp.Raw);
                     mp.Reference = getReference(mp.Raw);
-                    mountPoints.emplace_back(mp);
+                    mountPoints.push_back(std::move(mp));
                 }
                 rowStart = rowEnd + 2;
                 rowEnd = data.find("\r\n", rowStart);

@@ -4,6 +4,7 @@ namespace VrsTunnel::Ntrip
 {
     async_io::async_io(int sockfd) noexcept
     {
+        ::memset(&m_read_cb, 0, sizeof(m_read_cb));
         m_read_cb.aio_fildes = sockfd;
         m_read_cb.aio_sigevent.sigev_notify = SIGEV_SIGNAL;
     }

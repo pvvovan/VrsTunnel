@@ -9,7 +9,8 @@ namespace VrsTunnel::Ntrip
     
     [[nodiscard]] io_status tcp_client::connect(std::string address, int port)
     {
-        struct addrinfo hints = { 0 };
+        struct addrinfo hints;
+        ::memset(&hints, 0, sizeof(hints));
         struct addrinfo *result, *rp;
         int sfd;
 

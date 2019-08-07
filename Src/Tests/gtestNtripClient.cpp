@@ -62,7 +62,7 @@ TEST(testNtripClient, pasreTableTest1)
     EXPECT_TRUE(nc.hasTableEnding(tbl));
 
     auto table = nc.parseTable(tbl);
-    EXPECT_EQ(5, table.size());
+    EXPECT_EQ(5UL, table.size());
 
     EXPECT_EQ(table[0].Raw, "STR;RTCM3_HUST0;RTCM3_HUST0;RTCM 3;1004(1),1005/1007(5),PBS(10);2;GPS+GLONASS;ZAKPOS;UKR;48.18;23.29;0;0;Trimble GPSNet;None;B;Y;19200;ZAKPOS, Khust;");
     EXPECT_EQ(table[1].Raw, "STR;RTCM3_RAHI0;RTCM3_RAHI0;RTCM 3;1004(1),1005/1007(5),PBS(10);2;GPS+GLONASS;ZAKPOS;UKR;48.05;24.2;0;0;Trimble GPSNet;None;B;Y;19200;ZAKPOS, Rakhiv;");

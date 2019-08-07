@@ -20,7 +20,7 @@ namespace VrsTunnel::Ntrip
         async_io& operator=(async_io&&)         = delete;
 
         // control block to ckeck transmission status
-        struct aiocb m_read_cb { 0 };
+        struct aiocb m_read_cb;
         std::unique_ptr<char[]> m_data;
 
         public:

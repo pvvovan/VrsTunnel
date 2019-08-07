@@ -45,7 +45,7 @@ TEST(TcpTestGroup, TestTcpClient)
         EXPECT_TRUE(false);
     }
     tc.close();
-    EXPECT_EQ(responseRaw.size(), 853);
+    EXPECT_EQ(responseRaw.size(), 853UL);
     tc.close();
 };
 

@@ -10,7 +10,8 @@
 #include "NtripClient.hpp"
 
 
-int main(int argc, char** argv) {
+int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv) {
+    
     using namespace std;
     cout << "OK " << (71^80) << endl;
     std::string strnum{"123.123"};

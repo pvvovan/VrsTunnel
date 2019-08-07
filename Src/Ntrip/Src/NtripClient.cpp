@@ -94,7 +94,7 @@ namespace VrsTunnel::Ntrip
                 if (mp.Raw != "ENDSOURCETABLE") {
                     mp.Name = getName(mp.Raw);
                     mp.Reference = getReference(mp.Raw);
-                    mountPoints.push_back(std::move(mp));
+                    mountPoints.emplace_back(std::move(mp));
                 }
                 rowStart = rowEnd + 2;
                 rowEnd = data.find("\r\n", rowStart);
@@ -244,11 +244,6 @@ namespace VrsTunnel::Ntrip
             return true;
         }
         return false;
-        // else if (m_aio->check() == io_status::Success) {
-        //     m_aio->end();
-        //     return false;
-        // }
-        // throw std::runtime_error("error sending gga");
     }
 
     NtripClient::status NtripClient::get_status()

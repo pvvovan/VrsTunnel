@@ -10,7 +10,7 @@ namespace VrsTunnel::Ntrip
 
     [[nodiscard]] io_status async_io::check() noexcept
     {
-        int res = aio_error(&m_read_cb);
+        int res = ::aio_error(&m_read_cb);
         if (res == EINPROGRESS) {
             return io_status::InProgress;
         }
@@ -29,7 +29,7 @@ namespace VrsTunnel::Ntrip
         m_read_cb.aio_nbytes = size;
         m_read_cb.aio_offset = 0;
         m_read_cb.aio_buf = m_data.get();
-        int res = aio_write(&m_read_cb);
+        int res = ::aio_write(&m_read_cb);
         if (res == 0) {
             return io_status::Success;
         }
@@ -41,7 +41,7 @@ namespace VrsTunnel::Ntrip
     int async_io::available() noexcept
     {
         int n_bytes_avail = 0;
-        int res = ioctl(m_read_cb.aio_fildes, FIONREAD, &n_bytes_avail);
+        int res = ::ioctl(m_read_cb.aio_fildes, FIONREAD, &n_bytes_avail);
         if (res == 0) {
             return n_bytes_avail;
         }

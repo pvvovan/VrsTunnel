@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.10.2)
 project (ntrip)
 
 #SET (CMAKE_CXX_COMPILER             "/home/vovan/Desktop/uboot-x15/vanilla/toolchain/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf/bin/arm-linux-gnueabihf-g++")
-SET (CMAKE_CXX_COMPILER             "clang++-8")
+#SET (CMAKE_CXX_COMPILER             "clang++-8")
 #SET (CMAKE_CXX_COMPILER             "g++-8")
 #SET (CMAKE_CXX_COMPILER             "/home/vovan/llvm-project/build/bin/clang++")
 set(CMAKE_CXX_FLAGS                "-Wall -Werror")
@@ -48,3 +48,5 @@ add_test(NAME Test2Gglt COMMAND test2gsui)
 
 # Makefile generation
 # cmake -DCMAKE_BUILD_TYPE=Debug ../Src/
+# CC=gcc-4.2 CXX=/usr/bin/g++-4.2 cmake -G "Your Generator" path/to/your/source
+# cmake -G "Your Generator" -D CMAKE_C_COMPILER=gcc-4.2 -D CMAKE_CXX_COMPILER=g++-4.2 path/to/your/source

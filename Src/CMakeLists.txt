@@ -56,3 +56,4 @@ add_test(NAME Test2Gglt COMMAND test2gsui)
 # cmake -G "Your Generator" -D CMAKE_C_COMPILER=gcc-4.2 -D CMAKE_CXX_COMPILER=g++-4.2 path/to/your/source
 # cmake -D CMAKE_CXX_COMPILER="/home/vovan/Desktop/uboot-x15/vanilla/toolchain/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf/bin/arm-linux-gnueabihf-g++" ../Src
 # cmake -DCMAKE_CXX_COMPILER="clang++-8" -DCMAKE_BUILD_TYPE=Debug ../Src
+# cmake -DCMAKE_CXX_COMPILER="/home/vovan/Desktop/uboot-x15/vanilla/toolchain/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf/bin/arm-linux-gnueabihf-g++" -DCMAKE_BUILD_TYPE=Debug ../Src

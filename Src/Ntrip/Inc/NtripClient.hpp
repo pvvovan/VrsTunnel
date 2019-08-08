@@ -21,12 +21,11 @@ namespace VrsTunnel::Ntrip
         location Reference;
         std::string Name;
     };
+
+    enum class status { uninitialized, ready, error, authfailure, nomount, sending };
     
     class NtripClient
     {
-    public:
-    enum class status { uninitialized, ok, error, authfailure, no_mount };
-
     private:
         std::string getName(std::string_view line);
         location getReference(std::string_view line);
@@ -54,7 +53,7 @@ namespace VrsTunnel::Ntrip
         int available();
         std::unique_ptr<char[]> receive(int size);
         [[nodiscard]] io_status send_gga(location location, std::chrono::system_clock::time_point time);
-        bool is_sending();
+        void send_end();
         status get_status();
     };
 

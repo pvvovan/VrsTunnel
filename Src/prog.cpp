@@ -69,11 +69,11 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv) {
     ntlogin.mountpoint = std::get<std::vector<VrsTunnel::Ntrip::MountPoint>>(mps)[0].Name;
     cout << ntlogin.mountpoint << endl;
     auto con_res = ntclient.connect(ntlogin);
-    if (con_res == VrsTunnel::Ntrip::NtripClient::status::error) {
+    if (con_res == VrsTunnel::Ntrip::status::error) {
         cerr << "could not connect\n";
         return 1;
     }
-    else if (con_res == VrsTunnel::Ntrip::NtripClient::status::authfailure) {
+    else if (con_res == VrsTunnel::Ntrip::status::authfailure) {
         cerr << "authentication failure\n";
         return 1;
     }

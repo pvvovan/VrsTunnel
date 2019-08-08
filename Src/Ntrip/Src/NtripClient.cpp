@@ -160,7 +160,7 @@ namespace VrsTunnel::Ntrip
         return loc;
     }
 
-    NtripClient::status NtripClient::connect(ntrip_login nlogin)
+    status NtripClient::connect(ntrip_login nlogin)
     {
         if (m_tcp) {
             throw std::runtime_error("tcp connection already created");
@@ -169,13 +169,14 @@ namespace VrsTunnel::Ntrip
         auto con_res = m_tcp->connect(nlogin.address, nlogin.port);
         if (con_res != io_status::Success) {
             m_tcp.reset();
-            return NtripClient::status::error;
+            return status::error;
         }
         m_aio = std::make_unique<async_io>(m_tcp->get_sockfd());
         std::unique_ptr<char[]> request = build_request(nlogin.mountpoint.data(), nlogin.username, nlogin.password);
         auto res = m_aio->write(request.get(), strlen(request.get()));
         if (res != io_status::Success) {
-            return NtripClient::status::error;
+            m_status = status::error;
+            return m_status;
         }
 
         // read authentication result
@@ -208,13 +209,13 @@ namespace VrsTunnel::Ntrip
         };
 
         if (startsWith("ICY 200 OK\r\n")) {
-            m_status = status::ok;
+            m_status = status::ready;
         }
         else if (startsWith("HTTP/1.1 401 Unauthorized\r\n")) {
             m_status = status::authfailure;
         } 
         else if (startsWith("HTTP/1.1 404 Not Found\r\n")) {
-            m_status = status::no_mount;
+            m_status = status::nomount;
         } 
         else {
             m_status = status::error;
@@ -241,23 +242,22 @@ namespace VrsTunnel::Ntrip
         return m_aio->write(gga.c_str(), gga.length());
     }
 
-    bool NtripClient::is_sending()
+    status NtripClient::get_status()
     {
-        if (m_aio->check() == io_status::InProgress) {
-            return true;
-        }
-        return false;
-    }
-
-    NtripClient::status NtripClient::get_status()
-    {
-        if (m_status == status::ok) {
+        if (m_status == status::ready) {
             io_status res = m_aio->check();
-            if (res == io_status::Success || res == io_status::InProgress) {
-                return status::ok;
-            }
-            else {
+            switch (res)
+            {
+            case io_status::Success:
+                m_status = status::ready;
+                break;
+            case io_status::InProgress:
+                m_status = status::sending;
+                break;
+            
+            default:
                 m_status = status::error;
+                break;
             }
         }
         return m_status;
@@ -269,5 +269,10 @@ namespace VrsTunnel::Ntrip
         m_aio->end();
         m_tcp->close();
         m_status = status::uninitialized;
+    }
+
+    void NtripClient::send_end()
+    {
+        m_aio->end();
     }
 }

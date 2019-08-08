@@ -25,7 +25,7 @@ namespace VrsTunnel::Ntrip
     class NtripClient
     {
     public:
-    enum class status { uninitialized, ok, error, authfailure };
+    enum class status { uninitialized, ok, error, authfailure, no_mount };
 
     private:
         std::string getName(std::string_view line);

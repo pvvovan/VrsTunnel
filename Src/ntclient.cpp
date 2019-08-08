@@ -56,6 +56,11 @@ void output_correction(VrsTunnel::Ntrip::ntrip_login login)
         std::cerr << "connection error" << std::endl;
         return;
     }
+    else if (res == VrsTunnel::Ntrip::NtripClient::status::no_mount) {
+        std::cerr << "mount point not found" << std::endl;
+        return;
+    }
+
     constexpr int timeout_gga = 100; // 10 seconds (100 times 100ms)
     constexpr int timeout_status = 300; // 30 seconds (300 times 100ms)
     int time_gga = timeout_gga - 3;

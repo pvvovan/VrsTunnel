@@ -207,16 +207,19 @@ namespace VrsTunnel::Ntrip
             return text->compare(0, start.size(), start) == 0;
         };
 
-        if (startsWith("HTTP/1.1 401 Unauthorized\r\n")) {
-            m_status = status::authfailure;
-            return NtripClient::status::authfailure;
-        }
-        else if (startsWith("ICY 200 OK\r\n")) {
+        if (startsWith("ICY 200 OK\r\n")) {
             m_status = status::ok;
-            return NtripClient::status::ok;
         }
-        m_status = status::error;
-        return NtripClient::status::error;
+        else if (startsWith("HTTP/1.1 401 Unauthorized\r\n")) {
+            m_status = status::authfailure;
+        } 
+        else if (startsWith("HTTP/1.1 404 Not Found\r\n")) {
+            m_status = status::no_mount;
+        } 
+        else {
+            m_status = status::error;
+        }
+        return m_status;
     }
 
     int NtripClient::available()
@@ -255,9 +258,7 @@ namespace VrsTunnel::Ntrip
             }
             else {
                 m_status = status::error;
-                return status::error;
             }
-            
         }
         return m_status;
     }

@@ -271,8 +271,8 @@ namespace VrsTunnel::Ntrip
         m_status = status::uninitialized;
     }
 
-    void NtripClient::send_end()
+    ssize_t NtripClient::send_end()
     {
-        m_aio->end();
+        return m_aio->end();
     }
 }

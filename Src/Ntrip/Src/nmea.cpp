@@ -15,10 +15,6 @@ namespace VrsTunnel::Ntrip
         return checksum;
     }
 
-    // NMEA GGA message generation based on provided location and time
-    // speed is assumed to be 0, correction source is RTK, 12 satellies,
-    // DOP 0.9, age of DGPS data record and reference station ID are 0,
-    // both heights are equal to elevetion
     [[nodiscard]] std::variant<std::string, nmea::ErrorCode>
     nmea::getGGA(location location, std::chrono::system_clock::time_point time) {
         constexpr int bsize = 256;

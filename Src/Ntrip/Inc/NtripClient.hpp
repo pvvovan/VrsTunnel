@@ -15,45 +15,102 @@
 
 namespace VrsTunnel::Ntrip
 {
+    /**
+     * NTRIP mount point
+     */
     struct MountPoint
     {
-        std::string Raw;
-        location Reference;
-        std::string Name;
+        std::string Raw;    /**< Raw data from NTRIP caster */
+        location Reference; /**< Mount point position coordinates */
+        std::string Name;   /**< Mount point name to be show */
     };
 
+    /**
+     * NTRIP client status
+     */
     enum class status { uninitialized, ready, error, authfailure, nomount, sending };
     
+    /**
+     * NTRIP client class
+     */
     class NtripClient
     {
     private:
-        std::string getName(std::string_view line);
-        location getReference(std::string_view line);
-        std::unique_ptr<async_io> m_aio {nullptr};
-        std::unique_ptr<tcp_client> m_tcp {nullptr};
-        status m_status {status::uninitialized};
+        std::string getName(std::string_view line); /**< Retrieves name from NTRIP mount point description raw data */
+        location getReference(std::string_view line); /**< Retrieves location of mount point */
+        std::unique_ptr<async_io> m_aio {nullptr}; /**< Asyncronous operations */
+        std::unique_ptr<tcp_client> m_tcp {nullptr}; /**< TCP connection */
+        status m_status {status::uninitialized}; /**< Current status of the client */
 
         std::unique_ptr<char[]> build_request(const char* mountpoint,
                 std::string name, std::string password);
+        
+        NtripClient(const NtripClient&) = delete;               /**< No copy constructor */
+        NtripClient(NtripClient&&) = delete;                    /**< No move costructor */
+        NtripClient& operator=(const NtripClient&) = delete;    /**< No copy operator */
+        NtripClient& operator=(NtripClient&&) = delete;         /**< No move operator */
 
     public:
         NtripClient() = default;
         ~NtripClient() = default;
 
+        /**
+         * Download mount point table
+         */
         std::variant<std::vector<MountPoint>, io_status>
         getMountPoints(std::string address, int tcpPort, 
             std::string name = std::string(), std::string password = std::string());
 
+        /**
+         * Helper method to check if download is complete
+         */
         bool hasTableEnding(std::string_view data);
 
+        /**
+         * Helper method to parse NTRIP mount point table
+         */
         std::vector<MountPoint> parseTable(std::string_view data);
 
-        [[nodiscard]] status connect(ntrip_login);
+        /**
+         * Create connection with NTRIP Caster
+         * @param nlogin login information
+         * @return result of the connection
+         */
+        [[nodiscard]] status connect(ntrip_login nlogin);
+
+        /**
+         * Disconnect from NTRIP Caster
+         */
         void disconnect();
+
+        /**
+         * @return amount of available RTK correction
+         */
         int available();
+
+        /**
+         * Get available RTK correction
+         * @param size amount to receive
+         * @return RTK correction data
+         */
         std::unique_ptr<char[]> receive(int size);
+
+        /**
+         * Provides NMEA GGA message to NTRIP Caster.
+         * @param location coordinates of NTRIP Client position
+         * @param time epoch when position was measured
+         * @return status of the transmission request
+         */
         [[nodiscard]] io_status send_gga(location location, std::chrono::system_clock::time_point time);
-        void send_end();
+
+        /**
+         * @return status associated with AIOCBP.
+         */
+        ssize_t send_end();
+
+        /**
+         * @return current status of the connection
+         */
         status get_status();
     };
 

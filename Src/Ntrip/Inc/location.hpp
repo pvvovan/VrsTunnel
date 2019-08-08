@@ -3,6 +3,9 @@
 
 namespace VrsTunnel::Ntrip
 {
+    /**
+     * Struct for geodetic coordinates
+     */
     struct location
     {
         double Latitude;

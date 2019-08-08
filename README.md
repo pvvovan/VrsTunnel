@@ -9,3 +9,6 @@ For example:
 ./ntclient -a vrs.ua -p 2102 -m RTCM3 -u myname -pw mypass -la 51.123 -lo 32.654 | pv -ptebar > /dev/null
 
 NMEA input is not supported by 'ntclient' currently
+
+Detailed description of source code is published here
+https://pvvovan.github.io/VrsTunnel/index.html

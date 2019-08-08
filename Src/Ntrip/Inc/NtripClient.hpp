@@ -31,7 +31,8 @@ namespace VrsTunnel::Ntrip
     enum class status { uninitialized, ready, error, authfailure, nomount, sending };
     
     /**
-     * NTRIP client class
+     * NTRIP client class.
+     * The main task is to provide RTK correction from NTRIP Caster to GNSS receiver.
      */
     class NtripClient
     {

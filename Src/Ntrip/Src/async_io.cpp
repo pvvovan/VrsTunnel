@@ -57,7 +57,10 @@ namespace VrsTunnel::Ntrip
     std::unique_ptr<char[]> async_io::read(int size)
     {
         auto data = std::make_unique<char[]>(size);
-        ::read(m_read_cb.aio_fildes, data.get(), size);
+        ssize_t n_read = static_cast<int>(::read(m_read_cb.aio_fildes, data.get(), size));
+        if (n_read != size) {
+            throw std::runtime_error("missing data");
+        }
         return data;
     }
 

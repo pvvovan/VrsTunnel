@@ -8,10 +8,39 @@
 #include "async_io.hpp"
 #include "tcp_client.hpp"
 #include "ntrip_client.hpp"
-
+#include "ntrip_server.hpp"
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv) {
-    
+    VrsTunnel::Ntrip::ntrip_server ntserver{};
+    VrsTunnel::Ntrip::ntrip_login ntl{};
+    ntl.address = "titanmachinery.ua";
+    ntl.port = 8023;
+    ntl.position = VrsTunnel::Ntrip::location(51, 31, 0);
+    ntl.username = "test";
+    ntl.password = "test";
+    ntl.mountpoint = "myMout";
+    auto scn = ntserver.connect(ntl);
+    if (scn == VrsTunnel::Ntrip::status::ready) {
+        std::cout << "server ready\n";
+        for (;;) {
+            auto printErr = [](VrsTunnel::Ntrip::status s) { 
+                if (s != VrsTunnel::Ntrip::status::ready) {
+                    std::cerr << "nserver: send error\n";
+                }
+                else {
+                    std::cerr << "nserver: OK\n";
+                }
+            };
+            printErr(ntserver.get_status());
+            sleep(1);
+            printErr(ntserver.send_begin("1234567890", 10));
+            sleep(1);
+            if (ntserver.send_end() != 10) {
+                std::cerr << "nserver: send error\n";
+            }
+        }
+    }
+
     using namespace std;
     cout << "OK " << (71^80) << endl;
     std::string strnum{"123.123"};

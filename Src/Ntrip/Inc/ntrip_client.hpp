@@ -28,16 +28,16 @@ namespace VrsTunnel::Ntrip
     class ntrip_client
     {
     private:
-        std::unique_ptr<async_io> m_aio {nullptr}; /**< Asyncronous operations */
-        std::unique_ptr<tcp_client> m_tcp {nullptr}; /**< TCP connection */
-        status m_status {status::uninitialized}; /**< Current status of the client */
+        std::unique_ptr<async_io> m_aio {nullptr};      /**< Asyncronous operations */
+        std::unique_ptr<tcp_client> m_tcp {nullptr};    /**< TCP connection */
+        status m_status {status::uninitialized};        /**< Current status of the client */
 
         /**
          * Build HTTP GET request
          * @param mountpoint name of NTRIP mount point
          * @param name NTRIP user name
          * @param passwword NTRIP user password
-         * @return HTTP GET request buffer
+         * @return HTTP GET request buffer (null terminated)
          */
         std::unique_ptr<char[]> build_request(const char* mountpoint,
                 std::string name, std::string password);

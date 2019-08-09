@@ -23,6 +23,7 @@ set(COMPILE_WARNING_MODE HIGH)
 set(ntrip_source Ntrip/Src/login_encode.cpp Ntrip/Src/base64_encoder.cpp Ntrip/Src/nmea.cpp)
 set(ntrip_source ${ntrip_source} Ntrip/Src/async_io.cpp Ntrip/Src/tcp_client.cpp)
 set(ntrip_source ${ntrip_source} Ntrip/Src/ntrip_client.cpp Ntrip/Src/mount_point.cpp)
+set(ntrip_source ${ntrip_source} Ntrip/Src/ntrip_server.cpp)
 
 include_directories(Ntrip/Inc)
 #include <cli.hpp>
@@ -30,6 +31,7 @@ include_directories(Ntrip/Inc)
 # add_library(Ntrip Ntrip/Src/login_encode.cpp)
 add_executable(prog prog.cpp ${ntrip_source})
 add_executable(ntclient ntclient.cpp ${ntrip_source})
+add_executable(ntserver ntserver.cpp ${ntrip_source})
 
 enable_testing()
 

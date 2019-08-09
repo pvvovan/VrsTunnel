@@ -59,6 +59,7 @@ namespace VrsTunnel::Ntrip
                 }
             }
         }
+        aio.end();
 
         if (!this->hasTableEnding(responseRaw)) {
             return io_status::Error;
@@ -88,7 +89,8 @@ namespace VrsTunnel::Ntrip
         auto con_res = m_tcp->connect(nlogin.address, nlogin.port);
         if (con_res != io_status::Success) {
             m_tcp.reset();
-            return status::error;
+            m_status = status::error;
+            return m_status;
         }
         m_aio = std::make_unique<async_io>(m_tcp->get_sockfd());
         std::unique_ptr<char[]> request = build_request(nlogin.mountpoint.data(), nlogin.username, nlogin.password);
@@ -104,7 +106,8 @@ namespace VrsTunnel::Ntrip
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
             auto avail = m_aio->available();
             if (avail < 0) {
-                return status::error;
+                m_status = status::error;
+                return m_status;
             }
             else if (avail > 0) {
                 auto chunk = m_aio->read(avail);
@@ -118,6 +121,7 @@ namespace VrsTunnel::Ntrip
                 }
             }
         }
+        m_aio->end();
 
         auto startsWith = [text = &responseText](std::string_view start) -> bool
         {
@@ -184,7 +188,16 @@ namespace VrsTunnel::Ntrip
 
     void ntrip_client::disconnect()
     {
-        while (m_aio->check() == io_status::InProgress) { } // timeout missing?
+        constexpr int timeout = 50;
+        int time = 0;
+        while (m_aio->check() == io_status::InProgress) 
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            ++time;
+            if (time > timeout) {
+                break;
+            }
+        }
         m_aio->end();
         m_tcp->close();
         m_status = status::uninitialized;

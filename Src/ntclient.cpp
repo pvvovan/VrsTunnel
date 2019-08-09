@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 
 #include "cli.hpp"
 #include "ntrip_client.hpp"
@@ -116,7 +117,7 @@ int main(int argc, const char* argv[])
         return print_usage();
     }
 
-    constexpr double noGeo = 1234536;
+    constexpr double noGeo {std::numeric_limits<double>::max()};
     double latitude{noGeo}, longitude{noGeo};
     std::string name{}, password{}, mount{}, address{}, yesno{};
     int port{0};

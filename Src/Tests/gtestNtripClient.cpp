@@ -65,34 +65,34 @@ TEST(testNtripClient, pasreTableTest1)
     auto table = VrsTunnel::Ntrip::mount_point::parse_table(tbl);
     EXPECT_EQ(5UL, table.size());
 
-    EXPECT_EQ(table[0].Raw, "STR;RTCM3_HUST0;RTCM3_HUST0;RTCM 3;1004(1),1005/1007(5),PBS(10);2;GPS+GLONASS;ZAKPOS;UKR;48.18;23.29;0;0;Trimble GPSNet;None;B;Y;19200;ZAKPOS, Khust;");
-    EXPECT_EQ(table[1].Raw, "STR;RTCM3_RAHI0;RTCM3_RAHI0;RTCM 3;1004(1),1005/1007(5),PBS(10);2;GPS+GLONASS;ZAKPOS;UKR;48.05;24.2;0;0;Trimble GPSNet;None;B;Y;19200;ZAKPOS, Rakhiv;");
-    EXPECT_EQ(table[2].Raw, "STR;RTCM3_MUKA;RTCM3_MUKA;RTCM 3;1004(1),1005/1007(5),PBS(10);2;GPS+GLONASS;ZAKPOS;UKR;48.45;22.72;0;0;Trimble NetR5;None;B;Y;19200;ZAKPOS, Mukachevo;");
-    EXPECT_EQ(table[3].Raw, "STR;RAW_CRNI;RAW_CRNI;RAW;1004(1),1005/1007(5),PBS(10);2;GPS;ZAKPOS;UKR;0;0;0;0;Trimble 5700;None;B;Y;19200;ZAKPOS, Chernivtsi;");
-    EXPECT_EQ(table[4].Raw, "STR;RAW_VOLO;RAW_VOLO;RAW;1004(1),1005/1007(5),PBS(10);2;GPS+GLONASS;ZakPOS;UKR;0;0;0;0;Trimble GPSNet;None;B;Y;0;;");
+    EXPECT_EQ(table[0].raw_entry, "STR;RTCM3_HUST0;RTCM3_HUST0;RTCM 3;1004(1),1005/1007(5),PBS(10);2;GPS+GLONASS;ZAKPOS;UKR;48.18;23.29;0;0;Trimble GPSNet;None;B;Y;19200;ZAKPOS, Khust;");
+    EXPECT_EQ(table[1].raw_entry, "STR;RTCM3_RAHI0;RTCM3_RAHI0;RTCM 3;1004(1),1005/1007(5),PBS(10);2;GPS+GLONASS;ZAKPOS;UKR;48.05;24.2;0;0;Trimble GPSNet;None;B;Y;19200;ZAKPOS, Rakhiv;");
+    EXPECT_EQ(table[2].raw_entry, "STR;RTCM3_MUKA;RTCM3_MUKA;RTCM 3;1004(1),1005/1007(5),PBS(10);2;GPS+GLONASS;ZAKPOS;UKR;48.45;22.72;0;0;Trimble NetR5;None;B;Y;19200;ZAKPOS, Mukachevo;");
+    EXPECT_EQ(table[3].raw_entry, "STR;RAW_CRNI;RAW_CRNI;RAW;1004(1),1005/1007(5),PBS(10);2;GPS;ZAKPOS;UKR;0;0;0;0;Trimble 5700;None;B;Y;19200;ZAKPOS, Chernivtsi;");
+    EXPECT_EQ(table[4].raw_entry, "STR;RAW_VOLO;RAW_VOLO;RAW;1004(1),1005/1007(5),PBS(10);2;GPS+GLONASS;ZakPOS;UKR;0;0;0;0;Trimble GPSNet;None;B;Y;0;;");
     
-    EXPECT_EQ("RTCM3_HUST0", table[0].Name);
-    EXPECT_EQ("RTCM3_RAHI0", table[1].Name);
-    EXPECT_EQ( "RTCM3_MUKA", table[2].Name);
-    EXPECT_EQ(   "RAW_CRNI", table[3].Name);
-    EXPECT_EQ(   "RAW_VOLO", table[4].Name);
+    EXPECT_EQ("RTCM3_HUST0", table[0].name);
+    EXPECT_EQ("RTCM3_RAHI0", table[1].name);
+    EXPECT_EQ( "RTCM3_MUKA", table[2].name);
+    EXPECT_EQ(   "RAW_CRNI", table[3].name);
+    EXPECT_EQ(   "RAW_VOLO", table[4].name);
 
-    EXPECT_EQ("RTCM 3", table[0].Type);
-    EXPECT_EQ("RTCM 3", table[1].Type);
-    EXPECT_EQ("RTCM 3", table[2].Type);
-    EXPECT_EQ(   "RAW", table[3].Type);
-    EXPECT_EQ(   "RAW", table[4].Type);
+    EXPECT_EQ("RTCM 3", table[0].type);
+    EXPECT_EQ("RTCM 3", table[1].type);
+    EXPECT_EQ("RTCM 3", table[2].type);
+    EXPECT_EQ(   "RAW", table[3].type);
+    EXPECT_EQ(   "RAW", table[4].type);
 
-    EXPECT_DOUBLE_EQ(48.18, table[0].Reference.Latitude);
-    EXPECT_DOUBLE_EQ(23.29, table[0].Reference.Longitude);
-    EXPECT_DOUBLE_EQ(48.05, table[1].Reference.Latitude);
-    EXPECT_DOUBLE_EQ(24.20, table[1].Reference.Longitude);
-    EXPECT_DOUBLE_EQ(48.45, table[2].Reference.Latitude);
-    EXPECT_DOUBLE_EQ(22.72, table[2].Reference.Longitude);
-    EXPECT_DOUBLE_EQ( 0.00, table[3].Reference.Latitude);
-    EXPECT_DOUBLE_EQ( 0.00, table[3].Reference.Longitude);
-    EXPECT_DOUBLE_EQ( 0.00, table[4].Reference.Latitude);
-    EXPECT_DOUBLE_EQ( 0.00, table[4].Reference.Longitude);
+    EXPECT_DOUBLE_EQ(48.18, table[0].reference.Latitude);
+    EXPECT_DOUBLE_EQ(23.29, table[0].reference.Longitude);
+    EXPECT_DOUBLE_EQ(48.05, table[1].reference.Latitude);
+    EXPECT_DOUBLE_EQ(24.20, table[1].reference.Longitude);
+    EXPECT_DOUBLE_EQ(48.45, table[2].reference.Latitude);
+    EXPECT_DOUBLE_EQ(22.72, table[2].reference.Longitude);
+    EXPECT_DOUBLE_EQ( 0.00, table[3].reference.Latitude);
+    EXPECT_DOUBLE_EQ( 0.00, table[3].reference.Longitude);
+    EXPECT_DOUBLE_EQ( 0.00, table[4].reference.Latitude);
+    EXPECT_DOUBLE_EQ( 0.00, table[4].reference.Longitude);
 }
 
 TEST(testNtripClient, getMountPointsTest1)
@@ -100,7 +100,7 @@ TEST(testNtripClient, getMountPointsTest1)
     VrsTunnel::Ntrip::ntrip_client nc{};
     auto resp = nc.getMountPoints("195.16.76.194", 2101);
     auto mounts = std::get<std::vector<VrsTunnel::Ntrip::mount_point>>(resp);
-    EXPECT_EQ("RTCM3_HUST0", mounts[0].Name);
+    EXPECT_EQ("RTCM3_HUST0", mounts[0].name);
 }
 
 TEST(testNtripClient, getMountPointsTest2)
@@ -108,7 +108,7 @@ TEST(testNtripClient, getMountPointsTest2)
     VrsTunnel::Ntrip::ntrip_client nc{};
     auto resp = nc.getMountPoints("195.16.76.194", 2101, "test", "test");
     auto mounts = std::get<std::vector<VrsTunnel::Ntrip::mount_point>>(resp);
-    EXPECT_EQ("RTCM3_HUST0", mounts[0].Name);
+    EXPECT_EQ("RTCM3_HUST0", mounts[0].name);
 }
 
 TEST(testNtripClient, getMountPointsTest3)
@@ -116,5 +116,5 @@ TEST(testNtripClient, getMountPointsTest3)
     VrsTunnel::Ntrip::ntrip_client nc{};
     auto resp = nc.getMountPoints("titanmachinery.ua", 8021, "test", "test");
     auto mounts = std::get<std::vector<VrsTunnel::Ntrip::mount_point>>(resp);
-    EXPECT_EQ("DynRTK", mounts[0].Name);
+    EXPECT_EQ("DynRTK", mounts[0].name);
 }

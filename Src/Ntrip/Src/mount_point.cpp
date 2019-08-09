@@ -14,12 +14,9 @@ namespace VrsTunnel::Ntrip
             std::size_t rowStart = tableStart + 4;
             std::size_t rowEnd = data.find("\r\n", rowStart);
             while (rowEnd != std::string::npos) {
-                mount_point mp{};
-                mp.Raw = data.substr(rowStart, rowEnd - rowStart);
-                if (mp.Raw != "ENDSOURCETABLE") {
-                    mp.Name = parse_name(mp.Raw);
-                    mp.Type = parse_type(mp.Raw);
-                    mp.Reference = parse_reference(mp.Raw);
+                auto table_entry = data.substr(rowStart, rowEnd - rowStart);
+                if (table_entry != "ENDSOURCETABLE") {
+                    mount_point mp {table_entry};
                     mountPoints.emplace_back(std::move(mp));
                 }
                 rowStart = rowEnd + 2;
@@ -28,6 +25,13 @@ namespace VrsTunnel::Ntrip
         }
         return mountPoints;
     }
+
+    mount_point::mount_point(std::string_view line) :
+        raw_entry {std::string(line)},
+        reference {parse_reference(line)},
+        name {std::string(parse_name(line))},
+        type {std::string(parse_type(line))}
+    { }
 
     std::string mount_point::parse_name(std::string_view line)
     {

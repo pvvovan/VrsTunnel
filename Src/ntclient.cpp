@@ -37,8 +37,8 @@ int showMountPoints(std::string address, int port, std::string username, std::st
     else {
         auto mounts = std::get<std::vector<VrsTunnel::Ntrip::mount_point>>(res);
         for(const auto& m : mounts) {
-            std::cout << m.Name << "\t<" << m.Type << "\t(" << m.Reference.Latitude << ";" 
-                    << m.Reference.Longitude << ")>" << std::endl;
+            std::cout << m.name << "\t<" << m.type << "\t(" << m.reference.Latitude << ";" 
+                    << m.reference.Longitude << ")>" << std::endl;
         }
     }
     

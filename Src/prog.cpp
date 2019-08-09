@@ -53,7 +53,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv) {
     VrsTunnel::Ntrip::ntrip_client nc{};
     auto r = nc.getMountPoints("195.16.76.194", 2101);
     if (std::holds_alternative<std::vector<VrsTunnel::Ntrip::mount_point>>(r)) {
-        cout << std::get<std::vector<VrsTunnel::Ntrip::mount_point>>(r)[0].Raw << endl;
+        cout << std::get<std::vector<VrsTunnel::Ntrip::mount_point>>(r)[0].raw_entry << endl;
     }
 
     VrsTunnel::Ntrip::ntrip_client ntclient{};
@@ -66,7 +66,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv) {
     ntlogin.position = VrsTunnel::Ntrip::location(51, 31, 0);
     ntlogin.username = "test";
     ntlogin.password = "test";
-    ntlogin.mountpoint = std::get<std::vector<VrsTunnel::Ntrip::mount_point>>(mps)[0].Name;
+    ntlogin.mountpoint = std::get<std::vector<VrsTunnel::Ntrip::mount_point>>(mps)[0].name;
     cout << ntlogin.mountpoint << endl;
     auto con_res = ntclient.connect(ntlogin);
     if (con_res == VrsTunnel::Ntrip::status::error) {

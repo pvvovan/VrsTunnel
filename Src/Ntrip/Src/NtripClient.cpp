@@ -93,6 +93,7 @@ namespace VrsTunnel::Ntrip
                 mp.Raw = data.substr(rowStart, rowEnd - rowStart);
                 if (mp.Raw != "ENDSOURCETABLE") {
                     mp.Name = getName(mp.Raw);
+                    mp.Type = getType(mp.Raw);
                     mp.Reference = getReference(mp.Raw);
                     mountPoints.emplace_back(std::move(mp));
                 }
@@ -114,6 +115,34 @@ namespace VrsTunnel::Ntrip
             }
         }
         return "";
+    }
+
+    std::string NtripClient::getType(std::string_view line)
+    {
+        std::function<std::size_t(std::string_view, std::size_t, std::string_view, std::size_t)> find_Nth;
+
+        find_Nth = [&find_Nth]
+            (std::string_view haystack, std::size_t pos, std::string_view needle, std::size_t nth)
+            -> std::size_t 
+        {
+            std::size_t found_pos = haystack.find(needle, pos);
+            if (nth == 0 || std::string::npos == found_pos) {
+                return found_pos;
+            }
+            return find_Nth(haystack, found_pos + 1, needle, nth - 1);
+        };
+
+        std::size_t start = find_Nth(line, 0, ";", 2);
+        if (start == std::string::npos) {
+            return std::string();
+        }
+        start++;
+        std::size_t stop = find_Nth(line, 0, ";", 3);
+        if (stop == std::string::npos) {
+            return std::string();
+        }
+        std::string_view sv_type = line.substr(start, stop - start);
+        return std::string(sv_type);
     }
 
     location NtripClient::getReference(std::string_view line)

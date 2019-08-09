@@ -23,6 +23,7 @@ namespace VrsTunnel::Ntrip
         std::string Raw;    /**< Raw data from NTRIP caster */
         location Reference; /**< Mount point position coordinates */
         std::string Name;   /**< Mount point name to be show */
+        std::string Type;   /**< GNSS RTK correction type */
     };
 
     /**
@@ -37,7 +38,8 @@ namespace VrsTunnel::Ntrip
     class NtripClient
     {
     private:
-        std::string getName(std::string_view line); /**< Retrieves name from NTRIP mount point description raw data */
+        std::string getName(std::string_view line); /**< Retrieves name from NTRIP mount point table entry */
+        std::string getType(std::string_view line); /**< Retrieves GNSS correction type from NTRIP mount point table entry */
         location getReference(std::string_view line); /**< Retrieves location of mount point */
         std::unique_ptr<async_io> m_aio {nullptr}; /**< Asyncronous operations */
         std::unique_ptr<tcp_client> m_tcp {nullptr}; /**< TCP connection */

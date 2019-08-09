@@ -37,7 +37,8 @@ int showMountPoints(std::string address, int port, std::string username, std::st
     else {
         auto mounts = std::get<std::vector<VrsTunnel::Ntrip::MountPoint>>(res);
         for(const auto& m : mounts) {
-            std::cout << m.Name << std::endl;
+            std::cout << m.Name << "\t<" << m.Type << "\t(" << m.Reference.Latitude << ";" 
+                    << m.Reference.Longitude << ")>" << std::endl;
         }
     }
     
@@ -49,15 +50,15 @@ void output_correction(VrsTunnel::Ntrip::ntrip_login login)
     VrsTunnel::Ntrip::NtripClient nc{};
     auto res = nc.connect(login);
     if (res == VrsTunnel::Ntrip::status::authfailure) {
-        std::cerr << "authentication failure" << std::endl;
+        std::cerr << "ntclient: authentication failure" << std::endl;
         return;
     }
     else if (res == VrsTunnel::Ntrip::status::error) {
-        std::cerr << "connection error" << std::endl;
+        std::cerr << "ntclient: connection error" << std::endl;
         return;
     }
     else if (res == VrsTunnel::Ntrip::status::nomount) {
-        std::cerr << "mount point not found" << std::endl;
+        std::cerr << "ntclient: mount point not found" << std::endl;
         return;
     }
 
@@ -70,7 +71,7 @@ void output_correction(VrsTunnel::Ntrip::ntrip_login login)
         auto time = std::chrono::system_clock::now();
         auto send_res = nc.send_gga(login.position, time);
         if (send_res != VrsTunnel::Ntrip::io_status::Success) {
-            std::cerr << "gga sending error" << std::endl;
+            std::cerr << "ntclient: gga sending error" << std::endl;
         }
     };
     sendgga();
@@ -100,7 +101,7 @@ void output_correction(VrsTunnel::Ntrip::ntrip_login login)
                 break;
             
             default:
-                std::cerr << "error" << std::endl;
+                std::cerr << "ntclient: error" << std::endl;
                 nc.disconnect();
                 return;
                 break;
@@ -212,7 +213,7 @@ int main(int argc, const char* argv[])
     for (;;) {
         output_correction(login);
         constexpr int retry_period = 30;
-        std::cerr << "retrying in " << retry_period << " seconds" << std::endl;
+        std::cerr << "ntclient: retrying in " << retry_period << " seconds" << std::endl;
         sleep(retry_period);
     }
     return 0;

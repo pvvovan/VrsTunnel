@@ -1,5 +1,5 @@
 var searchData=
 [
   ['nmea',['nmea',['../class_vrs_tunnel_1_1_ntrip_1_1nmea.html#ad86396786073565c34a590f97ad92b38',1,'VrsTunnel::Ntrip::nmea']]],
-  ['ntripclient',['NtripClient',['../class_vrs_tunnel_1_1_ntrip_1_1_ntrip_client.html#a225e073a06787307cd08f23b25091121',1,'VrsTunnel::Ntrip::NtripClient::NtripClient(const NtripClient &amp;)=delete'],['../class_vrs_tunnel_1_1_ntrip_1_1_ntrip_client.html#a7239a9f8162bc90f4a537f85e311a320',1,'VrsTunnel::Ntrip::NtripClient::NtripClient(NtripClient &amp;&amp;)=delete'],['../class_vrs_tunnel_1_1_ntrip_1_1_ntrip_client.html#ad0c56e405805b612bb26348d2c02826a',1,'VrsTunnel::Ntrip::NtripClient::NtripClient()=default']]]
+  ['ntrip_5fclient',['ntrip_client',['../class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#af03524eb0653ad9a9d108183056af80b',1,'VrsTunnel::Ntrip::ntrip_client::ntrip_client(const ntrip_client &amp;)=delete'],['../class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#a0db23617e7b5f8ad98ba83a9e65c8270',1,'VrsTunnel::Ntrip::ntrip_client::ntrip_client(ntrip_client &amp;&amp;)=delete'],['../class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#a59acaa2da08aa31e0c01a918adfefb52',1,'VrsTunnel::Ntrip::ntrip_client::ntrip_client()=default']]]
 ];

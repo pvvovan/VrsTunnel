@@ -4,9 +4,9 @@ var namespace_vrs_tunnel_1_1_ntrip =
     [ "base64_encoder", "class_vrs_tunnel_1_1_ntrip_1_1base64__encoder.html", "class_vrs_tunnel_1_1_ntrip_1_1base64__encoder" ],
     [ "location", "struct_vrs_tunnel_1_1_ntrip_1_1location.html", "struct_vrs_tunnel_1_1_ntrip_1_1location" ],
     [ "login_encode", "class_vrs_tunnel_1_1_ntrip_1_1login__encode.html", "class_vrs_tunnel_1_1_ntrip_1_1login__encode" ],
-    [ "MountPoint", "struct_vrs_tunnel_1_1_ntrip_1_1_mount_point.html", "struct_vrs_tunnel_1_1_ntrip_1_1_mount_point" ],
+    [ "mount_point", "struct_vrs_tunnel_1_1_ntrip_1_1mount__point.html", "struct_vrs_tunnel_1_1_ntrip_1_1mount__point" ],
     [ "nmea", "class_vrs_tunnel_1_1_ntrip_1_1nmea.html", "class_vrs_tunnel_1_1_ntrip_1_1nmea" ],
+    [ "ntrip_client", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client" ],
     [ "ntrip_login", "struct_vrs_tunnel_1_1_ntrip_1_1ntrip__login.html", "struct_vrs_tunnel_1_1_ntrip_1_1ntrip__login" ],
-    [ "NtripClient", "class_vrs_tunnel_1_1_ntrip_1_1_ntrip_client.html", "class_vrs_tunnel_1_1_ntrip_1_1_ntrip_client" ],
     [ "tcp_client", "class_vrs_tunnel_1_1_ntrip_1_1tcp__client.html", "class_vrs_tunnel_1_1_ntrip_1_1tcp__client" ]
 ];

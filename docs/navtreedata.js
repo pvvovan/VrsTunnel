@@ -33,7 +33,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"_ntrip_client_8cpp.html"
+"_run_all_tests_8cpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

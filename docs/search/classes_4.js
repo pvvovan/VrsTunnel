@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mountpoint',['MountPoint',['../struct_vrs_tunnel_1_1_ntrip_1_1_mount_point.html',1,'VrsTunnel::Ntrip']]]
+  ['mount_5fpoint',['mount_point',['../struct_vrs_tunnel_1_1_ntrip_1_1mount__point.html',1,'VrsTunnel::Ntrip']]]
 ];

@@ -1,11 +1,11 @@
 <map id="/home/vovan/VrsTunnel/Src/Ntrip/Inc/async_io.hpp" name="/home/vovan/VrsTunnel/Src/Ntrip/Inc/async_io.hpp">
 <area shape="rect" id="node2" href="$tcp__client_8hpp.html" title="/home/vovan/VrsTunnel\l/Src/Ntrip/Inc/tcp_client.hpp" alt="" coords="189,117,374,158"/>
-<area shape="rect" id="node3" href="$_ntrip_client_8hpp.html" title="/home/vovan/VrsTunnel\l/Src/Ntrip/Inc/NtripClient.hpp" alt="" coords="385,213,575,255"/>
-<area shape="rect" id="node6" href="$prog_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/prog.cpp" alt="" coords="5,303,165,344"/>
+<area shape="rect" id="node3" href="$ntrip__client_8hpp.html" title="/home/vovan/VrsTunnel\l/Src/Ntrip/Inc/ntrip\l_client.hpp" alt="" coords="391,213,551,269"/>
+<area shape="rect" id="node6" href="$prog_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/prog.cpp" alt="" coords="5,325,165,366"/>
 <area shape="rect" id="node10" href="$async__io_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/Ntrip/Src/async\l_io.cpp" alt="" coords="449,109,609,165"/>
-<area shape="rect" id="node8" href="$gtest_tcp_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/Tests/gtestTcp.cpp" alt="" coords="192,303,355,344"/>
-<area shape="rect" id="node9" href="$tcp__client_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/Ntrip/Src/tcp_client.cpp" alt="" coords="123,213,309,255"/>
-<area shape="rect" id="node4" href="$ntclient_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/ntclient.cpp" alt="" coords="605,303,765,344"/>
-<area shape="rect" id="node5" href="$_ntrip_client_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/Ntrip/Src/NtripClient.cpp" alt="" coords="790,303,983,344"/>
-<area shape="rect" id="node7" href="$gtest_ntrip_client_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/Tests/gtestNtripClient.cpp" alt="" coords="379,303,581,344"/>
+<area shape="rect" id="node8" href="$gtest_tcp_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/Tests/gtestTcp.cpp" alt="" coords="189,325,352,366"/>
+<area shape="rect" id="node9" href="$tcp__client_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/Ntrip/Src/tcp_client.cpp" alt="" coords="129,221,316,262"/>
+<area shape="rect" id="node4" href="$ntclient_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/ntclient.cpp" alt="" coords="603,325,763,366"/>
+<area shape="rect" id="node5" href="$ntrip__client_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/Ntrip/Src/ntrip\l_client.cpp" alt="" coords="787,317,947,373"/>
+<area shape="rect" id="node7" href="$gtest_ntrip_client_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/Tests/gtestNtripClient.cpp" alt="" coords="376,325,579,366"/>
 </map>

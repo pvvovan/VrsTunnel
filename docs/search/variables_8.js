@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['username',['username',['../struct_vrs_tunnel_1_1_ntrip_1_1ntrip__login.html#a9164658a3108b1dd1f2fe78e3b7f50a5',1,'VrsTunnel::Ntrip::ntrip_login']]]
+  ['type',['Type',['../struct_vrs_tunnel_1_1_ntrip_1_1mount__point.html#a706ea94a2e67df13ea9d443e34bbb8df',1,'VrsTunnel::Ntrip::mount_point']]]
 ];

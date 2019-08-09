@@ -6,5 +6,5 @@ var searchData=
   ['async_5fio_2ecpp',['async_io.cpp',['../async__io_8cpp.html',1,'']]],
   ['async_5fio_2ehpp',['async_io.hpp',['../async__io_8hpp.html',1,'']]],
   ['authfailure',['authfailure',['../namespace_vrs_tunnel_1_1_ntrip.html#a85b9bde762688aad4636040aa80bbb57a10c653a5bf6bd267e9e30800262afff5',1,'VrsTunnel::Ntrip']]],
-  ['available',['available',['../class_vrs_tunnel_1_1_ntrip_1_1async__io.html#afe5b9ac35f0e638161ef0e743f1ca15a',1,'VrsTunnel::Ntrip::async_io::available()'],['../class_vrs_tunnel_1_1_ntrip_1_1_ntrip_client.html#ab78837f4663e47363142f552e10b40cc',1,'VrsTunnel::Ntrip::NtripClient::available()']]]
+  ['available',['available',['../class_vrs_tunnel_1_1_ntrip_1_1async__io.html#afe5b9ac35f0e638161ef0e743f1ca15a',1,'VrsTunnel::Ntrip::async_io::available()'],['../class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#a6da2f89b8ecb2ee5f810258e054d1f0b',1,'VrsTunnel::Ntrip::ntrip_client::available()']]]
 ];

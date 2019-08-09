@@ -13,7 +13,7 @@ namespace VrsTunnel::Ntrip
      */
     struct mount_point
     {
-        std::string Raw;    /**< Raw data from NTRIP caster */
+        std::string Raw;    /**< Raw table line from NTRIP Caster */
         location Reference; /**< Mount point position coordinates */
         std::string Name;   /**< Mount point name to be show */
         std::string Type;   /**< GNSS RTK correction type */

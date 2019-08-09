@@ -140,13 +140,14 @@ void send_correction(VrsTunnel::Ntrip::ntrip_login& login)
 
     for (;;) {
         int n_bytes_avail = 0;
+        std::unique_ptr<char[]> data;
         int ir = ::ioctl(STDIN_FILENO, FIONREAD, &n_bytes_avail);
         if (ir != 0) {
             std::cerr << "ntserver: read correction error" << std::endl;
             return;
         }
         if (n_bytes_avail > 0) {
-            std::unique_ptr<char[]> data = std::make_unique<char[]>(n_bytes_avail);
+            data = std::make_unique<char[]>(n_bytes_avail);
             ssize_t n_read = ::read(STDIN_FILENO, data.get(), n_bytes_avail);
             if (n_read > 0) {
                 auto send_stat = ns.send_begin(data.get(), n_read);

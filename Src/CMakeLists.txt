@@ -21,7 +21,8 @@ set(COMPILE_WARNING_MODE HIGH)
 # SET (CMAKE_RANLIB  "/usr/bin/llvm-ranlib")
 
 set(ntrip_source Ntrip/Src/login_encode.cpp Ntrip/Src/base64_encoder.cpp Ntrip/Src/nmea.cpp)
-set(ntrip_source ${ntrip_source} Ntrip/Src/async_io.cpp Ntrip/Src/tcp_client.cpp Ntrip/Src/NtripClient.cpp)
+set(ntrip_source ${ntrip_source} Ntrip/Src/async_io.cpp Ntrip/Src/tcp_client.cpp)
+set(ntrip_source ${ntrip_source} Ntrip/Src/ntrip_client.cpp Ntrip/Src/mount_point.cpp)
 
 include_directories(Ntrip/Inc)
 #include <cli.hpp>

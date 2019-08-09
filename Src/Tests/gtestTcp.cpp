@@ -5,7 +5,7 @@
 #include <thread>
 
 #include "tcp_client.hpp"
-#include "NtripClient.hpp"
+#include "ntrip_client.hpp"
 
 
 
@@ -16,7 +16,7 @@ TEST(TcpTestGroup, TestTcpClient)
     if (con_res != VrsTunnel::Ntrip::io_status::Success) {
         EXPECT_TRUE(false);
     }
-    VrsTunnel::Ntrip::NtripClient nc{};
+    VrsTunnel::Ntrip::ntrip_client nc{};
     VrsTunnel::Ntrip::async_io aio{tc.get_sockfd()};
     const char* request = "GET / HTTP/1.0\r\n"
         "User-Agent: NTRIP PvvovanNTRIPClient/\r\n"

@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "cli.hpp"
-#include "NtripClient.hpp"
+#include "ntrip_client.hpp"
 
 int print_usage() 
 {
@@ -29,13 +29,13 @@ int showMountPoints(std::string address, int port, std::string username, std::st
     if (address.size() == 0 || port == 0) {
         return print_usage();
     }
-    VrsTunnel::Ntrip::NtripClient nc{};
+    VrsTunnel::Ntrip::ntrip_client nc{};
     auto res = nc.getMountPoints(address, port, username, password);
     if (std::holds_alternative<VrsTunnel::Ntrip::io_status>(res)) {
         std::cout << "Error retreiving mount points" << std::endl;
     }
     else {
-        auto mounts = std::get<std::vector<VrsTunnel::Ntrip::MountPoint>>(res);
+        auto mounts = std::get<std::vector<VrsTunnel::Ntrip::mount_point>>(res);
         for(const auto& m : mounts) {
             std::cout << m.Name << "\t<" << m.Type << "\t(" << m.Reference.Latitude << ";" 
                     << m.Reference.Longitude << ")>" << std::endl;
@@ -47,7 +47,7 @@ int showMountPoints(std::string address, int port, std::string username, std::st
 
 void output_correction(VrsTunnel::Ntrip::ntrip_login login)
 {
-    VrsTunnel::Ntrip::NtripClient nc{};
+    VrsTunnel::Ntrip::ntrip_client nc{};
     auto res = nc.connect(login);
     if (res == VrsTunnel::Ntrip::status::authfailure) {
         std::cerr << "ntclient: authentication failure" << std::endl;

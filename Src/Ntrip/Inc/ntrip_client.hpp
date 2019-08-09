@@ -12,20 +12,10 @@
 #include "async_io.hpp"
 #include "ntrip_login.hpp"
 #include "tcp_client.hpp"
+#include "mount_point.hpp"
 
 namespace VrsTunnel::Ntrip
 {
-    /**
-     * NTRIP mount point
-     */
-    struct MountPoint
-    {
-        std::string Raw;    /**< Raw data from NTRIP caster */
-        location Reference; /**< Mount point position coordinates */
-        std::string Name;   /**< Mount point name to be show */
-        std::string Type;   /**< GNSS RTK correction type */
-    };
-
     /**
      * NTRIP client status
      */
@@ -35,32 +25,36 @@ namespace VrsTunnel::Ntrip
      * NTRIP client class.
      * The main task is to provide RTK correction from NTRIP Caster to GNSS receiver.
      */
-    class NtripClient
+    class ntrip_client
     {
     private:
-        std::string getName(std::string_view line); /**< Retrieves name from NTRIP mount point table entry */
-        std::string getType(std::string_view line); /**< Retrieves GNSS correction type from NTRIP mount point table entry */
-        location getReference(std::string_view line); /**< Retrieves location of mount point */
         std::unique_ptr<async_io> m_aio {nullptr}; /**< Asyncronous operations */
         std::unique_ptr<tcp_client> m_tcp {nullptr}; /**< TCP connection */
         status m_status {status::uninitialized}; /**< Current status of the client */
 
+        /**
+         * Build HTTP GET request
+         * @param mountpoint name of NTRIP mount point
+         * @param name NTRIP user name
+         * @param passwword NTRIP user password
+         * @return HTTP GET request buffer
+         */
         std::unique_ptr<char[]> build_request(const char* mountpoint,
                 std::string name, std::string password);
         
-        NtripClient(const NtripClient&) = delete;               /**< No copy constructor */
-        NtripClient(NtripClient&&) = delete;                    /**< No move costructor */
-        NtripClient& operator=(const NtripClient&) = delete;    /**< No copy operator */
-        NtripClient& operator=(NtripClient&&) = delete;         /**< No move operator */
+        ntrip_client(const ntrip_client&) = delete;               /**< No copy constructor */
+        ntrip_client(ntrip_client&&) = delete;                    /**< No move costructor */
+        ntrip_client& operator=(const ntrip_client&) = delete;    /**< No copy operator */
+        ntrip_client& operator=(ntrip_client&&) = delete;         /**< No move operator */
 
     public:
-        NtripClient() = default;
-        ~NtripClient() = default;
+        ntrip_client() = default;
+        ~ntrip_client() = default;
 
         /**
          * Download mount point table
          */
-        std::variant<std::vector<MountPoint>, io_status>
+        std::variant<std::vector<mount_point>, io_status>
         getMountPoints(std::string address, int tcpPort, 
             std::string name = std::string(), std::string password = std::string());
 
@@ -68,11 +62,6 @@ namespace VrsTunnel::Ntrip
          * Helper method to check if download is complete
          */
         bool hasTableEnding(std::string_view data);
-
-        /**
-         * Helper method to parse NTRIP mount point table
-         */
-        std::vector<MountPoint> parseTable(std::string_view data);
 
         /**
          * Create connection with NTRIP Caster

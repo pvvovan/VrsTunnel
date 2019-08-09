@@ -3,7 +3,8 @@
 #include <gtest/gtest.h>
 #include <string>
 
-#include "NtripClient.hpp"
+#include "ntrip_client.hpp"
+#include "mount_point.hpp"
 
 TEST(testNtripClient, hasTableTest1)
 {
@@ -20,7 +21,7 @@ TEST(testNtripClient, hasTableTest1)
 "STR;RAW_VOLO;RAW_VOLO;RAW;1004(1),1005/1007(5),PBS(10);2;GPS+GLONASS;ZakPOS;UKR;0;0;0;0;Trimble GPSNet;None;B;Y;0;;\r\n"
 "ENDSOURCETABLE\r\n" };
 
-    VrsTunnel::Ntrip::NtripClient nc{};
+    VrsTunnel::Ntrip::ntrip_client nc{};
     EXPECT_TRUE(nc.hasTableEnding(tbl));
 }
 
@@ -39,7 +40,7 @@ TEST(testNtripClient, hasTableTest2)
 "STR;RAW_VOLO;RAW_VOLO;RAW;1004(1),1005/1007(5),PBS(10);2;GPS+GLONASS;ZakPOS;UKR;0;0;0;0;Trimble GPSNet;None;B;Y;0;;\r\n"
 "ENDSOURCETABLE" };
 
-    VrsTunnel::Ntrip::NtripClient nc{};
+    VrsTunnel::Ntrip::ntrip_client nc{};
     EXPECT_FALSE(nc.hasTableEnding(tbl));
 }
 
@@ -58,10 +59,10 @@ TEST(testNtripClient, pasreTableTest1)
 "STR;RAW_VOLO;RAW_VOLO;RAW;1004(1),1005/1007(5),PBS(10);2;GPS+GLONASS;ZakPOS;UKR;0;0;0;0;Trimble GPSNet;None;B;Y;0;;\r\n"
 "ENDSOURCETABLE\r\n" };
 
-    VrsTunnel::Ntrip::NtripClient nc{};
+    VrsTunnel::Ntrip::ntrip_client nc{};
     EXPECT_TRUE(nc.hasTableEnding(tbl));
 
-    auto table = nc.parseTable(tbl);
+    auto table = VrsTunnel::Ntrip::mount_point::parse_table(tbl);
     EXPECT_EQ(5UL, table.size());
 
     EXPECT_EQ(table[0].Raw, "STR;RTCM3_HUST0;RTCM3_HUST0;RTCM 3;1004(1),1005/1007(5),PBS(10);2;GPS+GLONASS;ZAKPOS;UKR;48.18;23.29;0;0;Trimble GPSNet;None;B;Y;19200;ZAKPOS, Khust;");
@@ -75,6 +76,12 @@ TEST(testNtripClient, pasreTableTest1)
     EXPECT_EQ( "RTCM3_MUKA", table[2].Name);
     EXPECT_EQ(   "RAW_CRNI", table[3].Name);
     EXPECT_EQ(   "RAW_VOLO", table[4].Name);
+
+    EXPECT_EQ("RTCM 3", table[0].Type);
+    EXPECT_EQ("RTCM 3", table[1].Type);
+    EXPECT_EQ("RTCM 3", table[2].Type);
+    EXPECT_EQ(   "RAW", table[3].Type);
+    EXPECT_EQ(   "RAW", table[4].Type);
 
     EXPECT_DOUBLE_EQ(48.18, table[0].Reference.Latitude);
     EXPECT_DOUBLE_EQ(23.29, table[0].Reference.Longitude);
@@ -90,24 +97,24 @@ TEST(testNtripClient, pasreTableTest1)
 
 TEST(testNtripClient, getMountPointsTest1)
 {
-    VrsTunnel::Ntrip::NtripClient nc{};
+    VrsTunnel::Ntrip::ntrip_client nc{};
     auto resp = nc.getMountPoints("195.16.76.194", 2101);
-    auto mounts = std::get<std::vector<VrsTunnel::Ntrip::MountPoint>>(resp);
+    auto mounts = std::get<std::vector<VrsTunnel::Ntrip::mount_point>>(resp);
     EXPECT_EQ("RTCM3_HUST0", mounts[0].Name);
 }
 
 TEST(testNtripClient, getMountPointsTest2)
 {
-    VrsTunnel::Ntrip::NtripClient nc{};
+    VrsTunnel::Ntrip::ntrip_client nc{};
     auto resp = nc.getMountPoints("195.16.76.194", 2101, "test", "test");
-    auto mounts = std::get<std::vector<VrsTunnel::Ntrip::MountPoint>>(resp);
+    auto mounts = std::get<std::vector<VrsTunnel::Ntrip::mount_point>>(resp);
     EXPECT_EQ("RTCM3_HUST0", mounts[0].Name);
 }
 
 TEST(testNtripClient, getMountPointsTest3)
 {
-    VrsTunnel::Ntrip::NtripClient nc{};
+    VrsTunnel::Ntrip::ntrip_client nc{};
     auto resp = nc.getMountPoints("titanmachinery.ua", 8021, "test", "test");
-    auto mounts = std::get<std::vector<VrsTunnel::Ntrip::MountPoint>>(resp);
+    auto mounts = std::get<std::vector<VrsTunnel::Ntrip::mount_point>>(resp);
     EXPECT_EQ("DynRTK", mounts[0].Name);
 }

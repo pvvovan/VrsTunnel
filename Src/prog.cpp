@@ -7,7 +7,7 @@
 #include "nmea.hpp"
 #include "async_io.hpp"
 #include "tcp_client.hpp"
-#include "NtripClient.hpp"
+#include "ntrip_client.hpp"
 
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv) {
@@ -50,13 +50,13 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv) {
     //     cout << "tcp error\n";
     // }
     
-    VrsTunnel::Ntrip::NtripClient nc{};
+    VrsTunnel::Ntrip::ntrip_client nc{};
     auto r = nc.getMountPoints("195.16.76.194", 2101);
-    if (std::holds_alternative<std::vector<VrsTunnel::Ntrip::MountPoint>>(r)) {
-        cout << std::get<std::vector<VrsTunnel::Ntrip::MountPoint>>(r)[0].Raw << endl;
+    if (std::holds_alternative<std::vector<VrsTunnel::Ntrip::mount_point>>(r)) {
+        cout << std::get<std::vector<VrsTunnel::Ntrip::mount_point>>(r)[0].Raw << endl;
     }
 
-    VrsTunnel::Ntrip::NtripClient ntclient{};
+    VrsTunnel::Ntrip::ntrip_client ntclient{};
     std::string ntaddress = "titanmachinery.ua"; // "194.28.183.167"; "94.153.224.194"
     int ntport = 8021;
     auto mps = ntclient.getMountPoints(ntaddress, ntport);
@@ -66,7 +66,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv) {
     ntlogin.position = VrsTunnel::Ntrip::location(51, 31, 0);
     ntlogin.username = "test";
     ntlogin.password = "test";
-    ntlogin.mountpoint = std::get<std::vector<VrsTunnel::Ntrip::MountPoint>>(mps)[0].Name;
+    ntlogin.mountpoint = std::get<std::vector<VrsTunnel::Ntrip::mount_point>>(mps)[0].Name;
     cout << ntlogin.mountpoint << endl;
     auto con_res = ntclient.connect(ntlogin);
     if (con_res == VrsTunnel::Ntrip::status::error) {

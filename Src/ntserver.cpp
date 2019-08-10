@@ -161,7 +161,7 @@ void send_correction(VrsTunnel::Ntrip::ntrip_login& login)
             }
         }
         
-        constexpr int timeout = 150; /**< 15 seconds (15 times 100ms) */
+        constexpr int timeout = 150; /* 15 seconds (15 times 100ms) */
         for(int i = 0; i < timeout; ++i) {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
             if (ns.get_status() == VrsTunnel::Ntrip::status::ready) {

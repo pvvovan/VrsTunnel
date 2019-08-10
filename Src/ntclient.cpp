@@ -33,7 +33,7 @@ int showMountPoints(std::string address, int port, std::string username, std::st
     VrsTunnel::Ntrip::ntrip_client nc{};
     auto res = nc.getMountPoints(address, port, username, password);
     if (std::holds_alternative<VrsTunnel::Ntrip::io_status>(res)) {
-        std::cout << "Error retreiving mount points" << std::endl;
+        std::cout << "Error retreiving mount points." << std::endl;
     }
     else {
         auto mounts = std::get<std::vector<VrsTunnel::Ntrip::mount_point>>(res);
@@ -51,15 +51,15 @@ void output_correction(VrsTunnel::Ntrip::ntrip_login login)
     VrsTunnel::Ntrip::ntrip_client nc{};
     auto res = nc.connect(login);
     if (res == VrsTunnel::Ntrip::status::authfailure) {
-        std::cerr << "ntclient: authentication failure" << std::endl;
+        std::cerr << "ntclient: authentication failure." << std::endl;
         return;
     }
     else if (res == VrsTunnel::Ntrip::status::error) {
-        std::cerr << "ntclient: connection error" << std::endl;
+        std::cerr << "ntclient: connection error." << std::endl;
         return;
     }
     else if (res == VrsTunnel::Ntrip::status::nomount) {
-        std::cerr << "ntclient: mount point not found" << std::endl;
+        std::cerr << "ntclient: mount point not found." << std::endl;
         return;
     }
 
@@ -70,16 +70,21 @@ void output_correction(VrsTunnel::Ntrip::ntrip_login login)
     auto sendgga = [&time_gga, &nc, &login]() {
         time_gga = 0;
         auto time = std::chrono::system_clock::now();
-        auto send_res = nc.send_gga(login.position, time);
+        auto send_res = nc.send_gga_begin(login.position, time);
         if (send_res != VrsTunnel::Ntrip::io_status::Success) {
-            std::cerr << "ntclient: gga sending error" << std::endl;
+            std::cerr << "ntclient: gga sending error." << std::endl;
         }
     };
+    bool data_available = true;
+    bool data_sent = true;
     sendgga();
     for (;;) {
         ++time_gga;
         if (time_gga == timeout_gga && nc.get_status() == VrsTunnel::Ntrip::status::ready) {
-            nc.send_end();
+            auto n_sent = nc.send_end();
+            if (n_sent > 0) {
+                data_sent = true;
+            }
             sendgga();
         }
 
@@ -89,10 +94,25 @@ void output_correction(VrsTunnel::Ntrip::ntrip_login login)
             auto corr = nc.receive(avail);
             fwrite(corr.get(), avail, 1, stdout);
             fflush(stdout);
+            data_available = true;
         }
 
         ++time_status;
         if (time_status == timeout_status) {
+            if (!data_available) {
+                std::cerr << "ntclient: no correction available." << std::endl;
+                nc.disconnect();
+                return;
+            }
+            data_available = false;
+
+            if (!data_sent) {
+                std::cerr << "ntclient: GGA could not be sent." << std::endl;
+                nc.disconnect();
+                return;
+            }
+            data_sent = false;
+
             auto stat = nc.get_status();
             switch (stat)
             {
@@ -102,7 +122,7 @@ void output_correction(VrsTunnel::Ntrip::ntrip_login login)
                 break;
             
             default:
-                std::cerr << "ntclient: error" << std::endl;
+                std::cerr << "ntclient: error!" << std::endl;
                 nc.disconnect();
                 return;
                 break;
@@ -214,7 +234,7 @@ int main(int argc, const char* argv[])
     for (;;) {
         output_correction(login);
         constexpr int retry_period = 30;
-        std::cerr << "ntclient: retrying in " << retry_period << " seconds" << std::endl;
+        std::cerr << "ntclient: retrying in " << retry_period << " seconds..." << std::endl;
         sleep(retry_period);
     }
     return 0;

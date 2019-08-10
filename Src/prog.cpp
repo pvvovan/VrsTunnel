@@ -112,7 +112,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv) {
         ++counter;
         if (counter == 10) {
             counter = 0;
-            auto send_res = ntclient.send_gga(VrsTunnel::Ntrip::location(50, 30, 0),
+            auto send_res = ntclient.send_gga_begin(VrsTunnel::Ntrip::location(50, 30, 0),
                     std::chrono::system_clock::now());
             if (send_res != VrsTunnel::Ntrip::io_status::Success) {
                 cerr << "gga sending error\n";

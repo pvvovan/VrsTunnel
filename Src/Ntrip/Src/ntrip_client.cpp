@@ -80,7 +80,7 @@ namespace VrsTunnel::Ntrip
         }
     }
 
-    status ntrip_client::connect(ntrip_login nlogin)
+    [[nodiscard]] status ntrip_client::connect(ntrip_login nlogin)
     {
         if (m_tcp) {
             throw std::runtime_error("tcp connection already created");
@@ -156,7 +156,7 @@ namespace VrsTunnel::Ntrip
         return m_aio->read(size);
     }
 
-    [[nodiscard]] io_status ntrip_client::send_gga(location location, std::chrono::system_clock::time_point time)
+    [[nodiscard]] io_status ntrip_client::send_gga_begin(location location, std::chrono::system_clock::time_point time)
     {
         if (!m_aio) {
             throw std::runtime_error("no tcp connection");
@@ -165,7 +165,7 @@ namespace VrsTunnel::Ntrip
         return m_aio->write(gga.c_str(), gga.length());
     }
 
-    status ntrip_client::get_status()
+    [[nodiscard]] status ntrip_client::get_status()
     {
         if (m_status == status::ready) {
             io_status res = m_aio->check();
@@ -203,7 +203,7 @@ namespace VrsTunnel::Ntrip
         m_status = status::uninitialized;
     }
 
-    ssize_t ntrip_client::send_end()
+    [[nodiscard]] ssize_t ntrip_client::send_end()
     {
         return m_aio->end();
     }

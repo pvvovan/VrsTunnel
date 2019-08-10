@@ -93,17 +93,17 @@ namespace VrsTunnel::Ntrip
          * @param time epoch when position was measured
          * @return status of the transmission request
          */
-        [[nodiscard]] io_status send_gga(location location, std::chrono::system_clock::time_point time);
+        [[nodiscard]] io_status send_gga_begin(location location, std::chrono::system_clock::time_point time);
 
         /**
          * @return status associated with AIOCBP.
          */
-        ssize_t send_end();
+        [[nodiscard]] ssize_t send_end();
 
         /**
-         * @return current status of the connection
+         * @return current status of the operation
          */
-        status get_status();
+        [[nodiscard]] status get_status();
     };
 
 }

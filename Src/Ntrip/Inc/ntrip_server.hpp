@@ -50,17 +50,17 @@ namespace VrsTunnel::Ntrip
          * @param size the buffer size
          * @return status of the operation
          */
-        status send_begin(const char* data, int size);
+        [[nodiscard]] status send_begin(const char* data, int size);
 
         /**
          * @return status associated with AIOCBP.
          */
-        ssize_t send_end();
+        [[nodiscard]] ssize_t send_end();
 
         /**
-         * @return current status of the connection
+         * @return current status of the operation
          */
-        status get_status();
+        [[nodiscard]] status get_status();
     };
 }
 

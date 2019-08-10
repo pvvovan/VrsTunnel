@@ -114,7 +114,7 @@ int main(int argc, const char* argv[])
     for (;;) {
         send_correction(login);
         constexpr int retry_period = 30;
-        std::cerr << "ntserver: retrying in " << retry_period << " seconds" << std::endl;
+        std::cerr << "ntserver: retrying in " << retry_period << " seconds..." << std::endl;
         sleep(retry_period);
     }
 
@@ -126,39 +126,42 @@ void send_correction(VrsTunnel::Ntrip::ntrip_login& login)
     VrsTunnel::Ntrip::ntrip_server ns{};
     auto res = ns.connect(login);
     if (res == VrsTunnel::Ntrip::status::authfailure) {
-        std::cerr << "ntserver: authentication failure" << std::endl;
+        std::cerr << "ntserver: authentication failure." << std::endl;
         return;
     }
     else if (res == VrsTunnel::Ntrip::status::error) {
-        std::cerr << "ntserver: connection error" << std::endl;
+        std::cerr << "ntserver: connection error." << std::endl;
         return;
     }
     else if (res == VrsTunnel::Ntrip::status::nomount) {
-        std::cerr << "ntserver: mount point not found" << std::endl;
+        std::cerr << "ntserver: mount point not found." << std::endl;
         return;
     }
 
     for (;;) {
+        ssize_t n_read = 0;
         int n_bytes_avail = 0;
         std::unique_ptr<char[]> data;
         int ir = ::ioctl(STDIN_FILENO, FIONREAD, &n_bytes_avail);
         if (ir != 0) {
-            std::cerr << "ntserver: read correction error" << std::endl;
+            std::cerr << "ntserver: read correction error." << std::endl;
+            ns.disconnect();
             return;
         }
         if (n_bytes_avail > 0) {
             data = std::make_unique<char[]>(n_bytes_avail);
-            ssize_t n_read = ::read(STDIN_FILENO, data.get(), n_bytes_avail);
+            n_read = ::read(STDIN_FILENO, data.get(), n_bytes_avail);
             if (n_read > 0) {
                 auto send_stat = ns.send_begin(data.get(), n_read);
                 if (send_stat != VrsTunnel::Ntrip::status::ready) {
-                    std::cerr << "ntserver: send correction error" << std::endl;
+                    std::cerr << "ntserver: send correction error." << std::endl;
+                    ns.disconnect();
                     return;
                 }
             }
         }
-
-        constexpr int timeout = 50;
+        
+        constexpr int timeout = 150; /**< 15 seconds (15 times 100ms) */
         for(int i = 0; i < timeout; ++i) {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
             if (ns.get_status() == VrsTunnel::Ntrip::status::ready) {
@@ -166,9 +169,16 @@ void send_correction(VrsTunnel::Ntrip::ntrip_login& login)
             }
         }
         if (ns.get_status() != VrsTunnel::Ntrip::status::ready) {
-            std::cerr << "ntserver: send correction timeout" << std::endl;
+            std::cerr << "ntserver: send correction timeout." << std::endl;
+            ns.disconnect();
             return;
         }
-        ns.send_end();
+        if (n_read > 0) {
+            if (n_read != ns.send_end()) {
+                std::cerr << "ntserver: send correction error." << std::endl;
+                ns.disconnect();
+                return;
+            }
+        }
     }
 }

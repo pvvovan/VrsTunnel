@@ -3,7 +3,7 @@
 
 namespace VrsTunnel::Ntrip
 {
-    status ntrip_server::connect(ntrip_login& nlogin)
+    [[nodiscard]] status ntrip_server::connect(ntrip_login& nlogin)
     {
         if (m_tcp) {
             throw std::runtime_error("tcp connection already created");
@@ -101,12 +101,12 @@ namespace VrsTunnel::Ntrip
         m_status = status::uninitialized;
     }
 
-    ssize_t ntrip_server::send_end()
+    [[nodiscard]] ssize_t ntrip_server::send_end()
     {
         return m_aio->end();
     }
 
-    status ntrip_server::get_status()
+    [[nodiscard]] status ntrip_server::get_status()
     {
         if (m_status == status::ready) {
             io_status res = m_aio->check();
@@ -127,7 +127,7 @@ namespace VrsTunnel::Ntrip
         return m_status;
     }
 
-    status ntrip_server::send_begin(const char* data, int size)
+    [[nodiscard]] status ntrip_server::send_begin(const char* data, int size)
     {
         if (!m_aio) {
             throw std::runtime_error("no tcp connection");

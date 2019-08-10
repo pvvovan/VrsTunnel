@@ -20,6 +20,9 @@ var dir_b4bc8ababc5ef05c73bc450731652ee8 =
     [ "ntrip_login.hpp", "ntrip__login_8hpp.html", [
       [ "ntrip_login", "struct_vrs_tunnel_1_1_ntrip_1_1ntrip__login.html", "struct_vrs_tunnel_1_1_ntrip_1_1ntrip__login" ]
     ] ],
+    [ "ntrip_server.hpp", "ntrip__server_8hpp.html", [
+      [ "ntrip_server", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__server.html", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__server" ]
+    ] ],
     [ "tcp_client.hpp", "tcp__client_8hpp.html", [
       [ "tcp_client", "class_vrs_tunnel_1_1_ntrip_1_1tcp__client.html", "class_vrs_tunnel_1_1_ntrip_1_1tcp__client" ]
     ] ]

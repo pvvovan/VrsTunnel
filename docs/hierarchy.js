@@ -10,5 +10,6 @@ var hierarchy =
     [ "VrsTunnel::Ntrip::nmea", "class_vrs_tunnel_1_1_ntrip_1_1nmea.html", null ],
     [ "VrsTunnel::Ntrip::ntrip_client", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html", null ],
     [ "VrsTunnel::Ntrip::ntrip_login", "struct_vrs_tunnel_1_1_ntrip_1_1ntrip__login.html", null ],
+    [ "VrsTunnel::Ntrip::ntrip_server", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__server.html", null ],
     [ "VrsTunnel::Ntrip::tcp_client", "class_vrs_tunnel_1_1_ntrip_1_1tcp__client.html", null ]
 ];

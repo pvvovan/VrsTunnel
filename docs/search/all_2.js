@@ -5,5 +5,5 @@ var searchData=
   ['cli',['cli',['../class_vrs_tunnel_1_1cli.html',1,'VrsTunnel::cli'],['../class_vrs_tunnel_1_1cli.html#a47c9e17490402a290a2c3821dd6fb348',1,'VrsTunnel::cli::cli()']]],
   ['cli_2ehpp',['cli.hpp',['../cli_8hpp.html',1,'']]],
   ['close',['close',['../class_vrs_tunnel_1_1_ntrip_1_1tcp__client.html#a566c75ae80c2f60f5eb54075012def34',1,'VrsTunnel::Ntrip::tcp_client']]],
-  ['connect',['connect',['../class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#a8228ef66b2a8eef6b56632045869144b',1,'VrsTunnel::Ntrip::ntrip_client::connect()'],['../class_vrs_tunnel_1_1_ntrip_1_1tcp__client.html#ab1470364eaef2e91d9dc088c1b55ba01',1,'VrsTunnel::Ntrip::tcp_client::connect()']]]
+  ['connect',['connect',['../class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#a8228ef66b2a8eef6b56632045869144b',1,'VrsTunnel::Ntrip::ntrip_client::connect()'],['../class_vrs_tunnel_1_1_ntrip_1_1ntrip__server.html#a47250fd5ef6348769a059fbb520706d0',1,'VrsTunnel::Ntrip::ntrip_server::connect()'],['../class_vrs_tunnel_1_1_ntrip_1_1tcp__client.html#ab1470364eaef2e91d9dc088c1b55ba01',1,'VrsTunnel::Ntrip::tcp_client::connect()']]]
 ];

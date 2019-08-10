@@ -15,7 +15,7 @@ var class_vrs_tunnel_1_1_ntrip_1_1ntrip__client =
     [ "operator=", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#a89f3f7ffaadd51b6bb0422a9918e6f14", null ],
     [ "receive", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#a989ca7246754df8780e305f60030d815", null ],
     [ "send_end", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#a05d63c771fe12a65d2d64ce38445ba68", null ],
-    [ "send_gga", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#aa7ffa693a1706d6808eb30ff0a23de2a", null ],
+    [ "send_gga_begin", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#acf142a34b096880f75a6e4537a2ccb73", null ],
     [ "m_aio", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#a761bf33f318f57ab05985a0f026b09fb", null ],
     [ "m_status", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#a3de4d12a003ea4c1d23d676a07b2e491", null ],
     [ "m_tcp", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#a76f63b59f7f82e5ef2a6000c53999fae", null ]

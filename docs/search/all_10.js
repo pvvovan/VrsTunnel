@@ -9,5 +9,5 @@ var searchData=
   ['testgoo1_2ecpp',['testGoo1.cpp',['../test_goo1_8cpp.html',1,'']]],
   ['testu1_2ecpp',['testU1.cpp',['../test_u1_8cpp.html',1,'']]],
   ['try_5fparse',['try_parse',['../class_vrs_tunnel_1_1cli.html#ace7ba5b3edf2a25fbb6d7416c1660943',1,'VrsTunnel::cli']]],
-  ['type',['Type',['../struct_vrs_tunnel_1_1_ntrip_1_1mount__point.html#a706ea94a2e67df13ea9d443e34bbb8df',1,'VrsTunnel::Ntrip::mount_point']]]
+  ['type',['type',['../struct_vrs_tunnel_1_1_ntrip_1_1mount__point.html#a5b13ac7ec55ec0cbc99f875fbd4ca47d',1,'VrsTunnel::Ntrip::mount_point']]]
 ];

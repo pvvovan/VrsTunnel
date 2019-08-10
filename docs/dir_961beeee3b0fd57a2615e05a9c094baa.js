@@ -6,5 +6,6 @@ var dir_961beeee3b0fd57a2615e05a9c094baa =
     [ "mount_point.cpp", "mount__point_8cpp.html", null ],
     [ "nmea.cpp", "nmea_8cpp.html", null ],
     [ "ntrip_client.cpp", "ntrip__client_8cpp.html", null ],
+    [ "ntrip_server.cpp", "ntrip__server_8cpp.html", null ],
     [ "tcp_client.cpp", "tcp__client_8cpp.html", null ]
 ];

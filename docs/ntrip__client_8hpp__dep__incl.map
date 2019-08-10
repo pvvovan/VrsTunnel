@@ -1,7 +1,10 @@
 <map id="/home/vovan/VrsTunnel/Src/Ntrip/Inc/ntrip_client.hpp" name="/home/vovan/VrsTunnel/Src/Ntrip/Inc/ntrip_client.hpp">
-<area shape="rect" id="node2" href="$ntclient_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/ntclient.cpp" alt="" coords="5,117,165,158"/>
-<area shape="rect" id="node3" href="$ntrip__client_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/Ntrip/Src/ntrip\l_client.cpp" alt="" coords="189,109,349,165"/>
-<area shape="rect" id="node4" href="$prog_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/prog.cpp" alt="" coords="373,117,533,158"/>
-<area shape="rect" id="node5" href="$gtest_ntrip_client_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/Tests/gtestNtripClient.cpp" alt="" coords="557,117,760,158"/>
-<area shape="rect" id="node6" href="$gtest_tcp_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/Tests/gtestTcp.cpp" alt="" coords="784,117,947,158"/>
+<area shape="rect" id="node2" href="$ntclient_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/ntclient.cpp" alt="" coords="39,117,199,158"/>
+<area shape="rect" id="node3" href="$ntrip__server_8hpp.html" title="/home/vovan/VrsTunnel\l/Src/Ntrip/Inc/ntrip\l_server.hpp" alt="" coords="223,109,383,165"/>
+<area shape="rect" id="node6" href="$prog_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/prog.cpp" alt="" coords="373,221,533,262"/>
+<area shape="rect" id="node7" href="$ntrip__client_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/Ntrip/Src/ntrip\l_client.cpp" alt="" coords="457,109,617,165"/>
+<area shape="rect" id="node8" href="$gtest_ntrip_client_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/Tests/gtestNtripClient.cpp" alt="" coords="641,117,844,158"/>
+<area shape="rect" id="node9" href="$gtest_tcp_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/Tests/gtestTcp.cpp" alt="" coords="868,117,1031,158"/>
+<area shape="rect" id="node4" href="$ntrip__server_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/Ntrip/Src/ntrip\l_server.cpp" alt="" coords="5,213,165,269"/>
+<area shape="rect" id="node5" href="$ntserver_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/ntserver.cpp" alt="" coords="189,221,349,262"/>
 </map>

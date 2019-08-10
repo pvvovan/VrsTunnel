@@ -110,8 +110,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6da2f89b8ecb2ee5f810258e054d1f0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a989ca7246754df8780e305f60030d815"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; char[]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#a989ca7246754df8780e305f60030d815">receive</a> (int size)</td></tr>
 <tr class="separator:a989ca7246754df8780e305f60030d815"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7ffa693a1706d6808eb30ff0a23de2a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_vrs_tunnel_1_1_ntrip.html#a5d7e3bffeeb85f4f8f05e7fac9ed1d8d">io_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#aa7ffa693a1706d6808eb30ff0a23de2a">send_gga</a> (<a class="el" href="struct_vrs_tunnel_1_1_ntrip_1_1location.html">location</a> <a class="el" href="struct_vrs_tunnel_1_1_ntrip_1_1location.html">location</a>, std::chrono::system_clock::time_point time)</td></tr>
-<tr class="separator:aa7ffa693a1706d6808eb30ff0a23de2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf142a34b096880f75a6e4537a2ccb73"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_vrs_tunnel_1_1_ntrip.html#a5d7e3bffeeb85f4f8f05e7fac9ed1d8d">io_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#acf142a34b096880f75a6e4537a2ccb73">send_gga_begin</a> (<a class="el" href="struct_vrs_tunnel_1_1_ntrip_1_1location.html">location</a> <a class="el" href="struct_vrs_tunnel_1_1_ntrip_1_1location.html">location</a>, std::chrono::system_clock::time_point time)</td></tr>
+<tr class="separator:acf142a34b096880f75a6e4537a2ccb73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05d63c771fe12a65d2d64ce38445ba68"><td class="memItemLeft" align="right" valign="top">ssize_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#a05d63c771fe12a65d2d64ce38445ba68">send_end</a> ()</td></tr>
 <tr class="separator:a05d63c771fe12a65d2d64ce38445ba68"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9a12d538daf965eeecee14a3c6aeae0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_vrs_tunnel_1_1_ntrip.html#a85b9bde762688aad4636040aa80bbb57">status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#aa9a12d538daf965eeecee14a3c6aeae0">get_status</a> ()</td></tr>
@@ -265,7 +265,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>amount of available RTK correction </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ntrip__client_8cpp_source.html#l00145">145</a> of file <a class="el" href="ntrip__client_8cpp_source.html">ntrip_client.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ntrip__client_8cpp_source.html#l00149">149</a> of file <a class="el" href="ntrip__client_8cpp_source.html">ntrip_client.cpp</a>.</p>
 
 </div>
 </div>
@@ -316,7 +316,7 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>HTTP GET request buffer </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>HTTP GET request buffer (null terminated) </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="ntrip__client_8cpp_source.html#l00010">10</a> of file <a class="el" href="ntrip__client_8cpp_source.html">ntrip_client.cpp</a>.</p>
 
@@ -345,7 +345,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>result of the connection </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ntrip__client_8cpp_source.html#l00082">82</a> of file <a class="el" href="ntrip__client_8cpp_source.html">ntrip_client.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ntrip__client_8cpp_source.html#l00083">83</a> of file <a class="el" href="ntrip__client_8cpp_source.html">ntrip_client.cpp</a>.</p>
 
 </div>
 </div>
@@ -365,7 +365,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Disconnect from NTRIP Caster </p>
 
-<p class="definition">Definition at line <a class="el" href="ntrip__client_8cpp_source.html#l00185">185</a> of file <a class="el" href="ntrip__client_8cpp_source.html">ntrip_client.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ntrip__client_8cpp_source.html#l00189">189</a> of file <a class="el" href="ntrip__client_8cpp_source.html">ntrip_client.cpp</a>.</p>
 
 </div>
 </div>
@@ -383,9 +383,9 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>current status of the connection </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>current status of the operation </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ntrip__client_8cpp_source.html#l00164">164</a> of file <a class="el" href="ntrip__client_8cpp_source.html">ntrip_client.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ntrip__client_8cpp_source.html#l00168">168</a> of file <a class="el" href="ntrip__client_8cpp_source.html">ntrip_client.cpp</a>.</p>
 
 </div>
 </div>
@@ -449,7 +449,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Helper method to check if download is complete </p>
 
-<p class="definition">Definition at line <a class="el" href="ntrip__client_8cpp_source.html#l00070">70</a> of file <a class="el" href="ntrip__client_8cpp_source.html">ntrip_client.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ntrip__client_8cpp_source.html#l00071">71</a> of file <a class="el" href="ntrip__client_8cpp_source.html">ntrip_client.cpp</a>.</p>
 
 </div>
 </div>
@@ -530,7 +530,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>RTK correction data </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ntrip__client_8cpp_source.html#l00150">150</a> of file <a class="el" href="ntrip__client_8cpp_source.html">ntrip_client.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ntrip__client_8cpp_source.html#l00154">154</a> of file <a class="el" href="ntrip__client_8cpp_source.html">ntrip_client.cpp</a>.</p>
 
 </div>
 </div>
@@ -550,18 +550,18 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>status associated with AIOCBP. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ntrip__client_8cpp_source.html#l00193">193</a> of file <a class="el" href="ntrip__client_8cpp_source.html">ntrip_client.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ntrip__client_8cpp_source.html#l00206">206</a> of file <a class="el" href="ntrip__client_8cpp_source.html">ntrip_client.cpp</a>.</p>
 
 </div>
 </div>
-<a id="aa7ffa693a1706d6808eb30ff0a23de2a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7ffa693a1706d6808eb30ff0a23de2a">&#9670;&nbsp;</a></span>send_gga()</h2>
+<a id="acf142a34b096880f75a6e4537a2ccb73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf142a34b096880f75a6e4537a2ccb73">&#9670;&nbsp;</a></span>send_gga_begin()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespace_vrs_tunnel_1_1_ntrip.html#a5d7e3bffeeb85f4f8f05e7fac9ed1d8d">io_status</a> VrsTunnel::Ntrip::ntrip_client::send_gga </td>
+          <td class="memname"><a class="el" href="namespace_vrs_tunnel_1_1_ntrip.html#a5d7e3bffeeb85f4f8f05e7fac9ed1d8d">io_status</a> VrsTunnel::Ntrip::ntrip_client::send_gga_begin </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="struct_vrs_tunnel_1_1_ntrip_1_1location.html">location</a>&#160;</td>
           <td class="paramname"><em>location</em>, </td>
@@ -588,7 +588,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>status of the transmission request </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ntrip__client_8cpp_source.html#l00155">155</a> of file <a class="el" href="ntrip__client_8cpp_source.html">ntrip_client.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ntrip__client_8cpp_source.html#l00159">159</a> of file <a class="el" href="ntrip__client_8cpp_source.html">ntrip_client.cpp</a>.</p>
 
 </div>
 </div>

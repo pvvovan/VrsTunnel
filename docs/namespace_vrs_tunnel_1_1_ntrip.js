@@ -8,5 +8,6 @@ var namespace_vrs_tunnel_1_1_ntrip =
     [ "nmea", "class_vrs_tunnel_1_1_ntrip_1_1nmea.html", "class_vrs_tunnel_1_1_ntrip_1_1nmea" ],
     [ "ntrip_client", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client" ],
     [ "ntrip_login", "struct_vrs_tunnel_1_1_ntrip_1_1ntrip__login.html", "struct_vrs_tunnel_1_1_ntrip_1_1ntrip__login" ],
+    [ "ntrip_server", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__server.html", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__server" ],
     [ "tcp_client", "class_vrs_tunnel_1_1_ntrip_1_1tcp__client.html", "class_vrs_tunnel_1_1_ntrip_1_1tcp__client" ]
 ];

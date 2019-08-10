@@ -8,6 +8,6 @@ var searchData=
   ['password',['password',['../struct_vrs_tunnel_1_1_ntrip_1_1ntrip__login.html#a7df90ea852b026083b37b5b2e4f90679',1,'VrsTunnel::Ntrip::ntrip_login']]],
   ['port',['port',['../struct_vrs_tunnel_1_1_ntrip_1_1ntrip__login.html#a459c4020aa043286a1c5eb3a4e8a6662',1,'VrsTunnel::Ntrip::ntrip_login']]],
   ['position',['position',['../struct_vrs_tunnel_1_1_ntrip_1_1ntrip__login.html#abff4b115ba0dc058ad0da33738c64d97',1,'VrsTunnel::Ntrip::ntrip_login']]],
-  ['print_5fusage',['print_usage',['../ntclient_8cpp.html#a26dac3d531ac8a9d8d9c0d931b47eb51',1,'ntclient.cpp']]],
+  ['print_5fusage',['print_usage',['../ntclient_8cpp.html#a26dac3d531ac8a9d8d9c0d931b47eb51',1,'print_usage():&#160;ntclient.cpp'],['../ntserver_8cpp.html#a26dac3d531ac8a9d8d9c0d931b47eb51',1,'print_usage():&#160;ntserver.cpp']]],
   ['prog_2ecpp',['prog.cpp',['../prog_8cpp.html',1,'']]]
 ];

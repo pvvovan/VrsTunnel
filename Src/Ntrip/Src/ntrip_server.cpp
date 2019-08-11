@@ -44,6 +44,11 @@ namespace VrsTunnel::Ntrip
                 }
             }
         }
+        if (m_aio->check() != io_status::Success) {
+            m_status = status::error;
+            return m_status;
+        }
+        m_aio->end();
 
         auto startsWith = [text = &responseText](std::string_view start) -> bool
         {

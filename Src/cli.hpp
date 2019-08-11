@@ -1,80 +1,69 @@
-#ifndef VRS_TUNNEL_CMD_LINE_
-#define VRS_TUNNEL_CMD_LINE_
+#ifndef VRS_TUNNEL_CLI_LINE_
+#define VRS_TUNNEL_CLI_LINE_
 
 #include <variant>
 #include <map>
-#include <charconv>
 #include <string>
-
+#include <vector>
 
 namespace VrsTunnel
 {
+    /**
+     * Helper class to parse command line arguments. It is supposed to be 
+     * linked (included) only once.
+     */ 
+    class cli
+    {
+        public:
+        using arg = std::variant<int, double, std::string>; /**< Generic argument type */
 
-class cli
-{
-    public:
-    using arg = std::variant<int, double, std::string>;
+        private:
+        std::map<std::string, arg> mParsedArgs; /**< All arguments are stored here */
+        void parse_args(int argc, const char* argv[]);
+        arg try_parse(std::string_view sv) const;
 
-    private:
-    std::map<std::string, arg> mParsedArgs;
-    void parse_args(int argc, const char* argv[]);
-    arg try_parse(std::string_view sv);
+        /**
+         * If double type parameter is passed as int, it will parsed as int.
+         * Therefore, both type are checked!
+         */
+        double to_double(const std::optional<VrsTunnel::cli::arg>& arg) const;
 
-    public:
-    explicit cli(int argc, const char* argv[]) 
-    { 
-        parse_args(argc, argv); 
-    }
+        /**
+         * Find argument by its name
+         */
+        std::optional<arg> find(const std::string& name) const;
 
-    std::optional<arg> find(const std::string& name) const;
-
+        public:
+        explicit cli(int argc, const char* argv[]) 
+        { 
+            parse_args(argc, argv); 
+        }
+        ~cli() = default;
+        
+        /** 
+         * Retrieve parameter by it's name. 
+         * List of names is supported: {"long_name, ln"}.
+         */
+        template<typename T>
+        bool retrieve(std::vector<std::string> names, T& value) const
+        {
+            for (const auto& n : names) {
+                if constexpr (std::is_floating_point_v<T>) {
+                    if (auto arg = this->find(n); arg) {
+                        value = to_double(arg);
+                        return true;
+                    }
+                }
+                else {
+                    if (auto arg = this->find(n); arg) {
+                        value = std::get<T>(*arg);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    };
 };
 
-cli::arg cli::try_parse(std::string_view sv)
-{
-    // try with int first
-    int result = 0;
-    const auto last = sv.data() + sv.size();
-    const auto res = std::from_chars(sv.data(), last, result);
-    if (res.ec != std::errc{} || res.ptr != last)
-    {
-        // if not possible, then just assume it's a double
-        std::string sparam{sv};
-        try {
-            std::size_t next = 0;
-            double value = std::stod(sparam, &next);
-            if (next != sparam.length()) { // not all text is a number
-                return sparam; // then just assume it's a string
-            }
-            return value;
-        }
-        catch (...) { }
-        // if still not possible, then just assume it's a string
-        return sparam;
-    }
-    return result;
-}
-
-void cli::parse_args(int argc, const char* argv[])
-{
-    // the form: -argName value -argName value
-    for (int i = 1; i < argc; i+=2)
-    {
-        if (argv[i][0] != '-') { // super advanced pattern matching! :)
-            throw std::runtime_error("wrong command name");
-        }
-        mParsedArgs[argv[i]+1] = try_parse(argv[i+1]);
-    }
-}
-
-std::optional<cli::arg> cli::find(const std::string& name) const
-{
-    if (const auto it = mParsedArgs.find(name); it != mParsedArgs.end()) {
-        return it->second;
-    }
-    return { };
-}
-
-}
-
-#endif /* VRS_TUNNEL_CMD_LINE_ */
+#endif /* VRS_TUNNEL_CLI_LINE_ */

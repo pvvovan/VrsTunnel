@@ -23,7 +23,7 @@ set(COMPILE_WARNING_MODE HIGH)
 set(ntrip_source Ntrip/Src/login_encode.cpp Ntrip/Src/base64_encoder.cpp Ntrip/Src/nmea.cpp)
 set(ntrip_source ${ntrip_source} Ntrip/Src/async_io.cpp Ntrip/Src/tcp_client.cpp)
 set(ntrip_source ${ntrip_source} Ntrip/Src/ntrip_client.cpp Ntrip/Src/mount_point.cpp)
-set(ntrip_source ${ntrip_source} Ntrip/Src/ntrip_server.cpp)
+set(ntrip_source ${ntrip_source} Ntrip/Src/ntrip_server.cpp cli.cpp)
 
 include_directories(Ntrip/Inc)
 #include <cli.hpp>

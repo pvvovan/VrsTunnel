@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 #include "cli.hpp"
 #include "ntrip_server.hpp"
@@ -30,62 +31,18 @@ int main(int argc, const char* argv[])
     }
     constexpr double noGeo {std::numeric_limits<double>::max()};
     double latitude{noGeo}, longitude{noGeo};
-    std::string name{}, password{}, mount{}, address{};
+    std::string username{}, password{}, mount{}, address{};
     int port{0};
     try
     {
         VrsTunnel::cli cli(argc, argv);
-        auto to_double = [](std::optional<VrsTunnel::cli::arg>& arg) -> double {
-            if (std::holds_alternative<int>(*arg)) {
-                return std::get<int>(*arg);
-            }
-            else {
-                return std::get<double>(*arg);
-            }
-        };
-
-        if (auto arg = cli.find("-address"); arg) {
-            address = std::get<std::string>(*arg);
-        }
-        if (auto arg = cli.find("a"); arg) {
-            address = std::get<std::string>(*arg);
-        }
-        if (auto arg = cli.find("-port"); arg) {
-            port = std::get<int>(*arg);
-        }
-        if (auto arg = cli.find("p"); arg) {
-            port = std::get<int>(*arg);
-        }
-        if (auto arg = cli.find("-mount"); arg) {
-            mount = std::get<std::string>(*arg);
-        }
-        if (auto arg = cli.find("m"); arg) {
-            mount = std::get<std::string>(*arg);
-        }
-        if (auto arg = cli.find("-user"); arg) {
-            name = std::get<std::string>(*arg);
-        }
-        if (auto arg = cli.find("u"); arg) {
-            name = std::get<std::string>(*arg);
-        }
-        if (auto arg = cli.find("-password"); arg) {
-            password = std::get<std::string>(*arg);
-        }
-        if (auto arg = cli.find("pw"); arg) {
-            password = std::get<std::string>(*arg);
-        }
-        if (auto arg = cli.find("-latitude"); arg) {
-            latitude = to_double(arg);
-        }
-        if (auto arg = cli.find("la"); arg) {
-            latitude = to_double(arg);
-        }
-        if (auto arg = cli.find("-longitude"); arg) {
-            longitude = to_double(arg);
-        }
-        if (auto arg = cli.find("lo"); arg) {
-            longitude = to_double(arg);
-        }
+        cli.retrieve({"a", "-address"}, address);
+        cli.retrieve({"p", "-port"}, port);
+        cli.retrieve({"m", "-mount"}, mount);
+        cli.retrieve({"u", "-user"}, username);
+        cli.retrieve({"pw", "-password"}, password);
+        cli.retrieve({"la", "-latitude"}, latitude);
+        cli.retrieve({"lo", "-longitude"}, longitude);
     }
     catch (std::bad_variant_access& err)
     {
@@ -99,7 +56,7 @@ int main(int argc, const char* argv[])
 
     if (latitude == noGeo || longitude == noGeo || port == 0
             || address.size() == 0 || mount.size() == 0
-            || name.size() == 0 || password.size() == 0) {
+            || username.size() == 0 || password.size() == 0) {
         return print_usage();
     }
 
@@ -107,7 +64,7 @@ int main(int argc, const char* argv[])
     login.address = address;
     login.port = port;
     login.mountpoint = mount;
-    login.username = name;
+    login.username = username;
     login.password = password;
     login.position.Latitude = latitude;
     login.position.Longitude = longitude;
@@ -168,6 +125,7 @@ void send_correction(VrsTunnel::Ntrip::ntrip_login& login)
                 break;
             }
         }
+        
         if (ns.get_status() != VrsTunnel::Ntrip::status::ready) {
             std::cerr << "ntserver: send correction timeout." << std::endl;
             ns.disconnect();

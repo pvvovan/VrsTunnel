@@ -68,7 +68,7 @@ namespace VrsTunnel::Ntrip
          * @param nlogin login information
          * @return result of the connection
          */
-        [[nodiscard]] status connect(ntrip_login nlogin);
+        [[nodiscard]] status connect(ntrip_login& nlogin);
 
         /**
          * Disconnect from NTRIP Caster

@@ -80,7 +80,7 @@ namespace VrsTunnel::Ntrip
         }
     }
 
-    [[nodiscard]] status ntrip_client::connect(ntrip_login nlogin)
+    [[nodiscard]] status ntrip_client::connect(ntrip_login& nlogin)
     {
         if (m_tcp) {
             throw std::runtime_error("tcp connection already created");
@@ -120,6 +120,10 @@ namespace VrsTunnel::Ntrip
                     }
                 }
             }
+        }
+        if (m_aio->check() != io_status::Success) {
+            m_status = status::error;
+            return m_status;
         }
         m_aio->end();
 

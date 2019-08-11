@@ -75,9 +75,9 @@ void output_correction(VrsTunnel::Ntrip::ntrip_login login)
         static int tick = 0;
         tick++;
         if (tick == timeout && nc.get_status() == VrsTunnel::Ntrip::status::ready) {
+            tick = 0;
             auto n_sent = nc.send_end();
             if (n_sent > 0) {
-                tick = 0;
                 sendgga();
                 return false;
             }
@@ -94,6 +94,7 @@ void output_correction(VrsTunnel::Ntrip::ntrip_login login)
         static int tick = 0;
         ++tick;
         if (tick == timeout) {
+            tick = 0;
             if (!available) {
                 std::cerr << "ntclient: no correction available." << std::endl;
                 nc.disconnect();
@@ -105,7 +106,6 @@ void output_correction(VrsTunnel::Ntrip::ntrip_login login)
             {
             case VrsTunnel::Ntrip::status::ready:
             case VrsTunnel::Ntrip::status::sending:
-                tick = 0;
                 return false;
             
             default:

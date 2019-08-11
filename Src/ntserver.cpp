@@ -118,6 +118,7 @@ void send_correction(VrsTunnel::Ntrip::ntrip_login& login)
             }
         }
         
+        // wait for the connection to become ready
         constexpr int timeout = 150; /* 15 seconds (15 times 100ms) */
         for(int i = 0; i < timeout; ++i) {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -125,14 +126,14 @@ void send_correction(VrsTunnel::Ntrip::ntrip_login& login)
                 break;
             }
         }
-        
         if (ns.get_status() != VrsTunnel::Ntrip::status::ready) {
             std::cerr << "ntserver: send correction timeout." << std::endl;
             ns.disconnect();
             return;
         }
+
         if (n_read > 0) {
-            if (n_read != ns.send_end()) {
+            if (n_read != ns.send_end()) { // Not all the data have been transmitted
                 std::cerr << "ntserver: send correction error." << std::endl;
                 ns.disconnect();
                 return;

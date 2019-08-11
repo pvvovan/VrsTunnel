@@ -63,29 +63,66 @@ void output_correction(VrsTunnel::Ntrip::ntrip_login login)
         return;
     }
 
-    constexpr int timeout_gga = 100; // 10 seconds (100 times 100ms)
-    constexpr int timeout_status = 300; // 30 seconds (300 times 100ms)
-    int time_gga = 0;
-    int time_status = 0;
-    auto sendgga = [&time_gga, &nc, &login]() {
-        time_gga = 0;
+    auto sendgga = [&nc, &login]() {
         auto time = std::chrono::system_clock::now();
         auto send_res = nc.send_gga_begin(login.position, time);
         if (send_res != VrsTunnel::Ntrip::io_status::Success) {
             std::cerr << "ntclient: gga sending error." << std::endl;
         }
     };
-    bool data_available = true;
-    bool data_sent = true;
-    sendgga();
-    for (;;) {
-        ++time_gga;
-        if (time_gga == timeout_gga && nc.get_status() == VrsTunnel::Ntrip::status::ready) {
+    auto gga_timeout = [&sendgga, &nc]() -> bool {
+        constexpr int timeout = 100; // 10 seconds (100 times 100ms)
+        static int tick = 0;
+        tick++;
+        if (tick == timeout && nc.get_status() == VrsTunnel::Ntrip::status::ready) {
             auto n_sent = nc.send_end();
             if (n_sent > 0) {
-                data_sent = true;
+                tick = 0;
+                sendgga();
+                return false;
             }
-            sendgga();
+            else {
+                std::cerr << "ntclient: GGA could not be sent." << std::endl;
+                nc.disconnect();
+                return true;
+            }
+        }
+        return false;
+    };
+    auto status_timeout = [&nc](bool& available) -> bool {
+        constexpr int timeout = 300; // 30 seconds (300 times 100ms)
+        static int tick = 0;
+        ++tick;
+        if (tick == timeout) {
+            if (!available) {
+                std::cerr << "ntclient: no correction available." << std::endl;
+                nc.disconnect();
+                return true;
+            }
+            available = false;
+            auto stat = nc.get_status();
+            switch (stat)
+            {
+            case VrsTunnel::Ntrip::status::ready:
+            case VrsTunnel::Ntrip::status::sending:
+                tick = 0;
+                return false;
+            
+            default:
+                std::cerr << "ntclient: error!" << std::endl;
+                nc.disconnect();
+                return true;
+                break;
+            }
+        }
+        return false;
+    };
+
+    sendgga();
+    bool data_available = true;
+    for (;;) {
+        if (gga_timeout()) {
+            return;
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -97,36 +134,8 @@ void output_correction(VrsTunnel::Ntrip::ntrip_login login)
             data_available = true;
         }
 
-        ++time_status;
-        if (time_status == timeout_status) {
-            if (!data_available) {
-                std::cerr << "ntclient: no correction available." << std::endl;
-                nc.disconnect();
-                return;
-            }
-            data_available = false;
-
-            if (!data_sent) {
-                std::cerr << "ntclient: GGA could not be sent." << std::endl;
-                nc.disconnect();
-                return;
-            }
-            data_sent = false;
-
-            auto stat = nc.get_status();
-            switch (stat)
-            {
-            case VrsTunnel::Ntrip::status::ready:
-            case VrsTunnel::Ntrip::status::sending:
-                time_status = 0;
-                break;
-            
-            default:
-                std::cerr << "ntclient: error!" << std::endl;
-                nc.disconnect();
-                return;
-                break;
-            }
+        if (status_timeout(data_available)) {
+            return;
         }
     }
 }

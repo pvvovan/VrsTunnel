@@ -63,59 +63,66 @@ void output_correction(VrsTunnel::Ntrip::ntrip_login login)
         return;
     }
 
-    auto sendgga = [&nc, &login]() {
+    auto sendgga = [&nc, &login]() -> bool { // return error occured
         auto time = std::chrono::system_clock::now();
         auto send_res = nc.send_gga_begin(login.position, time);
         if (send_res != VrsTunnel::Ntrip::io_status::Success) {
-            std::cerr << "ntclient: gga sending error." << std::endl;
+            std::cerr << "ntclient: NMEA GGA sending error." << std::endl;
+            nc.disconnect();
+            return true;
         }
+        return false;
     };
-    auto gga_timeout = [&sendgga, &nc]() -> bool {
+    auto gga_timeout = [&sendgga, &nc]() -> bool { // return error occured
         constexpr int timeout = 100; // 10 seconds (100 times 100ms)
         static int tick = 0;
         tick++;
-        if (tick == timeout && nc.get_status() == VrsTunnel::Ntrip::status::ready) {
-            tick = 0;
-            auto n_sent = nc.send_end();
-            if (n_sent > 0) {
-                sendgga();
-                return false;
-            }
-            else {
-                std::cerr << "ntclient: GGA could not be sent." << std::endl;
-                nc.disconnect();
-                return true;
-            }
+        if (tick < timeout) { // wait for 10 seconds before proceeding
+            return false;
         }
-        return false;
+        tick = 0;
+        if (nc.get_status() != VrsTunnel::Ntrip::status::ready) {
+            std::cerr << "ntclient: NMEA GGA send timeout." << std::endl;
+            nc.disconnect();
+            return true;
+        }
+        auto n_sent = nc.send_end();
+        if (n_sent > 0) {
+            return sendgga();
+        }
+        else {
+            std::cerr << "ntclient: NMEA GGA could not be delivered." << std::endl;
+            nc.disconnect();
+            return true;
+        }
     };
-    auto status_timeout = [&nc](bool& available) -> bool {
+    auto status_timeout = [&nc](bool& available) -> bool { // return error occured
         constexpr int timeout = 300; // 30 seconds (300 times 100ms)
         static int tick = 0;
         ++tick;
-        if (tick == timeout) {
-            tick = 0;
-            if (!available) {
-                std::cerr << "ntclient: no correction available." << std::endl;
-                nc.disconnect();
-                return true;
-            }
-            available = false;
-            auto stat = nc.get_status();
-            switch (stat)
-            {
-            case VrsTunnel::Ntrip::status::ready:
-            case VrsTunnel::Ntrip::status::sending:
-                return false;
-            
-            default:
-                std::cerr << "ntclient: error!" << std::endl;
-                nc.disconnect();
-                return true;
-                break;
-            }
+        if (tick < timeout) { // wait for 30 seconds before proceeding
+            return false;
         }
-        return false;
+        tick = 0;
+        if (!available) { // correction did not arrive in 30 seconds
+            std::cerr << "ntclient: no correction available." << std::endl;
+            nc.disconnect();
+            return true;
+        }
+        available = false;
+        auto stat = nc.get_status();
+        switch (stat)
+        {
+        // ready or sending is expected
+        case VrsTunnel::Ntrip::status::ready:
+        case VrsTunnel::Ntrip::status::sending:
+            return false;
+        default: // otherwise return error
+            std::cerr << "ntclient: error!" << std::endl;
+            nc.disconnect();
+            return true;
+            break;
+        }
     };
 
     sendgga();

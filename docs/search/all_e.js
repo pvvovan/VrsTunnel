@@ -5,5 +5,6 @@ var searchData=
   ['ready',['ready',['../namespace_vrs_tunnel_1_1_ntrip.html#a85b9bde762688aad4636040aa80bbb57ab2fdab230a2c39f3595a947861863cb7',1,'VrsTunnel::Ntrip']]],
   ['receive',['receive',['../class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#a989ca7246754df8780e305f60030d815',1,'VrsTunnel::Ntrip::ntrip_client']]],
   ['reference',['reference',['../struct_vrs_tunnel_1_1_ntrip_1_1mount__point.html#a7fee133a344e285e4b6c4f1821c5f9f9',1,'VrsTunnel::Ntrip::mount_point']]],
+  ['retrieve',['retrieve',['../class_vrs_tunnel_1_1cli.html#a118ea06b2a5db4547517513314603a61',1,'VrsTunnel::cli']]],
   ['runalltests_2ecpp',['RunAllTests.cpp',['../_run_all_tests_8cpp.html',1,'']]]
 ];

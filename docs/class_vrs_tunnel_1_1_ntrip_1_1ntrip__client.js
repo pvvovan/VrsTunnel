@@ -6,7 +6,7 @@ var class_vrs_tunnel_1_1_ntrip_1_1ntrip__client =
     [ "~ntrip_client", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#a7858031541255258211d68319fb4b3cf", null ],
     [ "available", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#a6da2f89b8ecb2ee5f810258e054d1f0b", null ],
     [ "build_request", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#a872e59e77f13406e9b66177a8e43c917", null ],
-    [ "connect", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#a8228ef66b2a8eef6b56632045869144b", null ],
+    [ "connect", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#aad0215e915dd8550696bc3542a14c2f8", null ],
     [ "disconnect", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#a1cd94220a75c84613d57848b323b4fa0", null ],
     [ "get_status", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#aa9a12d538daf965eeecee14a3c6aeae0", null ],
     [ "getMountPoints", "class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#a68a3819329204eae77ef1e019904fc6c", null ],

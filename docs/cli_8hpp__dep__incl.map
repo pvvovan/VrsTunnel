@@ -1,5 +1,6 @@
 <map id="/home/vovan/VrsTunnel/Src/cli.hpp" name="/home/vovan/VrsTunnel/Src/cli.hpp">
-<area shape="rect" id="node2" href="$ntclient_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/ntclient.cpp" alt="" coords="5,95,165,136"/>
-<area shape="rect" id="node3" href="$ntserver_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/ntserver.cpp" alt="" coords="189,95,349,136"/>
-<area shape="rect" id="node4" href="$gtest__cli_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/Tests/gtest_cli.cpp" alt="" coords="374,95,535,136"/>
+<area shape="rect" id="node2" href="$cli_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/cli.cpp" alt="" coords="5,95,165,136"/>
+<area shape="rect" id="node3" href="$ntclient_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/ntclient.cpp" alt="" coords="189,95,349,136"/>
+<area shape="rect" id="node4" href="$ntserver_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/ntserver.cpp" alt="" coords="373,95,533,136"/>
+<area shape="rect" id="node5" href="$gtest__cli_8cpp.html" title="/home/vovan/VrsTunnel\l/Src/Tests/gtest_cli.cpp" alt="" coords="558,95,719,136"/>
 </map>

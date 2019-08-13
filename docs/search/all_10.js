@@ -8,6 +8,7 @@ var searchData=
   ['testencoder_2ecpp',['TestEncoder.cpp',['../_test_encoder_8cpp.html',1,'']]],
   ['testgoo1_2ecpp',['testGoo1.cpp',['../test_goo1_8cpp.html',1,'']]],
   ['testu1_2ecpp',['testU1.cpp',['../test_u1_8cpp.html',1,'']]],
-  ['try_5fparse',['try_parse',['../class_vrs_tunnel_1_1cli.html#ace7ba5b3edf2a25fbb6d7416c1660943',1,'VrsTunnel::cli']]],
+  ['to_5fdouble',['to_double',['../class_vrs_tunnel_1_1cli.html#ad67a33ab0a4c04c1186cc51e1e7bf5aa',1,'VrsTunnel::cli']]],
+  ['try_5fparse',['try_parse',['../class_vrs_tunnel_1_1cli.html#acc697fef4fb9f43de97db593aeb6390c',1,'VrsTunnel::cli']]],
   ['type',['type',['../struct_vrs_tunnel_1_1_ntrip_1_1mount__point.html#a5b13ac7ec55ec0cbc99f875fbd4ca47d',1,'VrsTunnel::Ntrip::mount_point']]]
 ];

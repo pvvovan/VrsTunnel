@@ -20,30 +20,37 @@ set(COMPILE_WARNING_MODE HIGH)
 # SET (CMAKE_OBJDUMP "/usr/bin/llvm-objdump")
 # SET (CMAKE_RANLIB  "/usr/bin/llvm-ranlib")
 
-set(ntrip_source Ntrip/Src/login_encode.cpp Ntrip/Src/base64_encoder.cpp Ntrip/Src/nmea.cpp)
-set(ntrip_source ${ntrip_source} Ntrip/Src/async_io.cpp Ntrip/Src/tcp_client.cpp)
-set(ntrip_source ${ntrip_source} Ntrip/Src/ntrip_client.cpp Ntrip/Src/mount_point.cpp)
-set(ntrip_source ${ntrip_source} Ntrip/Src/ntrip_server.cpp cli.cpp)
+set(ntrip_source Ntrip/Src/login_encode.cpp Ntrip/Src/base64_encoder.cpp Ntrip/Src/nmea.cpp cli.cpp)
+set(ntrip_source ${ntrip_source} Ntrip/Src/async_io.cpp Ntrip/Src/tcp_client.cpp Ntrip/Src/mount_point.cpp)
+set(ntclient_source ${ntrip_source} Ntrip/Src/ntrip_client.cpp )
+set(ntserver_source ${ntrip_source} Ntrip/Src/ntrip_server.cpp )
 
 include_directories(Ntrip/Inc)
 #include <cli.hpp>
 
 # add_library(Ntrip Ntrip/Src/login_encode.cpp)
-add_executable(prog prog.cpp ${ntrip_source})
-add_executable(ntclient ntclient.cpp ${ntrip_source})
-add_executable(ntserver ntserver.cpp ${ntrip_source})
+add_executable(ntclient ntclient.cpp ${ntclient_source})
+add_executable(ntserver ntserver.cpp ${ntserver_source})
+
+set(caster_source ${ntrip_source} Ntrip/Src/accept_listener.cpp Ntrip/Src/tcp_server.tmpl.cpp)
+
+set(prog_source ${caster_source} prog.cpp)
+add_executable(prog ${prog_source})
+target_link_libraries(prog pthread)
+
+
 
 enable_testing()
 
-set(test1cppu_source Tests/RunAllTests.cpp Tests/testU1.cpp Tests/TestEncoder.cpp ${ntrip_source})
-set(test1cppu_source ${test1cppu_source} )
+set(test1cppu_source Tests/RunAllTests.cpp Tests/testU1.cpp Tests/TestEncoder.cpp ${ntclient_source})
+set(test1cppu_source ${test1cppu_source} Tests/TestTcpServer.cpp Ntrip/Src/accept_listener.cpp)
 add_executable(test1CppU ${test1cppu_source})
 target_link_libraries(test1CppU CppUTest pthread)
 add_test(NAME Test1cppu COMMAND test1CppU)
 
 # gtbuild is output directory of googletest build
 link_directories(../gtest/googletest-release-1.8.1/gtbuild/)
-set(test2gsui_source Tests/testGoo1.cpp Tests/gtestNmea.cpp Tests/gtestNtripClient.cpp ${ntrip_source})
+set(test2gsui_source Tests/testGoo1.cpp Tests/gtestNmea.cpp Tests/gtestNtripClient.cpp ${ntclient_source})
 set(test2gsui_source ${test2gsui_source} Tests/gtestTcp.cpp Tests/gtest_cli.cpp)
 add_executable(test2gsui ${test2gsui_source})
 # include directory from googletest source

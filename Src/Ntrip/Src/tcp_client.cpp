@@ -6,6 +6,10 @@ namespace VrsTunnel::Ntrip
     {
         close();
     }
+
+    tcp_client::tcp_client(int fd) :
+        m_sockfd{fd}
+    { }
     
     [[nodiscard]] io_status tcp_client::connect(std::string address, int port)
     {

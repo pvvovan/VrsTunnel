@@ -7,6 +7,9 @@ var searchData=
   ['send_5fgga_5fbegin',['send_gga_begin',['../class_vrs_tunnel_1_1_ntrip_1_1ntrip__client.html#acf142a34b096880f75a6e4537a2ccb73',1,'VrsTunnel::Ntrip::ntrip_client']]],
   ['sending',['sending',['../namespace_vrs_tunnel_1_1_ntrip.html#a85b9bde762688aad4636040aa80bbb57a80f5f164aa43626d4045163a4ae593b5',1,'VrsTunnel::Ntrip']]],
   ['showmountpoints',['showMountPoints',['../ntclient_8cpp.html#a815e2c5974150ef26618b578ecb00d90',1,'ntclient.cpp']]],
+  ['start',['start',['../class_vrs_tunnel_1_1_ntrip_1_1tcp__server.html#ab1c6e70b758b3f580ba466b0e5613b82',1,'VrsTunnel::Ntrip::tcp_server']]],
   ['status',['status',['../namespace_vrs_tunnel_1_1_ntrip.html#a85b9bde762688aad4636040aa80bbb57',1,'VrsTunnel::Ntrip']]],
+  ['stop',['stop',['../class_vrs_tunnel_1_1_ntrip_1_1tcp__server.html#a80cb64daca36031d08953b1d5f62efa4',1,'VrsTunnel::Ntrip::tcp_server']]],
+  ['stop_5frequired',['stop_required',['../class_vrs_tunnel_1_1_ntrip_1_1tcp__server.html#a43e2475bb0fd1734659fa879556ec1e1',1,'VrsTunnel::Ntrip::tcp_server']]],
   ['success',['Success',['../namespace_vrs_tunnel_1_1_ntrip.html#a5d7e3bffeeb85f4f8f05e7fac9ed1d8da505a83f220c02df2f85c3810cd9ceb38',1,'VrsTunnel::Ntrip']]]
 ];

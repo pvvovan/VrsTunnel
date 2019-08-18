@@ -7,5 +7,6 @@ var dir_d7ee8d30e27f2f90e9dbe2771d277927 =
     [ "RunAllTests.cpp", "_run_all_tests_8cpp.html", "_run_all_tests_8cpp" ],
     [ "TestEncoder.cpp", "_test_encoder_8cpp.html", "_test_encoder_8cpp" ],
     [ "testGoo1.cpp", "test_goo1_8cpp.html", "test_goo1_8cpp" ],
+    [ "TestTcpServer.cpp", "_test_tcp_server_8cpp.html", "_test_tcp_server_8cpp" ],
     [ "testU1.cpp", "test_u1_8cpp.html", "test_u1_8cpp" ]
 ];

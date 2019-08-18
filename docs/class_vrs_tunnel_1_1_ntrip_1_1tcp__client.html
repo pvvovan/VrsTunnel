@@ -95,6 +95,8 @@ $(document).ready(function(){initNavTree('class_vrs_tunnel_1_1_ntrip_1_1tcp__cli
 Public Member Functions</h2></td></tr>
 <tr class="memitem:afa0e27100709e5db95b7134f90865121"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vrs_tunnel_1_1_ntrip_1_1tcp__client.html#afa0e27100709e5db95b7134f90865121">tcp_client</a> ()=default</td></tr>
 <tr class="separator:afa0e27100709e5db95b7134f90865121"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8411848c9db244fbf6cab7779ce03899"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vrs_tunnel_1_1_ntrip_1_1tcp__client.html#a8411848c9db244fbf6cab7779ce03899">tcp_client</a> (int fd)</td></tr>
+<tr class="separator:a8411848c9db244fbf6cab7779ce03899"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3fec2a55020014e0c89ece9afb499fa9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vrs_tunnel_1_1_ntrip_1_1tcp__client.html#a3fec2a55020014e0c89ece9afb499fa9">tcp_client</a> (const <a class="el" href="class_vrs_tunnel_1_1_ntrip_1_1tcp__client.html">tcp_client</a> &amp;)=delete</td></tr>
 <tr class="separator:a3fec2a55020014e0c89ece9afb499fa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44d93fbb3d78f5f1cdc98c6814a0e337"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_vrs_tunnel_1_1_ntrip_1_1tcp__client.html">tcp_client</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_vrs_tunnel_1_1_ntrip_1_1tcp__client.html#a44d93fbb3d78f5f1cdc98c6814a0e337">operator=</a> (const <a class="el" href="class_vrs_tunnel_1_1_ntrip_1_1tcp__client.html">tcp_client</a> &amp;)=delete</td></tr>
@@ -123,7 +125,7 @@ Private Attributes</h2></td></tr>
 <p class="definition">Definition at line <a class="el" href="tcp__client_8hpp_source.html#l00017">17</a> of file <a class="el" href="tcp__client_8hpp_source.html">tcp_client.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="afa0e27100709e5db95b7134f90865121"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa0e27100709e5db95b7134f90865121">&#9670;&nbsp;</a></span>tcp_client() <span class="overload">[1/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afa0e27100709e5db95b7134f90865121">&#9670;&nbsp;</a></span>tcp_client() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -148,8 +150,29 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a8411848c9db244fbf6cab7779ce03899"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8411848c9db244fbf6cab7779ce03899">&#9670;&nbsp;</a></span>tcp_client() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">VrsTunnel::Ntrip::tcp_client::tcp_client </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>fd</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>constructor for existing socket file descriptor </p>
+
+<p class="definition">Definition at line <a class="el" href="tcp__client_8cpp_source.html#l00010">10</a> of file <a class="el" href="tcp__client_8cpp_source.html">tcp_client.cpp</a>.</p>
+
+</div>
+</div>
 <a id="a3fec2a55020014e0c89ece9afb499fa9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3fec2a55020014e0c89ece9afb499fa9">&#9670;&nbsp;</a></span>tcp_client() <span class="overload">[2/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3fec2a55020014e0c89ece9afb499fa9">&#9670;&nbsp;</a></span>tcp_client() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -175,7 +198,7 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a33fbcdd0cf53876dcb10c263f2a67c92"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a33fbcdd0cf53876dcb10c263f2a67c92">&#9670;&nbsp;</a></span>tcp_client() <span class="overload">[3/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a33fbcdd0cf53876dcb10c263f2a67c92">&#9670;&nbsp;</a></span>tcp_client() <span class="overload">[4/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -237,7 +260,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>closes TCP connection if it is open. </p>
 
-<p class="definition">Definition at line <a class="el" href="tcp__client_8cpp_source.html#l00058">58</a> of file <a class="el" href="tcp__client_8cpp_source.html">tcp_client.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__client_8cpp_source.html#l00063">63</a> of file <a class="el" href="tcp__client_8cpp_source.html">tcp_client.cpp</a>.</p>
 
 </div>
 </div>
@@ -275,7 +298,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>connection result </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tcp__client_8cpp_source.html#l00010">10</a> of file <a class="el" href="tcp__client_8cpp_source.html">tcp_client.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__client_8cpp_source.html#l00014">14</a> of file <a class="el" href="tcp__client_8cpp_source.html">tcp_client.cpp</a>.</p>
 
 </div>
 </div>
@@ -303,7 +326,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>file descriptor of TCP connection </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="tcp__client_8cpp_source.html#l00069">69</a> of file <a class="el" href="tcp__client_8cpp_source.html">tcp_client.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="tcp__client_8cpp_source.html#l00074">74</a> of file <a class="el" href="tcp__client_8cpp_source.html">tcp_client.cpp</a>.</p>
 
 </div>
 </div>

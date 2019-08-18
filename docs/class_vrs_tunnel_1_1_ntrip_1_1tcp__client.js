@@ -1,6 +1,7 @@
 var class_vrs_tunnel_1_1_ntrip_1_1tcp__client =
 [
     [ "tcp_client", "class_vrs_tunnel_1_1_ntrip_1_1tcp__client.html#afa0e27100709e5db95b7134f90865121", null ],
+    [ "tcp_client", "class_vrs_tunnel_1_1_ntrip_1_1tcp__client.html#a8411848c9db244fbf6cab7779ce03899", null ],
     [ "tcp_client", "class_vrs_tunnel_1_1_ntrip_1_1tcp__client.html#a3fec2a55020014e0c89ece9afb499fa9", null ],
     [ "tcp_client", "class_vrs_tunnel_1_1_ntrip_1_1tcp__client.html#a33fbcdd0cf53876dcb10c263f2a67c92", null ],
     [ "~tcp_client", "class_vrs_tunnel_1_1_ntrip_1_1tcp__client.html#a5c272ed39da7c97eef91c52d854b3a6a", null ],

@@ -64,8 +64,11 @@ namespace VrsTunnel::Ntrip
         return data;
     }
 
-    ssize_t async_io::end() noexcept
+    [[nodiscard]] ssize_t async_io::end() noexcept
     {
+        if (m_data) {
+            m_data.reset();
+        }
         return aio_return(&m_read_cb);
     }
 }

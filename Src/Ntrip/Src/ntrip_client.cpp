@@ -59,7 +59,10 @@ namespace VrsTunnel::Ntrip
                 }
             }
         }
-        aio.end();
+        int end_res = aio.end();
+        if (end_res != (int)strlen(request.get())) {
+            return io_status::Error;
+        }
 
         if (!this->hasTableEnding(responseRaw)) {
             return io_status::Error;
@@ -125,7 +128,11 @@ namespace VrsTunnel::Ntrip
             m_status = status::error;
             return m_status;
         }
-        m_aio->end();
+        int end_res = m_aio->end();
+        if (end_res != (int)strlen(request.get())) {
+            m_status = status::error;
+            return m_status;
+        }
 
         auto startsWith = [text = &responseText](std::string_view start) -> bool
         {
@@ -202,7 +209,7 @@ namespace VrsTunnel::Ntrip
                 break;
             }
         }
-        m_aio->end();
+        [[maybe_unused]] ssize_t res = m_aio->end();
         m_tcp->close();
         m_status = status::uninitialized;
     }

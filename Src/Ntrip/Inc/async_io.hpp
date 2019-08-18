@@ -62,8 +62,10 @@ namespace VrsTunnel::Ntrip
         /**
          * Completes asyncronous operation
          * @return status associated with AIOCBP.
+         * It should be called after status is not
+         * 'InProgress' any more.
          */
-        ssize_t end() noexcept;
+        [[nodiscard]] ssize_t end() noexcept;
     };
 };
 

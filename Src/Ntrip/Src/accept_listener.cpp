@@ -4,22 +4,23 @@
 namespace VrsTunnel::Ntrip
 {
     
-    void accept_listener::OnClientConnected(std::unique_ptr<VrsTunnel::Ntrip::tcp_client> client)
+    void accept_listener::OnClientConnected(std::unique_ptr<tcp_client> client)
     {
         std::scoped_lock sl(the_mutex);
         element elem{};
         elem.asy_io = std::make_unique<async_io>(client->get_sockfd());
         elem.tcp_client = std::move(client);
-        m_clients.emplace_back(std::move(elem));
+        int id = elem.tcp_client->get_sockfd();
+        m_clients.insert_or_assign(id, std::move(elem));
     }
     
-    std::vector<std::weak_ptr<async_io>> accept_listener::get_asyncs()
+    std::list<std::weak_ptr<async_io>> accept_listener::get_asyncs()
     {
-        std::vector<std::weak_ptr<async_io>> vec{};
+        std::list<std::weak_ptr<async_io>> list{};
         std::scoped_lock sl(the_mutex);
         for (const auto el : m_clients) {
-            vec.emplace_back(std::weak_ptr(el.asy_io));
+            list.emplace_back(std::weak_ptr(el.second.asy_io));
         }
-        return vec;
+        return list;
     }
 }

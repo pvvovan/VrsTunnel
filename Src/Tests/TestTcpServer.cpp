@@ -1,13 +1,16 @@
 
 #include <future>
-#include <CppUTest/TestHarness.h>
-// // #include <CppUTestExt/MockSupport.h>
 #include <string>
 #include <thread>
 #include <atomic>
+#include <vector>
 
 #include "tcp_server.hpp.cpp"
 #include "accept_listener.hpp"
+
+#include <CppUTest/TestHarness.h>
+// // #include <CppUTestExt/MockSupport.h>
+
 
 class accept_listener_test
 {
@@ -91,7 +94,7 @@ TEST(ServThTestGroup, ThVecTest)
         {
             ready_elems[i].set_value();
             ready.wait();
-            al.OnClientConnected(std::make_unique<VrsTunnel::Ntrip::tcp_client>());
+            al.OnClientConnected(std::make_unique<VrsTunnel::Ntrip::tcp_client>(-i));
         }));
     }
     for (int i = 0; i < size; ++i) {

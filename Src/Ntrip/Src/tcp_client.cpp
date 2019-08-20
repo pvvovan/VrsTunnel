@@ -62,7 +62,7 @@ namespace VrsTunnel::Ntrip
 
     void tcp_client::close()
     {
-        if (m_sockfd != -1) {
+        if (m_sockfd > 0) {
             int res = ::close(m_sockfd);
             if (res != 0) {
                 throw std::runtime_error("possible memory leak");

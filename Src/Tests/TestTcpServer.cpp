@@ -81,28 +81,28 @@ TEST(ServThTestGroup, ThVecTest)
 {
     VrsTunnel::Ntrip::accept_listener al{};
     constexpr int size = 111;
-    std::vector<std::future<void>> inserters{};
-    std::vector<std::promise<void>> ready_elems{};
+    std::vector<std::future<void>> inserters{size};
+    std::vector<std::promise<void>> ready_elems;
     std::promise<void> go{};
     std::shared_future<void> ready(go.get_future());
     for (int i = 0; i < size; ++i) {
         ready_elems.emplace_back(std::promise<void>{});
     }
     for (int i = 0; i < size; ++i) {
-        inserters.emplace_back(std::async(std::launch::async,
-        [ready, &al, i, &ready_elems]
-        {
-            ready_elems[i].set_value();
-            ready.wait();
-            al.OnClientConnected(std::make_unique<VrsTunnel::Ntrip::tcp_client>(-i));
-        }));
+        inserters[i] = std::async(std::launch::async,
+            [ready, &al, i, &ready_elems] () -> void
+            {
+                ready_elems.at(i).set_value();
+                ready.wait();
+                al.OnClientConnected(std::make_unique<VrsTunnel::Ntrip::tcp_client>(-i));
+            });
     }
     for (int i = 0; i < size; ++i) {
-        ready_elems[i].get_future().wait();
+        ready_elems.at(i).get_future().wait();
     }
     go.set_value();
     for (int i = 0; i < size; ++i) {
-        inserters[i].get();
+        inserters.at(i).get();
     }
     CHECK_EQUAL(size, al.get_asyncs().size());
 }

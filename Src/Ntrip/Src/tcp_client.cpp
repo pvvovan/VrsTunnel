@@ -7,7 +7,7 @@ namespace VrsTunnel::Ntrip
         close();
     }
 
-    tcp_client::tcp_client(int fd) :
+    tcp_client::tcp_client(int fd) noexcept :
         m_sockfd{fd}
     { }
     

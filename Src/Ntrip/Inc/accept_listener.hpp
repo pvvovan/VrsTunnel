@@ -19,10 +19,10 @@ namespace VrsTunnel::Ntrip
             std::shared_ptr<async_io> asy_io{};
         };
         void OnClientConnected(std::unique_ptr<tcp_client> client);
-        std::list<std::weak_ptr<async_io>> get_asyncs();
+        std::list<std::weak_ptr<async_io>> get_asyncs() const;
 
     private:
-    std::mutex the_mutex{};
+    mutable std::mutex the_mutex{};
     std::map<int, element> m_clients{};
     };
 }

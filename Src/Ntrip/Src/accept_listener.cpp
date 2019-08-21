@@ -11,10 +11,13 @@ namespace VrsTunnel::Ntrip
         elem.asy_io = std::make_unique<async_io>(client->get_sockfd());
         elem.tcp_client = std::move(client);
         int id = elem.tcp_client->get_sockfd();
-        m_clients.insert_or_assign(id, std::move(elem));
+        auto [el_iter, success] = m_clients.emplace(id, std::move(elem));
+        if (!success) {
+            throw std::runtime_error("TCP client exists already");
+        }
     }
     
-    std::list<std::weak_ptr<async_io>> accept_listener::get_asyncs()
+    std::list<std::weak_ptr<async_io>> accept_listener::get_asyncs() const
     {
         std::list<std::weak_ptr<async_io>> list{};
         std::scoped_lock sl(the_mutex);

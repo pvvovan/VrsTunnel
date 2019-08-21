@@ -28,7 +28,7 @@ namespace VrsTunnel::Ntrip
         /**
          * constructor for existing socket file descriptor
          */
-        tcp_client(int fd);
+        tcp_client(int fd) noexcept;
 
         tcp_client(const tcp_client&)               = delete;
         tcp_client& operator=(const tcp_client&)    = delete;

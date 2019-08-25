@@ -1,5 +1,4 @@
-# VrsTunnel
-Linux NTRIP utilities
+## Linux NTRIP utilities
 
 'ntclient' writes RTK correction to standard output. 
 For example: 

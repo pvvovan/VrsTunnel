@@ -1,5 +1,7 @@
 #include <iostream>
 #include <limits>
+#include <iomanip>
+#include <algorithm>
 
 #include "cli.hpp"
 #include "ntrip_client.hpp"
@@ -37,9 +39,20 @@ int showMountPoints(std::string address, int port, std::string username, std::st
     }
     else {
         auto mounts = std::get<std::vector<VrsTunnel::Ntrip::mount_point>>(res);
+        using mp = VrsTunnel::Ntrip::mount_point;
+        auto maxMount = std::max_element(mounts.begin(), mounts.end(), 
+            [](const mp& a, const mp& b){return a.name.size() < b.name.size();});
+        std::size_t maxCorr = 0;
+        auto setMax = [&maxCorr](const mp& m) {
+            std::size_t l = m.type.size();
+            if (l > maxCorr) {
+                maxCorr = l;
+            }
+        };
+        std::for_each(mounts.begin(), mounts.end(), setMax);
         for(const auto& m : mounts) {
-            std::cout << m.name << "\t<" << m.type << "\t(" << m.reference.Latitude << ";" 
-                    << m.reference.Longitude << ")>" << std::endl;
+            std::cout << std::setw(maxMount->name.size()) << std::left << m.name << "\t [" << std::setw(maxCorr) 
+                << m.type << "\t (" << m.reference.Latitude << "; " << m.reference.Longitude << ")]" << std::endl;
         }
     }
     

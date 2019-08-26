@@ -1,5 +1,6 @@
 #include <iostream>
 #include <limits>
+#include <iomanip>
 
 #include "cli.hpp"
 #include "ntrip_client.hpp"
@@ -38,8 +39,8 @@ int showMountPoints(std::string address, int port, std::string username, std::st
     else {
         auto mounts = std::get<std::vector<VrsTunnel::Ntrip::mount_point>>(res);
         for(const auto& m : mounts) {
-            std::cout << m.name << "\t<" << m.type << "\t(" << m.reference.Latitude << ";" 
-                    << m.reference.Longitude << ")>" << std::endl;
+            std::cout << std::setw(18) << std::left << m.name << "\t[" << std::setw(8) << m.type << "\t(" 
+                << m.reference.Latitude << ";\t" << m.reference.Longitude << ")]" << std::endl;
         }
     }
     

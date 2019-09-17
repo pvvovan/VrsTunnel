@@ -56,22 +56,23 @@ namespace VrsTunnel
                     }
                 }
                 else if constexpr (std::is_same_v<T, std::string>) {
+                    /**
+                     * if the expected type is string but the value was parsed
+                     * as int or double, it is necessary to convert it back
+                     */
                     if (const auto arg = this->find(n); arg) {
                         if (const auto intPtr = std::get_if<int>(&*arg); intPtr) {
-                            std::string v = std::to_string(*intPtr);
-                            value = std::move(v);
-                            return true;
+                            value = std::to_string(*intPtr);
                         }
                         else if (const auto doublePtr = std::get_if<double>(&*arg); doublePtr) {
                             std::ostringstream os;
                             os << *doublePtr;
                             value = os.str();
-                            return true;
                         }
                         else {
                             value = std::move(std::get<T>(*arg));
-                            return true;
                         }
+                        return true;
                     }
                 }
                 else {

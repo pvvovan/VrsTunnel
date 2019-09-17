@@ -1,66 +1,95 @@
 cmake_minimum_required (VERSION 3.10.2)
 
-#SET (CMAKE_CXX_COMPILER             "/home/vovan/Desktop/uboot-x15/vanilla/toolchain/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf/bin/arm-linux-gnueabihf-g++")
-#SET (CMAKE_CXX_COMPILER             "clang++-8")
-#SET (CMAKE_CXX_COMPILER             "g++-8")
+################################################################################
+# Compiler can be selected as shown at the end
+################################################################################
+#set (CMAKE_CXX_COMPILER             "/home/vovan/Desktop/uboot-x15/vanilla/toolchain/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf/bin/arm-linux-gnueabihf-g++")
+#set (CMAKE_CXX_COMPILER             "clang++-8")
+#set (CMAKE_CXX_COMPILER             "g++-8")
+#set (CMAKE_CXX_COMPILER             "/home/vovan/llvm-project/build/bin/clang++")
 
 project (ntrip)
 
-#SET (CMAKE_CXX_COMPILER             "/home/vovan/llvm-project/build/bin/clang++")
-#set(CMAKE_CXX_FLAGS                "-Wall -Werror -Wextra -Wno-psabi")
-set(CMAKE_CXX_FLAGS                "-Wall -Werror -Wextra")
-#set(CMAKE_CXX_FLAGS_DEBUG          "-g -Og")
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_EXE_LINKER_FLAGS          "-lrt")
-set(COMPILE_WARNING_MODE HIGH)
+#set (CMAKE_CXX_FLAGS                "-Wall -Werror -Wextra -Wno-psabi")
+set (CMAKE_CXX_FLAGS                "-Wall -Werror -Wextra")
+set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_EXE_LINKER_FLAGS          "-lrt")
+set (COMPILE_WARNING_MODE HIGH)
 
-# SET (CMAKE_AR      "/usr/bin/llvm-ar")
-# SET (CMAKE_LINKER  "/usr/bin/llvm-ld")
-# SET (CMAKE_NM      "/usr/bin/llvm-nm")
-# SET (CMAKE_OBJDUMP "/usr/bin/llvm-objdump")
-# SET (CMAKE_RANLIB  "/usr/bin/llvm-ranlib")
-
-set(ntrip_source Ntrip/Src/login_encode.cpp Ntrip/Src/base64_encoder.cpp Ntrip/Src/nmea.cpp cli.cpp)
-set(ntrip_source ${ntrip_source} Ntrip/Src/async_io.cpp Ntrip/Src/tcp_client.cpp Ntrip/Src/mount_point.cpp)
-set(ntclient_source ${ntrip_source} Ntrip/Src/ntrip_client.cpp )
-set(ntserver_source ${ntrip_source} Ntrip/Src/ntrip_server.cpp )
+set (ntrip_src 
+        Ntrip/Src/login_encode.cpp
+        Ntrip/Src/base64_encoder.cpp
+        Ntrip/Src/nmea.cpp cli.cpp
+        Ntrip/Src/async_io.cpp
+        Ntrip/Src/tcp_client.cpp 
+        Ntrip/Src/mount_point.cpp
+)
+set (ntclient_src
+        ${ntrip_src}
+        Ntrip/Src/ntrip_client.cpp
+)
+set (ntserver_src
+        ${ntrip_src}
+        Ntrip/Src/ntrip_server.cpp
+)
 
 include_directories(Ntrip/Inc)
 #include <cli.hpp>
 
-# add_library(Ntrip Ntrip/Src/login_encode.cpp)
-add_executable(ntclient ntclient.cpp ${ntclient_source})
-add_executable(ntserver ntserver.cpp ${ntserver_source})
+add_executable (ntclient ntclient.cpp ${ntclient_src})
+add_executable (ntserver ntserver.cpp ${ntserver_src})
 
-set(caster_source ${ntrip_source} Ntrip/Src/accept_listener.cpp Ntrip/Src/tcp_server.tmpl.cpp)
+set (caster_src
+        ${ntrip_src}
+        Ntrip/Src/accept_listener.cpp
+        Ntrip/Src/tcp_server.tmpl.cpp
+)
 
-set(prog_source ${caster_source} prog.cpp)
-add_executable(prog ${prog_source})
-target_link_libraries(prog pthread)
+set (prog_src ${caster_src} prog.cpp)
+add_executable (prog ${prog_src})
+target_link_libraries (prog pthread)
 
-
-
+################################################################################
+# Unit Tests
+################################################################################
 enable_testing()
 
-set(test1cppu_source Tests/RunAllTests.cpp Tests/testU1.cpp Tests/TestEncoder.cpp ${ntclient_source})
-set(test1cppu_source ${test1cppu_source} Tests/TestTcpServer.cpp Ntrip/Src/accept_listener.cpp)
-add_executable(test1CppU ${test1cppu_source})
-target_link_libraries(test1CppU CppUTest pthread)
-add_test(NAME Test1cppu COMMAND test1CppU)
+# CppUTest
+set (testcppu_src
+        ${ntclient_src}
+        Tests/RunAllTests.cpp
+        Tests/testU1.cpp
+        Tests/TestEncoder.cpp
+        Tests/TestTcpServer.cpp
+        Ntrip/Src/accept_listener.cpp
+)
+add_executable (${PROJECT_NAME}_CppUtest ${testcppu_src})
+target_link_libraries (${PROJECT_NAME}_CppUtest CppUTest pthread)
+add_test (NAME ${PROJECT_NAME}_TCppU COMMAND ${PROJECT_NAME}_CppUtest)
 
+# Google Test
 # gtbuild is output directory of googletest build
-link_directories(../gtest/googletest-release-1.8.1/gtbuild/)
-set(test2gsui_source Tests/testGoo1.cpp Tests/gtestNmea.cpp Tests/gtestNtripClient.cpp ${ntclient_source})
-set(test2gsui_source ${test2gsui_source} Tests/gtestTcp.cpp Tests/gtest_cli.cpp)
-add_executable(test2gsui ${test2gsui_source})
+link_directories (../gtest/googletest-release-1.8.1/gtbuild/)
+
+set (testgsuite_src
+        ${ntclient_src}
+        Tests/testGoo1.cpp
+        Tests/gtestNmea.cpp
+        Tests/gtestNtripClient.cpp
+        Tests/gtestTcp.cpp
+        Tests/gtest_cli.cpp
+)
+add_executable (${PROJECT_NAME}_gtest ${testgsuite_src})
 # include directory from googletest source
-target_include_directories(test2gsui PUBLIC ../gtest/googletest-release-1.8.1/googletest/include/)
-target_link_libraries(test2gsui gtest gtest_main pthread)
-add_test(NAME Test2Gglt COMMAND test2gsui)
+target_include_directories (${PROJECT_NAME}_gtest
+        PUBLIC ../gtest/googletest-release-1.8.1/googletest/include/)
+target_link_libraries (${PROJECT_NAME}_gtest gtest gtest_main pthread)
+add_test (NAME ${PROJECT_NAME}_GTest COMMAND ${PROJECT_NAME}_gtest)
 
 
-
+################################################################################
 # Makefile generation
+################################################################################
 # cmake -DCMAKE_BUILD_TYPE=Debug ../Src/
 # CC=gcc-4.2 CXX=/usr/bin/g++-4.2 cmake -G "Your Generator" path/to/your/source
 # cmake -G "Your Generator" -D CMAKE_C_COMPILER=gcc-4.2 -D CMAKE_CXX_COMPILER=g++-4.2 path/to/your/source

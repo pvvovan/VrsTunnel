@@ -90,15 +90,26 @@ TEST(test_cli, test_cli_user)
     EXPECT_EQ("c22x22", user);
 }
 
-TEST(test_cli, test_cli_u)
+TEST(test_cli, test_cli_uint)
 {
-    const char* argv[] = {"appname", "-m", "myrtk.ua", "-u", "q1235y"};
+    const char* argv[] = {"appname", "-m", "myrtk.ua", "-u", "1235"};
     const int argc = sizeof(argv)/sizeof(argv[0]);
     VrsTunnel::cli cli(argc, argv);
     std::string user;
     auto arg = cli.retrieve({"u"}, user);
     EXPECT_TRUE(arg);
-    EXPECT_EQ("q1235y", user);
+    EXPECT_EQ("1235", user);
+}
+
+TEST(test_cli, test_cli_udouble)
+{
+    const char* argv[] = {"appname", "-m", "myrtk.ua", "-u", "12.35"};
+    const int argc = sizeof(argv)/sizeof(argv[0]);
+    VrsTunnel::cli cli(argc, argv);
+    std::string user;
+    auto arg = cli.retrieve({"u"}, user);
+    EXPECT_TRUE(arg);
+    EXPECT_EQ("12.35", user);
 }
 
 TEST(test_cli, test_cli_password)

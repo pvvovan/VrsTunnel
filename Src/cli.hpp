@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <sstream>
 
 namespace VrsTunnel
 {
@@ -49,13 +50,32 @@ namespace VrsTunnel
         {
             for (const auto& n : names) {
                 if constexpr (std::is_floating_point_v<T>) {
-                    if (auto arg = this->find(n); arg) {
+                    if (const auto arg = this->find(n); arg) {
                         value = to_double(arg);
                         return true;
                     }
                 }
+                else if constexpr (std::is_same_v<T, std::string>) {
+                    if (const auto arg = this->find(n); arg) {
+                        if (const auto intPtr = std::get_if<int>(&*arg); intPtr) {
+                            std::string v = std::to_string(*intPtr);
+                            value = std::move(v);
+                            return true;
+                        }
+                        else if (const auto doublePtr = std::get_if<double>(&*arg); doublePtr) {
+                            std::ostringstream os;
+                            os << *doublePtr;
+                            value = os.str();
+                            return true;
+                        }
+                        else {
+                            value = std::move(std::get<T>(*arg));
+                            return true;
+                        }
+                    }
+                }
                 else {
-                    if (auto arg = this->find(n); arg) {
+                    if (const auto arg = this->find(n); arg) {
                         value = std::get<T>(*arg);
                         return true;
                     }

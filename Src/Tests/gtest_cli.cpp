@@ -97,8 +97,8 @@ TEST(test_cli, test_cli_uint)
     VrsTunnel::cli cli(argc, argv);
     std::string user;
     auto arg = cli.retrieve({"u"}, user);
-    EXPECT_TRUE(arg);
-    EXPECT_EQ("1235", user);
+    EXPECT_TRUE(arg) << "retrieve failed";
+    EXPECT_EQ("1235", user) << "int as string failure";
 }
 
 TEST(test_cli, test_cli_udouble)
@@ -109,7 +109,7 @@ TEST(test_cli, test_cli_udouble)
     std::string user;
     auto arg = cli.retrieve({"u"}, user);
     EXPECT_TRUE(arg);
-    EXPECT_EQ("12.35", user);
+    EXPECT_EQ("12.35", user) << "double as string failure";
 }
 
 TEST(test_cli, test_cli_password)

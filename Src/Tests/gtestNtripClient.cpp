@@ -110,11 +110,3 @@ TEST(testNtripClient, getMountPointsTest2)
     auto mounts = std::get<std::vector<VrsTunnel::Ntrip::mount_point>>(resp);
     EXPECT_EQ("RTCM3_HUST0", mounts[0].name);
 }
-
-TEST(testNtripClient, getMountPointsTest3)
-{
-    VrsTunnel::Ntrip::ntrip_client nc{};
-    auto resp = nc.getMountPoints("titanmachinery.ua", 8021, "test", "test");
-    auto mounts = std::get<std::vector<VrsTunnel::Ntrip::mount_point>>(resp);
-    EXPECT_EQ("DynRTK", mounts[0].name);
-}

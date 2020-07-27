@@ -15,7 +15,7 @@ namespace VrsTunnel::Ntrip
     public:
         struct element
         {
-            std::shared_ptr<tcp_client> tcp_client{};
+            std::shared_ptr<tcp_client> sh_client{};
             std::shared_ptr<async_io> asy_io{};
         };
         void OnClientConnected(std::unique_ptr<tcp_client> client);

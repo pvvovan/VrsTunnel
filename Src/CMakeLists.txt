@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.10.2)
+cmake_minimum_required (VERSION 3.16.3)
 
 ################################################################################
 # Compiler can be selected as shown at the end
@@ -10,16 +10,16 @@ cmake_minimum_required (VERSION 3.10.2)
 
 project (ntrip)
 
-#set (CMAKE_CXX_FLAGS                "-Wall -Werror -Wextra -Wno-psabi")
-set (CMAKE_CXX_FLAGS                "-Wall -Werror -Wextra")
+#set (CMAKE_CXX_FLAGS                "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -Wno-psabi")
+set (CMAKE_CXX_FLAGS                "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra")
 set (CMAKE_CXX_STANDARD 17)
-set (CMAKE_EXE_LINKER_FLAGS          "-lrt")
 set (COMPILE_WARNING_MODE HIGH)
 
 set (ntrip_src 
         Ntrip/Src/login_encode.cpp
         Ntrip/Src/base64_encoder.cpp
-        Ntrip/Src/nmea.cpp cli.cpp
+        Ntrip/Src/nmea.cpp 
+        cli.cpp
         Ntrip/Src/async_io.cpp
         Ntrip/Src/tcp_client.cpp 
         Ntrip/Src/mount_point.cpp
@@ -37,7 +37,11 @@ include_directories(Ntrip/Inc)
 #include <cli.hpp>
 
 add_executable (ntclient ntclient.cpp ${ntclient_src})
+target_link_libraries (ntclient rt)
+
 add_executable (ntserver ntserver.cpp ${ntserver_src})
+target_link_libraries (ntserver rt)
+
 
 set (caster_src
         ${ntrip_src}
@@ -47,7 +51,7 @@ set (caster_src
 
 set (prog_src ${caster_src} prog.cpp)
 add_executable (prog ${prog_src})
-target_link_libraries (prog pthread)
+target_link_libraries (prog pthread rt)
 
 ################################################################################
 # Unit Tests
@@ -64,7 +68,7 @@ set (testcppu_src
         Ntrip/Src/accept_listener.cpp
 )
 add_executable (${PROJECT_NAME}_CppUtest ${testcppu_src})
-target_link_libraries (${PROJECT_NAME}_CppUtest CppUTest pthread)
+target_link_libraries (${PROJECT_NAME}_CppUtest CppUTest pthread rt)
 add_test (NAME ${PROJECT_NAME}_TCppU COMMAND ${PROJECT_NAME}_CppUtest)
 
 # Google Test
@@ -83,7 +87,7 @@ add_executable (${PROJECT_NAME}_gtest ${testgsuite_src})
 # include directory from googletest source
 target_include_directories (${PROJECT_NAME}_gtest
         PUBLIC ../gtest/googletest-release-1.8.1/googletest/include/)
-target_link_libraries (${PROJECT_NAME}_gtest gtest gtest_main pthread)
+target_link_libraries (${PROJECT_NAME}_gtest gtest gtest_main pthread rt)
 add_test (NAME ${PROJECT_NAME}_GTest COMMAND ${PROJECT_NAME}_gtest)
 
 

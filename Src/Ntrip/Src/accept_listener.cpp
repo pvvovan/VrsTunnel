@@ -9,8 +9,8 @@ namespace VrsTunnel::Ntrip
         std::scoped_lock sl(the_mutex);
         element elem{};
         elem.asy_io = std::make_unique<async_io>(client->get_sockfd());
-        elem.tcp_client = std::move(client);
-        int id = elem.tcp_client->get_sockfd();
+        elem.sh_client = std::move(client);
+        int id = elem.sh_client->get_sockfd();
         auto [el_iter, success] = m_clients.emplace(id, std::move(elem));
         if (!success) {
             throw std::runtime_error("TCP client exists already");

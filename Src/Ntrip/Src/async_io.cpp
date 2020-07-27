@@ -1,4 +1,5 @@
 #include "async_io.hpp"
+#include <aio.h>
 
 namespace VrsTunnel::Ntrip
 {

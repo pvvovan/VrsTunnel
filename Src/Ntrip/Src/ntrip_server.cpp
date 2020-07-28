@@ -5,7 +5,7 @@
 
 namespace VrsTunnel::Ntrip
 {
-    [[nodiscard]] status ntrip_server::connect(ntrip_login& nlogin)
+    [[nodiscard]] status ntrip_server::connect(const ntrip_login& nlogin)
     {
         if (m_tcp) {
             throw std::runtime_error("tcp connection already created");
@@ -79,7 +79,7 @@ namespace VrsTunnel::Ntrip
         return m_status;
     }
     
-    std::unique_ptr<char[]> ntrip_server::build_request(ntrip_login& nlogin)
+    std::unique_ptr<char[]> ntrip_server::build_request(const ntrip_login& nlogin)
     {
         // mount, port, auth, mount, lat, lon
         const char* requestFormat = "POST /%s HTTP/1.1\r\n"

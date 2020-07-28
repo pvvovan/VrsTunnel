@@ -84,7 +84,7 @@ namespace VrsTunnel::Ntrip
         }
     }
 
-    [[nodiscard]] status ntrip_client::connect(ntrip_login& nlogin)
+    [[nodiscard]] status ntrip_client::connect(const ntrip_login& nlogin)
     {
         if (m_tcp) {
             throw std::runtime_error("tcp connection already created");

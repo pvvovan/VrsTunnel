@@ -23,7 +23,7 @@ namespace VrsTunnel::Ntrip
          * @param nlogin NTRIP login data
          * @return HTTP POST null terminated request buffer
          */
-        std::unique_ptr<char[]> build_request(ntrip_login& nlogin);
+        std::unique_ptr<char[]> build_request(const ntrip_login& nlogin);
 
     public:
         ntrip_server() = default;
@@ -38,7 +38,7 @@ namespace VrsTunnel::Ntrip
          * @param nlogin login information
          * @return result of the connection
          */
-        [[nodiscard]] status connect(ntrip_login& nlogin);
+        [[nodiscard]] status connect(const ntrip_login& nlogin);
 
         /**
          * Disconnect from NTRIP Caster

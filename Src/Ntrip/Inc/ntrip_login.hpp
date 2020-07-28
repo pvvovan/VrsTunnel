@@ -13,7 +13,7 @@ namespace VrsTunnel::Ntrip
     struct ntrip_login
     {
         std::string address;    /**< NTRIP Caster address */
-        int port;               /**< NTRIP Caster TCP port */
+        unsigned short port;               /**< NTRIP Caster TCP port */
         std::string username;
         std::string password;
         std::string mountpoint;

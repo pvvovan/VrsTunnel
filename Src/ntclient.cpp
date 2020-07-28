@@ -208,7 +208,7 @@ int main(int argc, const char* argv[])
 
     VrsTunnel::Ntrip::ntrip_login login{};
     login.address = address;
-    login.port = port;
+    login.port = static_cast<unsigned short>(port);
     login.mountpoint = mount;
     login.username = username;
     login.password = password;

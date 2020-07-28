@@ -11,8 +11,7 @@ cmake_minimum_required (VERSION 3.16.3)
 project (ntrip)
 
 #set (CMAKE_CXX_FLAGS                "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -Wno-psabi")
-#set (CMAKE_CXX_FLAGS                "-Wall -Werror -Wextra -pedantic -pedantic-errors -Wconversion -Wsign-conversion")
-set (CMAKE_CXX_FLAGS                "-Wall -Werror -Wextra -Wconversion -Wsign-conversion")
+set (CMAKE_CXX_FLAGS                "-Wall -Werror -Wextra -pedantic -pedantic-errors -Wconversion -Wsign-conversion -Werror=pedantic")
 set (CMAKE_CXX_STANDARD 17)
 set (COMPILE_WARNING_MODE HIGH)
 

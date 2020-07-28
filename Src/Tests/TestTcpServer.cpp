@@ -64,7 +64,7 @@ TEST(TservTestGroup, ClientCountTest)
     ts.stop();
     CHECK_EQUAL(0, alt.clinet_count);
     ts.stop();
-};
+}
 
 
 TEST_GROUP(ServThTestGroup)

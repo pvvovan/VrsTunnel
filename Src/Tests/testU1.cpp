@@ -8,13 +8,14 @@
 
 TEST_GROUP(FirstTestGroup)
 {
+    
 };
 
 TEST(FirstTestGroup, FirstTest)
 {
     double d = 1;
     CHECK_EQUAL(1, d);
-};
+}
 
 
 TEST_GROUP(ListTestGroup)

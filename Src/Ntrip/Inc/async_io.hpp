@@ -10,63 +10,67 @@
 
 namespace VrsTunnel::Ntrip
 {
-    /**
-     * Input/output operation status
-     */
-    enum class io_status { InProgress, Error, Success };
+	/**
+	* Input/output operation status
+	*/
+	enum class io_status { InProgress, Error, Success };
 
-    /**
-     *  Asyncronous input/output operations based on file descriptor. Copy and move operations are disabled.
-     */
-    class async_io
-    {
-        async_io(const async_io&)               = delete;
-        async_io& operator=(const async_io&)    = delete;
-        async_io(async_io&&)                    = delete;
-        async_io& operator=(async_io&&)         = delete;
+	/**
+	*  Asyncronous input/output operations based on file descriptor. Copy and move operations are disabled.
+	*/
+	class async_io
+	{
+		async_io(const async_io&)               = delete;
+		async_io& operator=(const async_io&)    = delete;
+		async_io(async_io&&)                    = delete;
+		async_io& operator=(async_io&&)         = delete;
 
-        struct aiocb m_read_cb; /**< control block of asyncronous operation */
-        std::unique_ptr<char[]> m_data{}; /**< Buffer for transmission */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+		struct aiocb m_read_cb; /**< control block of asyncronous operation */
+#pragma GCC diagnostic pop
 
-        public:
-        /**
-         * Init asyncronous operation fields
-         */
-        async_io(int sockfd) noexcept;
+		std::unique_ptr<char[]> m_data{}; /**< Buffer for transmission */
 
-        /**
-         * @return current status of the transmission
-         */
-        [[nodiscard]] io_status check() noexcept;
+		public:
+		/**
+		* Init asyncronous operation fields
+		*/
+		async_io(int sockfd) noexcept;
 
-        /**
-         * Assyncronous write operation
-         * @param data buffer to be transmitted
-         * @param size buffer size
-         * @return status of async request
-         */
-        [[nodiscard]] io_status write(const char* data, std::size_t size);
+		/**
+		* @return current status of the transmission
+		*/
+		[[nodiscard]] io_status check() noexcept;
 
-        /**
-         * @return amount of received bytes
-         */
-        int available() noexcept;
+		/**
+		* Assyncronous write operation
+		* @param data buffer to be transmitted
+		* @param size buffer size
+		* @return status of async request
+		*/
+		[[nodiscard]] io_status write(const char* data, std::size_t size);
 
-        /**
-         * Method to read available bytes
-         * @param size number of bytes to read
-         * @return buffer of received bytes
-         */
-        std::unique_ptr<char[]> read(std::size_t size);
+		/**
+		* @return amount of received bytes
+		*/
+		int available() noexcept;
 
-        /**
-         * Completes asyncronous operation
-         * @return status associated with AIOCBP.
-         * It should be called after status is not
-         * 'InProgress' any more.
-         */
-        [[nodiscard]] ssize_t end() noexcept;
-    };
+		/**
+		* Method to read available bytes
+		* @param size number of bytes to read
+		* @return buffer of received bytes
+		*/
+		std::unique_ptr<char[]> read(std::size_t size);
+
+		/**
+		* Completes asyncronous operation
+		* @return status associated with AIOCBP.
+		* It should be called after status is not
+		* 'InProgress' any more.
+		*/
+		[[nodiscard]] ssize_t end() noexcept;
+	};
 }
 
 #endif /* ASYNCHRONOUS_INPUT_OUTPUT_ */

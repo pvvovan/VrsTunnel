@@ -29,7 +29,7 @@ namespace VrsTunnel::Ntrip
         static std::string parse_name(std::string_view line); /**< Retrieves name from NTRIP mount point table entry */
         static std::string parse_type(std::string_view line); /**< Retrieves GNSS correction type from NTRIP mount point table entry */
         static location parse_reference(std::string_view line); /**< Retrieves location of mount point */
-        static std::string_view get_item(std::string_view line, int index);
+        static std::string_view get_item(std::string_view line, std::size_t index);
         
         /**
          * Helper method to parse NTRIP mount point table

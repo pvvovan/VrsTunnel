@@ -1,3 +1,5 @@
+#include <bits/c++config.h>
+#include <bits/stdint-uintn.h>
 #include <string>
 #include <cinttypes>
 
@@ -7,10 +9,10 @@
 namespace VrsTunnel::Ntrip
 {
     uint8_t nmea::checksum(std::string_view data) {
-        int len = data.length();
-        uint8_t checksum = data[0];
-        for(int i = 1; i < len; ++i) {
-            checksum ^= data[i];
+        std::size_t len = data.length();
+        uint8_t checksum = static_cast<uint8_t>(data[0]);
+        for(std::size_t i = 1; i < len; ++i) {
+            checksum = static_cast<uint8_t>(checksum ^ data[i]);
         }
         return checksum;
     }
@@ -28,7 +30,7 @@ namespace VrsTunnel::Ntrip
         chrono::minutes minutes = chrono::duration_cast<chrono::minutes>(span -= hours);
         chrono::seconds seconds = chrono::duration_cast<chrono::seconds>(span -= minutes);
         chrono::milliseconds milliseconds = chrono::duration_cast<chrono::milliseconds>(span -= seconds);
-        int centiseconds = milliseconds.count() / 10;
+        int centiseconds = static_cast<int>(milliseconds.count() / 10);
 
         const char* NS = "N";
         if (location.Latitude < 0) {

@@ -85,6 +85,6 @@ namespace VrsTunnel
             return false;
         }
     };
-};
+}
 
 #endif /* VRS_TUNNEL_CLI_LINE_ */

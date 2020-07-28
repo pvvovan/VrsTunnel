@@ -106,10 +106,10 @@ void send_correction(VrsTunnel::Ntrip::ntrip_login& login)
             return;
         }
         if (n_bytes_avail > 0) {
-            data = std::make_unique<char[]>(n_bytes_avail);
-            n_read = ::read(STDIN_FILENO, data.get(), n_bytes_avail);
+            data = std::make_unique<char[]>((size_t)n_bytes_avail);
+            n_read = ::read(STDIN_FILENO, data.get(), (size_t)n_bytes_avail);
             if (n_read > 0) {
-                auto send_stat = ns.send_begin(data.get(), n_read);
+                auto send_stat = ns.send_begin(data.get(), (size_t)n_read);
                 if (send_stat != VrsTunnel::Ntrip::status::ready) {
                     std::cerr << "ntserver: send correction error." << std::endl;
                     ns.disconnect();

@@ -3,6 +3,7 @@
 
 #include "ntrip_login.hpp"
 #include "ntrip_client.hpp"
+#include <bits/c++config.h>
 
 namespace VrsTunnel::Ntrip
 {
@@ -50,7 +51,7 @@ namespace VrsTunnel::Ntrip
          * @param size the buffer size
          * @return status of the operation
          */
-        [[nodiscard]] status send_begin(const char* data, int size);
+        [[nodiscard]] status send_begin(const char* data, std::size_t size);
 
         /**
          * @return status associated with AIOCBP.

@@ -26,7 +26,7 @@ namespace VrsTunnel::Ntrip
         async_io& operator=(async_io&&)         = delete;
 
         struct aiocb m_read_cb; /**< control block of asyncronous operation */
-        std::unique_ptr<char[]> m_data; /**< Buffer for transmission */
+        std::unique_ptr<char[]> m_data{}; /**< Buffer for transmission */
 
         public:
         /**
@@ -45,7 +45,7 @@ namespace VrsTunnel::Ntrip
          * @param size buffer size
          * @return status of async request
          */
-        [[nodiscard]] io_status write(const char* data, int size);
+        [[nodiscard]] io_status write(const char* data, std::size_t size);
 
         /**
          * @return amount of received bytes
@@ -57,7 +57,7 @@ namespace VrsTunnel::Ntrip
          * @param size number of bytes to read
          * @return buffer of received bytes
          */
-        std::unique_ptr<char[]> read(int size);
+        std::unique_ptr<char[]> read(std::size_t size);
 
         /**
          * Completes asyncronous operation
@@ -67,6 +67,6 @@ namespace VrsTunnel::Ntrip
          */
         [[nodiscard]] ssize_t end() noexcept;
     };
-};
+}
 
 #endif /* ASYNCHRONOUS_INPUT_OUTPUT_ */

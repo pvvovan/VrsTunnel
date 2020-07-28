@@ -29,13 +29,13 @@ TEST(TcpTestGroup, TestTcpClient)
     std::string responseRaw{};
     for(int i = 0; i < 50; i++) { // 5 seconds timeout
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        auto avail = aio.available();
+        int avail = aio.available();
         if (avail < 0) {
             EXPECT_TRUE(false);
         }
         else if (avail > 0) {
-            auto chunk = aio.read(avail);
-            responseRaw.append(chunk.get(), avail);
+            auto chunk = aio.read((size_t)avail);
+            responseRaw.append(chunk.get(), (size_t)avail);
             if (nc.hasTableEnding(responseRaw)) {
                 break;
             }

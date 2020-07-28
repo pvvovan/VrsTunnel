@@ -1,3 +1,4 @@
+#include <bits/c++config.h>
 #include <iostream>
 #include <limits>
 #include <iomanip>
@@ -51,8 +52,10 @@ int showMountPoints(std::string address, int port, std::string username, std::st
         };
         std::for_each(mounts.begin(), mounts.end(), setMax);
         for(const auto& m : mounts) {
-            std::cout << std::setw(maxMount->name.size()) << std::left << m.name << "\t[" << std::setw(maxCorr) 
-                << m.type << "\t(" << m.reference.Latitude << "; " << m.reference.Longitude << ")]" << std::endl;
+            std::cout << std::setw(static_cast<int>(maxMount->name.size())) << std::left
+                << m.name << "\t[" << std::setw(static_cast<int>(maxCorr))
+                << m.type << "\t(" << m.reference.Latitude << "; " << m.reference.Longitude << ")]"
+                << std::endl;
         }
     }
     
@@ -148,9 +151,9 @@ void output_correction(VrsTunnel::Ntrip::ntrip_login login)
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         int avail = nc.available();
         if (avail > 0) {
-            auto corr = nc.receive(avail);
-            fwrite(corr.get(), avail, 1, stdout);
-            fflush(stdout);
+            auto corr = nc.receive(static_cast<std::size_t>(avail));
+            ::fwrite(corr.get(), static_cast<size_t>(avail), 1, stdout);
+            ::fflush(stdout);
             data_available = true;
         }
 
@@ -215,7 +218,7 @@ int main(int argc, const char* argv[])
         output_correction(login);
         constexpr int retry_period = 30;
         std::cerr << "ntclient: retrying in " << retry_period << " seconds..." << std::endl;
-        sleep(retry_period);
+        ::sleep(retry_period);
     }
     return 0;
 }

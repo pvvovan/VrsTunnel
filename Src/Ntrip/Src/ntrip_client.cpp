@@ -1,4 +1,5 @@
 #include <memory>
+#include <sys/types.h>
 
 #include "ntrip_client.hpp"
 #include "login_encode.hpp"
@@ -47,20 +48,20 @@ namespace VrsTunnel::Ntrip
         std::string responseRaw{};
         for(int i = 0; i < 50; i++) { // 5 seconds timeout
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            auto avail = aio.available();
+            int avail = aio.available();
             if (avail < 0) {
                 return io_status::Error;
             }
             else if (avail > 0) {
-                auto chunk = aio.read(avail);
-                responseRaw.append(chunk.get(), avail);
+                auto chunk = aio.read(static_cast<std::size_t>(avail));
+                responseRaw.append(chunk.get(), static_cast<std::size_t>(avail));
                 if (this->hasTableEnding(responseRaw)) {
                     break;
                 }
             }
         }
-        int end_res = aio.end();
-        if (end_res != (int)strlen(request.get())) {
+        ssize_t end_res = aio.end();
+        if (end_res != (ssize_t)strlen(request.get())) {
             return io_status::Error;
         }
 
@@ -113,8 +114,8 @@ namespace VrsTunnel::Ntrip
                 return m_status;
             }
             else if (avail > 0) {
-                auto chunk = m_aio->read(avail);
-                responseText.append(chunk.get(), avail);
+                auto chunk = m_aio->read((size_t)avail);
+                responseText.append(chunk.get(), (size_t)avail);
                 const std::string ending {"\r\n\r\n"};
                 if (responseText.length() >= ending.length()) {
                     if (responseText.compare(responseText.length() - ending.length(),
@@ -128,8 +129,8 @@ namespace VrsTunnel::Ntrip
             m_status = status::error;
             return m_status;
         }
-        int end_res = m_aio->end();
-        if (end_res != (int)strlen(request.get())) {
+        ssize_t end_res = m_aio->end();
+        if (end_res != (ssize_t)strlen(request.get())) {
             m_status = status::error;
             return m_status;
         }
@@ -162,7 +163,7 @@ namespace VrsTunnel::Ntrip
         return m_aio->available();
     }
 
-    std::unique_ptr<char[]> ntrip_client::receive(int size)
+    std::unique_ptr<char[]> ntrip_client::receive(std::size_t size)
     {
         return m_aio->read(size);
     }

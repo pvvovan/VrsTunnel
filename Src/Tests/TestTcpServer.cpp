@@ -1,4 +1,6 @@
 
+#include <bits/c++config.h>
+#include <bits/stdint-uintn.h>
 #include <future>
 #include <string>
 #include <thread>
@@ -26,8 +28,8 @@ public:
 
 namespace VrsTunnel::Ntrip
 {
-    template bool tcp_server::start(int, accept_listener_test&);
-    template void tcp_server::run_accepting(struct sockaddr*, int, accept_listener_test&);
+    template bool tcp_server::start(uint16_t port, accept_listener_test& listener);
+    template void tcp_server::run_accepting(struct sockaddr* addr, int sockfd, accept_listener_test& listener);
 }
 
 constexpr static int tcp_port = 2103;
@@ -88,7 +90,7 @@ TEST(ServThTestGroup, ThVecTest)
     for (int i = 0; i < size; ++i) {
         ready_elems.emplace_back(std::promise<void>{});
     }
-    for (int i = 0; i < size; ++i) {
+    for (std::size_t i = 0; i < size; ++i) {
         inserters[i] = std::async(std::launch::async,
             [ready, &al, i, &ready_elems] () -> void
             {
@@ -97,11 +99,11 @@ TEST(ServThTestGroup, ThVecTest)
                 al.OnClientConnected(std::make_unique<VrsTunnel::Ntrip::tcp_client>(-i));
             });
     }
-    for (int i = 0; i < size; ++i) {
+    for (std::size_t i = 0; i < size; ++i) {
         ready_elems.at(i).get_future().wait();
     }
     go.set_value();
-    for (int i = 0; i < size; ++i) {
+    for (std::size_t i = 0; i < size; ++i) {
         inserters.at(i).get();
     }
     CHECK_EQUAL(size, al.get_asyncs().size());

@@ -1,5 +1,6 @@
 #include "async_io.hpp"
 #include <aio.h>
+#include <bits/c++config.h>
 
 namespace VrsTunnel::Ntrip
 {
@@ -24,7 +25,7 @@ namespace VrsTunnel::Ntrip
         }
     };
 
-    [[nodiscard]] io_status async_io::write(const char* data, int size)
+    [[nodiscard]] io_status async_io::write(const char* data, std::size_t size)
     {
         m_data = std::make_unique<char[]>(size);
         memcpy(m_data.get(), data, size);
@@ -55,10 +56,10 @@ namespace VrsTunnel::Ntrip
         }
     }
 
-    std::unique_ptr<char[]> async_io::read(int size)
+    std::unique_ptr<char[]> async_io::read(std::size_t size)
     {
         auto data = std::make_unique<char[]>(size);
-        ssize_t n_read = static_cast<int>(::read(m_read_cb.aio_fildes, data.get(), size));
+        std::size_t n_read = static_cast<std::size_t>(::read(m_read_cb.aio_fildes, data.get(), size));
         if (n_read != size) {
             throw std::runtime_error("missing data");
         }

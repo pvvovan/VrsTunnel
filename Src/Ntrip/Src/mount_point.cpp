@@ -45,7 +45,7 @@ namespace VrsTunnel::Ntrip
 
     location mount_point::parse_reference(std::string_view line)
     {
-        auto parse = [&line] (int pos) -> double {
+        auto parse = [&line] (std::size_t pos) -> double {
             auto sv_float = get_item(line, pos);
             std::size_t dotPos = sv_float.find(".");
             if (dotPos != std::string::npos) {
@@ -71,7 +71,7 @@ namespace VrsTunnel::Ntrip
         return loc;
     }
 
-    std::string_view mount_point::get_item(std::string_view line, int index)
+    std::string_view mount_point::get_item(std::string_view line, std::size_t index)
     {
         using namespace std;
         function<std::size_t(string_view, std::size_t, string_view, std::size_t)> find_Nth;

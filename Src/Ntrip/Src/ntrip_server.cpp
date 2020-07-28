@@ -1,5 +1,7 @@
 #include "ntrip_server.hpp"
 #include "login_encode.hpp"
+#include <bits/c++config.h>
+#include <sys/types.h>
 
 namespace VrsTunnel::Ntrip
 {
@@ -33,8 +35,8 @@ namespace VrsTunnel::Ntrip
                 return m_status;
             }
             else if (avail > 0) {
-                auto chunk = m_aio->read(avail);
-                responseText.append(chunk.get(), avail);
+                auto chunk = m_aio->read((size_t)avail);
+                responseText.append(chunk.get(), (size_t)avail);
                 const std::string ending {"\r\n\r\n"};
                 if (responseText.length() >= ending.length()) {
                     if (responseText.compare(responseText.length() - ending.length(),
@@ -48,7 +50,7 @@ namespace VrsTunnel::Ntrip
             m_status = status::error;
             return m_status;
         }
-        int end_res = m_aio->end();
+        ssize_t end_res = m_aio->end();
         if (end_res != (int)strlen(request.get())) {
             m_status = status::error;
             return m_status;
@@ -136,7 +138,7 @@ namespace VrsTunnel::Ntrip
         return m_status;
     }
 
-    [[nodiscard]] status ntrip_server::send_begin(const char* data, int size)
+    [[nodiscard]] status ntrip_server::send_begin(const char* data, std::size_t size)
     {
         if (!m_aio) {
             throw std::runtime_error("no tcp connection");

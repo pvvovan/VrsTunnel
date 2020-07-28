@@ -23,7 +23,7 @@ namespace VrsTunnel::Ntrip
         tcp_server& operator=(tcp_server&&) = delete;
        
         template<typename connect_listen>
-        [[nodiscard]] bool start(int port, connect_listen& listener);
+        [[nodiscard]] bool start(uint16_t port, connect_listen& listener);
 
         void stop();
         

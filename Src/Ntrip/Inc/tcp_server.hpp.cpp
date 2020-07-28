@@ -3,11 +3,11 @@
 namespace VrsTunnel::Ntrip
 {
     template<typename connect_listen>
-    [[nodiscard]] bool tcp_server::start(int port, connect_listen& listener)
+    [[nodiscard]] bool tcp_server::start(uint16_t port, connect_listen& listener)
     {
-        m_port = port;
+        m_port = static_cast<uint16_t>(port);
         auto start_thread = [instance = this](std::thread& the_thread, int& servfd, struct sockaddr_in& addr, 
-                    int family, connect_listen& listener, int port, std::atomic<bool>& stop_required) {
+                    sa_family_t family, connect_listen& listener, uint16_t port, std::atomic<bool>& stop_required) {
             servfd = socket(family, SOCK_STREAM, 0);
             if (servfd == 0) {
                 servfd = -1;
@@ -30,7 +30,7 @@ namespace VrsTunnel::Ntrip
         };
 
         if (m_port > 0) {
-            return start_thread(m_thread_v4, m_servfd4, m_addr4, AF_INET, listener, m_port, stop_required);
+            return start_thread(m_thread_v4, m_servfd4, m_addr4, AF_INET, listener, (uint16_t)m_port, stop_required);
         }
         return false;
     }

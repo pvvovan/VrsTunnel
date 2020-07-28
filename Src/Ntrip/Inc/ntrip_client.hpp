@@ -1,6 +1,7 @@
 #ifndef VRSTUNNEL_NTRIP_NTRIP_CLIENT_
 #define VRSTUNNEL_NTRIP_NTRIP_CLIENT_
 
+#include <bits/c++config.h>
 #include <string>
 #include <vector>
 #include <thread>
@@ -85,7 +86,7 @@ namespace VrsTunnel::Ntrip
          * @param size amount to receive
          * @return RTK correction data
          */
-        std::unique_ptr<char[]> receive(int size);
+        std::unique_ptr<char[]> receive(std::size_t size);
 
         /**
          * Provides NMEA GGA message to NTRIP Caster.
@@ -105,7 +106,6 @@ namespace VrsTunnel::Ntrip
          */
         [[nodiscard]] status get_status();
     };
-
 }
 
 #endif

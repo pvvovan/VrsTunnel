@@ -1,4 +1,5 @@
 #include "base64_encoder.hpp"
+#include <cstdint>
 
 
 static const std::string base64_chars {
@@ -18,18 +19,18 @@ namespace VrsTunnel::Ntrip
 		std::string ret;
 		int i = 0;
 		int j = 0;
-		unsigned char char_array_3[3];
-		unsigned char char_array_4[4];
+		uint8_t char_array_3[3];
+		uint8_t char_array_4[4];
 
 		while (in_len--) {
-			char_array_3[i++] = static_cast<unsigned char>(*(bytes_to_encode++));
+			char_array_3[i++] = static_cast<uint8_t>(*(bytes_to_encode++));
 			if (i == 3) {
-				char_array_4[0] = static_cast<unsigned char>((char_array_3[0] & 0xfc) >> 2);
-				char_array_4[1] = static_cast<unsigned char>(((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4));
-				char_array_4[2] = static_cast<unsigned char>(((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6));
-				char_array_4[3] = static_cast<unsigned char>(char_array_3[2] & 0x3f);
+				char_array_4[0] = static_cast<uint8_t>((char_array_3[0] & 0xfc) >> 2);
+				char_array_4[1] = static_cast<uint8_t>(((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4));
+				char_array_4[2] = static_cast<uint8_t>(((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6));
+				char_array_4[3] = static_cast<uint8_t>(char_array_3[2] & 0x3f);
 
-				for(i = 0; (i <4) ; i++) {
+				for (i = 0; (i <4) ; i++) {
 					ret += base64_chars[char_array_4[i]];
 				}
 				i = 0;
@@ -37,17 +38,19 @@ namespace VrsTunnel::Ntrip
 		}
 
 		if (i) {
-			for(j = i; j < 3; j++)
-			char_array_3[j] = '\0';
+			for (j = i; j < 3; j++) {
+				char_array_3[j] = '\0';
+			}
 
-			char_array_4[0] = ( char_array_3[0] & 0xfc) >> 2;
-			char_array_4[1] = static_cast<unsigned char>(((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4));
-			char_array_4[2] = static_cast<unsigned char>(((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6));
+			char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;
+			char_array_4[1] = static_cast<uint8_t>(((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4));
+			char_array_4[2] = static_cast<uint8_t>(((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6));
 
-			for (j = 0; (j < i + 1); j++)
-			ret += base64_chars[char_array_4[j]];
+			for (j = 0; (j < i + 1); j++) {
+				ret += base64_chars[char_array_4[j]];
+			}
 
-			while((i++ < 3)) {
+			while (i++ < 3) {
 				ret += '=';
 			}
 		}

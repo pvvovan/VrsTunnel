@@ -16,7 +16,7 @@ namespace VrsTunnel::Ntrip
 	enum class io_status { InProgress, Error, Success };
 
 	/**
-	*  Asyncronous input/output operations based on file descriptor. Copy and move operations are disabled.
+	* Asyncronous input/output operations based on file descriptor. Copy and move operations are disabled.
 	*/
 	class async_io
 	{
@@ -25,9 +25,13 @@ namespace VrsTunnel::Ntrip
 		async_io(async_io&&)                    = delete;
 		async_io& operator=(async_io&&)         = delete;
 
+		/**
+		* Control block of asyncronous operation
+		* (pragma disables zero size array warning in struct aiocb)
+		*/
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
-		struct aiocb m_read_cb; /**< control block of asyncronous operation */
+		struct aiocb m_read_cb;
 #pragma GCC diagnostic pop
 
 		std::unique_ptr<char[]> m_data{}; /**< Buffer for transmission */

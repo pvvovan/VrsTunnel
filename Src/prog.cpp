@@ -19,6 +19,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	VrsTunnel::Ntrip::accept_listener al;
 	[[maybe_unused]] bool r = ts.start(8023, al);
 
-	sleep(1);
+	::sleep(1);
 	ts.stop();
 }

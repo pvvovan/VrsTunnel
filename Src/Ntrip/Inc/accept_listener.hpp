@@ -10,21 +10,22 @@
 
 namespace VrsTunnel::Ntrip
 {
-    class accept_listener
-    {
-    public:
-        struct element
-        {
-            std::shared_ptr<tcp_client> sh_client{};
-            std::shared_ptr<async_io> asy_io{};
-        };
-        void OnClientConnected(std::unique_ptr<tcp_client> client);
-        std::list<std::weak_ptr<async_io>> get_asyncs() const;
+	class accept_listener
+	{
+	public:
+		struct element
+		{
+			std::shared_ptr<tcp_client> sh_client{};
+			std::shared_ptr<async_io> asy_io{};
+		};
 
-    private:
-    mutable std::mutex the_mutex{};
-    std::map<int, element> m_clients{};
-    };
+		void OnClientConnected(std::unique_ptr<tcp_client> client);
+		std::list<std::weak_ptr<async_io>> get_asyncs() const;
+
+	private:
+	mutable std::mutex the_mutex{};
+	std::map<int, element> m_clients{};
+	};
 }
 
 #endif /* VRS_TUNNEL_ACCEPT_LISTENER_ */

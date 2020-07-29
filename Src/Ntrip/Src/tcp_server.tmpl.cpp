@@ -5,6 +5,6 @@
 
 namespace VrsTunnel::Ntrip
 {
-    template bool tcp_server::start(uint16_t port, accept_listener& listener);
-    template void tcp_server::run_accepting(struct sockaddr* addr, int sockfd, accept_listener& listener);
+	template bool tcp_server::start(uint16_t port, accept_listener& listener);
+	template void tcp_server::run_accepting(struct sockaddr* addr, int sockfd, accept_listener& listener);
 }

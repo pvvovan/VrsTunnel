@@ -28,7 +28,7 @@ namespace VrsTunnel::Ntrip
 	[[nodiscard]] io_status async_io::write(const char* data, std::size_t size)
 	{
 		m_data = std::make_unique<char[]>(size);
-		memcpy(m_data.get(), data, size);
+		::memcpy(m_data.get(), data, size);
 		m_read_cb.aio_nbytes = size;
 		m_read_cb.aio_offset = 0;
 		m_read_cb.aio_buf = m_data.get();
@@ -48,19 +48,18 @@ namespace VrsTunnel::Ntrip
 		if (res == 0) {
 			return n_bytes_avail;
 		}
-		else if (res > 0) {
-			return -res;
-		}
 		else {
-			return res;
+			return (res > 0) ? (-res) : res;
 		}
 	}
 
 	std::unique_ptr<char[]> async_io::read(std::size_t size)
 	{
 		auto data = std::make_unique<char[]>(size);
-		std::size_t n_read = static_cast<std::size_t>(::read(m_read_cb.aio_fildes, data.get(), size));
-		if (n_read != size) {
+		ssize_t n_read = ::read(m_read_cb.aio_fildes, data.get(), size);
+		if (n_read < 0) {
+			throw std::runtime_error("read error");
+		} else if (static_cast<std::size_t>(n_read) != size) {
 			throw std::runtime_error("missing data");
 		}
 		return data;
@@ -71,6 +70,6 @@ namespace VrsTunnel::Ntrip
 		if (m_data) {
 			m_data.reset();
 		}
-		return aio_return(&m_read_cb);
+		return ::aio_return(&m_read_cb);
 	}
 }

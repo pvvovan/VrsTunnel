@@ -34,12 +34,12 @@ namespace VrsTunnel
 	void cli::parse_args(int argc, const char* argv[])
 	{
 		/* Argument form: -argName value -argName value. */
-		for (int i = 1; i < argc; i+=2)
+		for (int i = 1; i < argc; i += 2)
 		{
 			if (argv[i][0] != '-') { /* dash based pattern matching */
 				throw std::runtime_error("wrong command name");
 			}
-			mParsedArgs[argv[i]+1] = try_parse(argv[i+1]);
+			mParsedArgs[argv[i]+1] = try_parse(argv[i + 1]);
 		}
 	}
 

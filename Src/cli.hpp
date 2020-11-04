@@ -11,10 +11,10 @@
 namespace VrsTunnel
 {
 	/**
-	* Helper class to parse command line arguments. It is supposed to be 
-	* linked (included) only once.
-	*/ 
-	class cli
+	 * Helper class to parse command line arguments. It is supposed to be 
+	 * linked (included) only once.
+	 */ 
+	class cli final
 	{
 		public:
 		using arg = std::variant<int, double, std::string>; /**< Generic argument type */
@@ -25,14 +25,14 @@ namespace VrsTunnel
 		arg try_parse(std::string_view sv) const;
 
 		/**
-		* If double type parameter is passed as int, it will parsed as int.
-		* Therefore, both type are checked!
-		*/
+		 * If double type parameter is passed as int, it will parsed as int.
+		 * Therefore, both type are checked!
+		 */
 		double to_double(const std::optional<VrsTunnel::cli::arg>& arg) const;
 
 		/**
-		* Find argument by its name
-		*/
+		 * Find argument by its name
+		 */
 		std::optional<arg> find(const std::string& name) const;
 
 		public:
@@ -43,9 +43,9 @@ namespace VrsTunnel
 		~cli() = default;
 		
 		/** 
-		* Retrieve parameter by it's name. 
-		* List of names is supported: {"long_name, ln"}.
-		*/
+		 * Retrieve parameter by it's name. 
+		 * List of names is supported: {"long_name, ln"}.
+		 */
 		template<typename T>
 		bool retrieve(std::vector<std::string> names, T& value) const
 		{
@@ -58,9 +58,9 @@ namespace VrsTunnel
 				}
 				else if constexpr (std::is_same_v<T, std::string>) {
 					/**
-					* if the expected type is string but the value was parsed
-					* as int or double, it is necessary to convert it back
-					*/
+					 * if the expected type is string but the value was parsed
+					 * as int or double, it is necessary to convert it back
+					 */
 					if (const auto arg = this->find(n); arg) {
 						if (const auto intPtr = std::get_if<int>(&*arg); intPtr) {
 							value = std::to_string(*intPtr);

@@ -2,6 +2,7 @@
 #define VRS_TUNNEL_CLI_LINE_
 
 #include <variant>
+#include <optional>
 #include <map>
 #include <string>
 #include <vector>

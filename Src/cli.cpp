@@ -39,7 +39,7 @@ namespace VrsTunnel
 			if (argv[i][0] != '-') { /* dash based pattern matching */
 				throw std::runtime_error("wrong command name");
 			}
-			mParsedArgs[argv[i]+1] = try_parse(argv[i + 1]);
+			mParsedArgs[argv[i] + 1] = try_parse(argv[i + 1]);
 		}
 	}
 

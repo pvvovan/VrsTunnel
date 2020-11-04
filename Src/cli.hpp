@@ -58,8 +58,8 @@ namespace VrsTunnel
 				}
 				else if constexpr (std::is_same_v<T, std::string>) {
 					/**
-					 * if the expected type is string but the value was parsed
-					 * as int or double, it is necessary to convert it back
+					 * If the expected type is string but the value was parsed
+					 * as int or double, it is necessary to convert it back.
 					 */
 					if (const auto arg = this->find(n); arg) {
 						if (const auto intPtr = std::get_if<int>(&*arg); intPtr) {

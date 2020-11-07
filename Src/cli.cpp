@@ -19,8 +19,9 @@ namespace VrsTunnel
 			try {
 				std::size_t next = 0;
 				double value = std::stod(sparam, &next);
-				if (next != sparam.length()) {  /* If not all text is a number, */
-					return sparam;              /* just assume it's a string. */
+				/* If not all text is a number, just assume it's a string. */
+				if (next != sparam.length()) { 
+					return sparam;
 				}
 				return value;
 			}
@@ -31,7 +32,7 @@ namespace VrsTunnel
 		return result;
 	}
 
-	void cli::parse_args(int argc, const char* argv[])
+	void cli::parse_args(int argc, char const *const *const argv)
 	{
 		/* Argument form: -argName value -argName value. */
 		for (int i = 1; i < argc; i += 2)
@@ -62,3 +63,4 @@ namespace VrsTunnel
 	}
 
 }
+

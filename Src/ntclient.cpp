@@ -163,7 +163,7 @@ void output_correction(VrsTunnel::Ntrip::ntrip_login login)
 	}
 }
 
-int main(int argc, const char* argv[])
+int main(int argc, char* argv[])
 {
 	if (argc == 1) {
 		return print_usage();

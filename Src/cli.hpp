@@ -20,7 +20,7 @@ namespace VrsTunnel
 
 		private:
 		std::map<std::string, arg> mParsedArgs; /**< All arguments are stored here */
-		void parse_args(int argc, const char* argv[]);
+		void parse_args(int argc, char const *const *const argv);
 		arg try_parse(std::string_view sv) const;
 
 		/**
@@ -35,7 +35,7 @@ namespace VrsTunnel
 		std::optional<arg> find(const std::string& name) const;
 
 		public:
-		explicit cli(int argc, const char* argv[]) 
+		explicit cli(int argc, char const *const *const argv) 
 		{ 
 			parse_args(argc, argv); 
 		}

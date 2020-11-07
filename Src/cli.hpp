@@ -1,5 +1,5 @@
-#ifndef VRS_TUNNEL_CLI_LINE_
-#define VRS_TUNNEL_CLI_LINE_
+#ifndef VRS_TUNNEL_CLI_LINE_HPP_
+#define VRS_TUNNEL_CLI_LINE_HPP_
 
 #include <variant>
 #include <optional>
@@ -11,8 +11,7 @@
 namespace VrsTunnel
 {
 	/**
-	 * Helper class to parse command line arguments. It is supposed to be 
-	 * linked (included) only once.
+	 * Helper class to parse command line arguments
 	 */ 
 	class cli final
 	{
@@ -88,4 +87,4 @@ namespace VrsTunnel
 	};
 }
 
-#endif /* VRS_TUNNEL_CLI_LINE_ */
+#endif /* VRS_TUNNEL_CLI_LINE_HPP_ */

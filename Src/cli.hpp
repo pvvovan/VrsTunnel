@@ -35,10 +35,7 @@ namespace VrsTunnel
 		std::optional<arg> find(const std::string& name) const;
 
 		public:
-		explicit cli(int argc, char const *const *const argv) 
-		{ 
-			this->parse_args(argc, argv); 
-		}
+		explicit cli(int argc, char const *const *const argv);
 		~cli() = default;
 		
 		/** 

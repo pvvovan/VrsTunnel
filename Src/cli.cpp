@@ -6,6 +6,11 @@
 namespace VrsTunnel
 {
 
+	cli::cli(int argc, char const *const *const argv) 
+	{
+		this->parse_args(argc, argv); 
+	}
+
 	cli::arg cli::try_parse(std::string_view sv) const
 	{
 		/* Try with int first. */

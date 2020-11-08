@@ -177,3 +177,27 @@ TEST(test_cli, test_cli_lo)
     EXPECT_TRUE(arg);
     EXPECT_DOUBLE_EQ(32.324, longitude);
 }
+
+TEST(test_cli, test_cli_notoken)
+{
+    const char* argv[] = {"appname", "--longitude", "28", "-lo", "32.324", "-a", "myvrs.com.ua"};
+    const int argc = sizeof(argv)/sizeof(argv[0]);
+    VrsTunnel::cli cli(argc, argv);
+    double longitude;
+    auto arg = cli.retrieve({"notoken"}, longitude);
+    EXPECT_FALSE(arg);
+}
+
+TEST(test_cli, test_cli_error)
+{
+    const char* argv[] = {"appname", "--longitude", "28", "-lo", "32.324", "a", "myvrs.com.ua"};
+    const int argc = sizeof(argv)/sizeof(argv[0]);
+    std::string err{};
+    try {
+        VrsTunnel::cli cli(argc, argv);
+    }
+    catch (const std::runtime_error& ex) {
+        err = ex.what();
+    }
+    ASSERT_STREQ(err.data(), "wrong command name");
+}

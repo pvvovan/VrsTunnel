@@ -16,7 +16,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(COMPILE_WARNING_MODE HIGH)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -fprofile-arcs -ftest-coverage")
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0 -fprofile-arcs -ftest-coverage")
 set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
 
 set(ntrip_src 
@@ -95,6 +94,8 @@ target_link_libraries(${PROJECT_NAME}_gtest gtest gtest_main pthread rt)
 add_test(NAME ${PROJECT_NAME}_GTest COMMAND ${PROJECT_NAME}_gtest)
 
 add_custom_target(coverage
+	COMMAND make ${PROJECT_NAME}_gtest
+	COMMAND ${CMAKE_BINARY_DIR}/${PROJECT_NAME}_gtest
 	COMMAND gcovr -r ${CMAKE_SOURCE_DIR} --html --html-details -o cov.html ${CMAKE_BINARY_DIR}
 )
 

@@ -37,7 +37,7 @@ namespace VrsTunnel
 		public:
 		explicit cli(int argc, char const *const *const argv) 
 		{ 
-			parse_args(argc, argv); 
+			this->parse_args(argc, argv); 
 		}
 		~cli() = default;
 		

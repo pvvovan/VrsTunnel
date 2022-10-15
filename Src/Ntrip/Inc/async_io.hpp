@@ -11,13 +11,14 @@
 namespace VrsTunnel::Ntrip
 {
 	/**
-	* Input/output operation status
-	*/
+	 * Input/output operation status
+	 */
 	enum class io_status { InProgress, Error, Success };
 
 	/**
-	* Asyncronous input/output operations based on file descriptor. Copy and move operations are disabled.
-	*/
+	 * Asyncronous input/output operations based on file descriptor.
+	 * Copy and move operations are disabled.
+	 */
 	class async_io
 	{
 		async_io(const async_io&)               = delete;
@@ -26,9 +27,9 @@ namespace VrsTunnel::Ntrip
 		async_io& operator=(async_io&&)         = delete;
 
 		/**
-		* Control block of asyncronous operation
-		* (pragma disables zero size array warning in struct aiocb)
-		*/
+		 * Control block of asyncronous operation
+		 * (pragma disables zero size array warning in struct aiocb)
+		 */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
 		struct aiocb m_read_cb;
@@ -36,43 +37,43 @@ namespace VrsTunnel::Ntrip
 
 		std::unique_ptr<char[]> m_data{}; /**< Buffer for transmission */
 
-		public:
+	public:
 		/**
-		* Init asyncronous operation fields
-		*/
-		async_io(int sockfd) noexcept;
+		 * Init asyncronous operation fields
+		 */
+		explicit async_io(int sockfd) noexcept;
 
 		/**
-		* @return current status of the transmission
-		*/
+		 * @return current status of the transmission
+		 */
 		[[nodiscard]] io_status check() noexcept;
 
 		/**
-		* Assyncronous write operation
-		* @param data buffer to be transmitted
-		* @param size buffer size
-		* @return status of async request
-		*/
+		 * Assyncronous write operation
+		 * @param data buffer to be transmitted
+		 * @param size buffer size
+		 * @return status of async request
+		 */
 		[[nodiscard]] io_status write(const char* data, std::size_t size);
 
 		/**
-		* @return amount of received bytes
-		*/
+		 * @return amount of received bytes
+		 */
 		int available() noexcept;
 
 		/**
-		* Method to read available bytes
-		* @param size number of bytes to read
-		* @return buffer of received bytes
-		*/
+		 * Method to read available bytes
+		 * @param size number of bytes to read
+		 * @return buffer of received bytes
+		 */
 		std::unique_ptr<char[]> read(std::size_t size);
 
 		/**
-		* Completes asyncronous operation
-		* @return status associated with AIOCBP.
-		* It should be called after status is not
-		* 'InProgress' any more.
-		*/
+		 * Completes asyncronous operation
+		 * @return status associated with AIOCBP.
+		 * It should be called after status is not
+		 * 'InProgress' any more.
+		 */
 		[[nodiscard]] ssize_t end() noexcept;
 	};
 }

@@ -4,81 +4,8 @@
 #include "cli.hpp"
 #include "ntrip_server.hpp"
 
-void send_correction(VrsTunnel::Ntrip::ntrip_login& login);
 
-int print_usage() 
-{
-	std::cerr << "Usage: ntserver PARAMETERS..." << std::endl;
-	std::cerr << "'ntserver' reads RTK correction from standard input." << std::endl << std::endl;
-	std::cerr << "Examples:" << std::endl;
-	std::cerr << "    ntserver -a rtk.ua -p 2101 -m mymount -u myname -pw myword -la 30 -lo -50" << std::endl;
-	std::cerr << "    ntserver --address rtk.ua --port 2101 --mount CMR --user myname --password myword --latitude 30.32 --longitude -52.65" << std::endl;
-	std::cerr << "Parameters:" << std::endl;
-	std::cerr << "    -a,  --address SERVER         NTRIP Caster address" << std::endl;
-	std::cerr << "    -p,  --port PORT              NTRIP Caster port" << std::endl;
-	std::cerr << "    -m,  --mount MOUNTPOINT       NTRIP mount point" << std::endl;
-	std::cerr << "    -u,  --user USERNAME          NTRIP user name" << std::endl;
-	std::cerr << "    -pw, --password PASSWORD      NTRIP password" << std::endl;
-	std::cerr << "    -la, --latitude LATITUDE      GNSS base station reference latitude" << std::endl;
-	std::cerr << "    -lo, --longitude LONGITUDE    GNSS base station reference longitude" << std::endl;
-	return 1;
-}
-
-int main(int argc, const char* argv[])
-{
-	if (argc == 1) {
-		return print_usage();
-	}
-	constexpr double noGeo {std::numeric_limits<double>::max()};
-	double latitude{noGeo}, longitude{noGeo};
-	std::string username{}, password{}, mount{}, address{};
-	int port{0};
-	try
-	{
-		VrsTunnel::cli cli(argc, argv);
-		cli.retrieve({"a", "-address"}, address);
-		cli.retrieve({"p", "-port"}, port);
-		cli.retrieve({"m", "-mount"}, mount);
-		cli.retrieve({"u", "-user"}, username);
-		cli.retrieve({"pw", "-password"}, password);
-		cli.retrieve({"la", "-latitude"}, latitude);
-		cli.retrieve({"lo", "-longitude"}, longitude);
-	}
-	catch (std::bad_variant_access& err)
-	{
-		return print_usage();
-	}
-	catch (std::runtime_error &err)
-	{
-		std::cerr << " ...err: " << err.what() << std::endl;;
-		return print_usage();
-	}
-
-	if (latitude == noGeo || longitude == noGeo || port == 0
-			|| address.size() == 0 || mount.size() == 0
-			|| username.size() == 0 || password.size() == 0) {
-		return print_usage();
-	}
-
-	VrsTunnel::Ntrip::ntrip_login login{};
-	login.address = address;
-	login.port = static_cast<unsigned short>(port);
-	login.mountpoint = mount;
-	login.username = username;
-	login.password = password;
-	login.position.Latitude = latitude;
-	login.position.Longitude = longitude;
-	for (;;) {
-		send_correction(login);
-		constexpr int retry_period = 30;
-		std::cerr << "ntserver: retrying in " << retry_period << " seconds..." << std::endl;
-		::sleep(retry_period);
-	}
-
-	return 0;
-}
-
-void send_correction(VrsTunnel::Ntrip::ntrip_login& login)
+static void send_correction(VrsTunnel::Ntrip::ntrip_login& login)
 {
 	VrsTunnel::Ntrip::ntrip_server ns{};
 	auto res = ns.connect(login);
@@ -138,4 +65,76 @@ void send_correction(VrsTunnel::Ntrip::ntrip_login& login)
 			}
 		}
 	}
+}
+
+static int print_usage()
+{
+	std::cerr << "Usage: ntserver PARAMETERS..." << std::endl;
+	std::cerr << "'ntserver' reads RTK correction from standard input." << std::endl << std::endl;
+	std::cerr << "Examples:" << std::endl;
+	std::cerr << "    ntserver -a rtk.ua -p 2101 -m mymount -u myname -pw myword -la 30 -lo -50" << std::endl;
+	std::cerr << "    ntserver --address rtk.ua --port 2101 --mount CMR --user myname --password myword --latitude 30.32 --longitude -52.65" << std::endl;
+	std::cerr << "Parameters:" << std::endl;
+	std::cerr << "    -a,  --address SERVER         NTRIP Caster address" << std::endl;
+	std::cerr << "    -p,  --port PORT              NTRIP Caster port" << std::endl;
+	std::cerr << "    -m,  --mount MOUNTPOINT       NTRIP mount point" << std::endl;
+	std::cerr << "    -u,  --user USERNAME          NTRIP user name" << std::endl;
+	std::cerr << "    -pw, --password PASSWORD      NTRIP password" << std::endl;
+	std::cerr << "    -la, --latitude LATITUDE      GNSS base station reference latitude" << std::endl;
+	std::cerr << "    -lo, --longitude LONGITUDE    GNSS base station reference longitude" << std::endl;
+	return 1;
+}
+
+int main(int argc, const char* argv[])
+{
+	if (argc == 1) {
+		return print_usage();
+	}
+	constexpr double noGeo {std::numeric_limits<double>::max()};
+	double latitude{noGeo}, longitude{noGeo};
+	std::string username{}, password{}, mount{}, address{};
+	int port{0};
+	try
+	{
+		VrsTunnel::cli cli(argc, argv);
+		cli.retrieve({"a", "-address"}, address);
+		cli.retrieve({"p", "-port"}, port);
+		cli.retrieve({"m", "-mount"}, mount);
+		cli.retrieve({"u", "-user"}, username);
+		cli.retrieve({"pw", "-password"}, password);
+		cli.retrieve({"la", "-latitude"}, latitude);
+		cli.retrieve({"lo", "-longitude"}, longitude);
+	}
+	catch (std::bad_variant_access& err)
+	{
+		return print_usage();
+	}
+	catch (std::runtime_error &err)
+	{
+		std::cerr << " ...err: " << err.what() << std::endl;;
+		return print_usage();
+	}
+
+	if (latitude == noGeo || longitude == noGeo || port == 0
+			|| address.size() == 0 || mount.size() == 0
+			|| username.size() == 0 || password.size() == 0) {
+		return ::print_usage();
+	}
+
+	VrsTunnel::Ntrip::ntrip_login login{};
+	login.address = address;
+	login.port = static_cast<unsigned short>(port);
+	login.mountpoint = mount;
+	login.username = username;
+	login.password = password;
+	login.position.Latitude = latitude;
+	login.position.Longitude = longitude;
+	for (;;) {
+		::send_correction(login);
+		constexpr int retry_period = 30;
+		std::cerr << "ntserver: retrying in " << retry_period << " seconds..." << std::endl;
+		::sleep(retry_period);
+	}
+
+	return 0;
 }

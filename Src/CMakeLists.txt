@@ -14,13 +14,13 @@ set(COMPILE_WARNING_MODE HIGH)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -fprofile-arcs -ftest-coverage")
 set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
 
-set(ntrip_src 
+set(ntrip_src
 	Ntrip/Src/login_encode.cpp
 	Ntrip/Src/base64_encoder.cpp
 	Ntrip/Src/nmea.cpp
 	cli.cpp
 	Ntrip/Src/async_io.cpp
-	Ntrip/Src/tcp_client.cpp 
+	Ntrip/Src/tcp_client.cpp
 	Ntrip/Src/mount_point.cpp
 )
 
@@ -34,7 +34,9 @@ set(ntserver_src
 	Ntrip/Src/ntrip_server.cpp
 )
 
-include_directories(Ntrip/Inc)
+include_directories(
+.
+Ntrip/Inc)
 
 add_executable(ntclient ntclient.cpp ${ntclient_src})
 target_link_libraries(ntclient rt)
@@ -60,7 +62,6 @@ target_link_libraries(prog pthread rt)
 
 enable_testing()
 
-# CppUTest
 set(testcppu_src
 	${ntclient_src}
 	Tests/RunAllTests.cpp

@@ -1,8 +1,10 @@
-#ifndef VRSTUNNEL_NTRIP_BASE64_ENCODER_
-#define VRSTUNNEL_NTRIP_BASE64_ENCODER_
+#ifndef VRSTUNNEL_NTRIP_BASE64_ENCODER_HPP_
+#define VRSTUNNEL_NTRIP_BASE64_ENCODER_HPP_
+
+#include <memory>
 
 #include "login_encode.hpp"
-#include <memory>
+
 
 namespace VrsTunnel::Ntrip
 {
@@ -35,4 +37,4 @@ namespace VrsTunnel::Ntrip
 	
 }
 
-#endif /* VRSTUNNEL_NTRIP_BASE64_ENCODER_ */
+#endif /* VRSTUNNEL_NTRIP_BASE64_ENCODER_HPP_ */

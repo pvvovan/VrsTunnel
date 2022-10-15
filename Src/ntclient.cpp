@@ -7,7 +7,8 @@
 #include "cli.hpp"
 #include "ntrip_client.hpp"
 
-int print_usage() 
+
+int print_usage()
 {
 	std::cerr << "Usage: ntclient PARAMETERS..." << std::endl;
 	std::cerr << "'ntclient' writes RTK correction to standard output." << std::endl << std::endl;
@@ -41,7 +42,7 @@ int showMountPoints(std::string address, uint16_t port, std::string username, st
 	else {
 		auto mounts = std::get<std::vector<VrsTunnel::Ntrip::mount_point>>(res);
 		using mp = VrsTunnel::Ntrip::mount_point;
-		auto maxMount = std::max_element(mounts.begin(), mounts.end(), 
+		auto maxMount = std::max_element(mounts.begin(), mounts.end(),
 			[](const mp& a, const mp& b) { return a.name.size() < b.name.size(); });
 		std::size_t maxCorr = 0;
 		auto setMax = [&maxCorr](const mp& m) {

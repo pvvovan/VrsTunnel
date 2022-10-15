@@ -1,8 +1,8 @@
 #include <string>
-
 #include <CppUTest/TestHarness.h>
 
 #include "login_encode.hpp"
+
 
 TEST_GROUP(EncoderTestGroup)
 {

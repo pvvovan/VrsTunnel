@@ -1,4 +1,7 @@
+#include <stdexcept>
+
 #include "tcp_server.hpp"
+
 
 namespace VrsTunnel::Ntrip
 {
@@ -6,7 +9,7 @@ namespace VrsTunnel::Ntrip
 	[[nodiscard]] bool tcp_server::start(uint16_t port, connect_listen& listener)
 	{
 		m_port = port;
-		auto start_thread = [instance = this](std::thread& the_thread, int& servfd, struct sockaddr_in& addr, 
+		auto start_thread = [instance = this](std::thread& the_thread, int& servfd, struct sockaddr_in& addr,
 					sa_family_t family, connect_listen& listener, uint16_t port, std::atomic<bool>& stop_required) {
 			servfd = ::socket(family, SOCK_STREAM, 0);
 			if (servfd == 0) {
@@ -24,7 +27,7 @@ namespace VrsTunnel::Ntrip
 				return false;
 			}
 			stop_required.store(false);
-			the_thread = std::thread{&tcp_server::run_accepting<connect_listen>, 
+			the_thread = std::thread{&tcp_server::run_accepting<connect_listen>,
 					instance, (struct sockaddr*)&addr, servfd, std::ref(listener)};
 			return true;
 		};
@@ -41,7 +44,7 @@ namespace VrsTunnel::Ntrip
 				return;
 			}
 			int client_socket = ::accept(sockfd, addr, &sock_len);
-			if (client_socket > 0) { 
+			if (client_socket > 0) {
 				listener.OnClientConnected(std::make_unique<tcp_client>(client_socket));
 			}
 		}

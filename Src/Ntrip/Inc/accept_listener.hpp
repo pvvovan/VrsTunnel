@@ -1,5 +1,5 @@
-#ifndef VRS_TUNNEL_ACCEPT_LISTENER_
-#define VRS_TUNNEL_ACCEPT_LISTENER_
+#ifndef VRS_TUNNEL_ACCEPT_LISTENER_HPP_
+#define VRS_TUNNEL_ACCEPT_LISTENER_HPP_
 
 #include <memory>
 #include <map>
@@ -7,6 +7,7 @@
 #include <list>
 
 #include "tcp_client.hpp"
+
 
 namespace VrsTunnel::Ntrip
 {
@@ -23,9 +24,9 @@ namespace VrsTunnel::Ntrip
 		std::list<std::weak_ptr<async_io>> get_asyncs() const;
 
 	private:
-	mutable std::mutex the_mutex{};
-	std::map<int, element> m_clients{};
+		mutable std::mutex the_mutex{};
+		std::map<int, element> m_clients{};
 	};
 }
 
-#endif /* VRS_TUNNEL_ACCEPT_LISTENER_ */
+#endif /* VRS_TUNNEL_ACCEPT_LISTENER_HPP_ */

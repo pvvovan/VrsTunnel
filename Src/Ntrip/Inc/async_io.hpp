@@ -1,5 +1,5 @@
-#ifndef ASYNCHRONOUS_INPUT_OUTPUT_
-#define ASYNCHRONOUS_INPUT_OUTPUT_
+#ifndef ASYNCHRONOUS_INPUT_OUTPUT_HPP_
+#define ASYNCHRONOUS_INPUT_OUTPUT_HPP_
 
 #include <aio.h>
 #include <memory>
@@ -77,4 +77,4 @@ namespace VrsTunnel::Ntrip
 	};
 }
 
-#endif /* ASYNCHRONOUS_INPUT_OUTPUT_ */
+#endif /* ASYNCHRONOUS_INPUT_OUTPUT_HPP_ */

@@ -1,9 +1,10 @@
-#ifndef VRSTUNNEL_NTRIP_NTRIP_LOGIN_
-#define VRSTUNNEL_NTRIP_NTRIP_LOGIN_
+#ifndef VRSTUNNEL_NTRIP_NTRIP_LOGIN_HPP_
+#define VRSTUNNEL_NTRIP_NTRIP_LOGIN_HPP_
 
 #include <string>
 
 #include "location.hpp"
+
 
 namespace VrsTunnel::Ntrip
 {
@@ -22,4 +23,4 @@ namespace VrsTunnel::Ntrip
 	
 }
 
-#endif /* VRSTUNNEL_NTRIP_NTRIP_LOGIN_ */
+#endif /* VRSTUNNEL_NTRIP_NTRIP_LOGIN_HPP_ */

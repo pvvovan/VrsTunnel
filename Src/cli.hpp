@@ -8,17 +8,18 @@
 #include <vector>
 #include <sstream>
 
+
 namespace VrsTunnel
 {
 	/**
 	 * Helper class to parse command line arguments
-	 */ 
+	 */
 	class cli final
 	{
-		public:
+	public:
 		using arg = std::variant<int, double, std::string>; /**< Generic argument type */
 
-		private:
+	private:
 		std::map<std::string, arg> mParsedArgs; /**< All arguments are stored here */
 		void parse_args(int argc, char const *const *const argv);
 		arg try_parse(std::string_view sv) const;
@@ -38,8 +39,8 @@ namespace VrsTunnel
 		explicit cli(int argc, char const *const *const argv);
 		~cli() = default;
 		
-		/** 
-		 * Retrieve parameter by it's name. 
+		/**
+		 * Retrieve parameter by it's name.
 		 * List of names is supported: {"long_name, ln"}.
 		 */
 		template<typename T>

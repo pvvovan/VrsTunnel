@@ -1,10 +1,9 @@
-
-
 #include <gtest/gtest.h>
 #include <string>
 
 #include "ntrip_client.hpp"
 #include "mount_point.hpp"
+
 
 TEST(testNtripClient, hasTableTest1)
 {
@@ -70,7 +69,7 @@ TEST(testNtripClient, pasreTableTest1)
     EXPECT_EQ(table[2].raw_entry, "STR;RTCM3_MUKA;RTCM3_MUKA;RTCM 3;1004(1),1005/1007(5),PBS(10);2;GPS+GLONASS;ZAKPOS;UKR;48.45;22.72;0;0;Trimble NetR5;None;B;Y;19200;ZAKPOS, Mukachevo;");
     EXPECT_EQ(table[3].raw_entry, "STR;RAW_CRNI;RAW_CRNI;RAW;1004(1),1005/1007(5),PBS(10);2;GPS;ZAKPOS;UKR;0;0;0;0;Trimble 5700;None;B;Y;19200;ZAKPOS, Chernivtsi;");
     EXPECT_EQ(table[4].raw_entry, "STR;RAW_VOLO;RAW_VOLO;RAW;1004(1),1005/1007(5),PBS(10);2;GPS+GLONASS;ZakPOS;UKR;0;0;0;0;Trimble GPSNet;None;B;Y;0;;");
-    
+
     EXPECT_EQ("RTCM3_HUST0", table[0].name);
     EXPECT_EQ("RTCM3_RAHI0", table[1].name);
     EXPECT_EQ( "RTCM3_MUKA", table[2].name);

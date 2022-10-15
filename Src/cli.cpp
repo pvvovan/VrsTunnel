@@ -3,12 +3,12 @@
 
 #include "cli.hpp"
 
+
 namespace VrsTunnel
 {
-
-	cli::cli(int argc, char const *const *const argv) 
+	cli::cli(int argc, char const *const *const argv)
 	{
-		this->parse_args(argc, argv); 
+		this->parse_args(argc, argv);
 	}
 
 	cli::arg cli::try_parse(std::string_view sv) const
@@ -25,7 +25,7 @@ namespace VrsTunnel
 				std::size_t next = 0;
 				double value = std::stod(sparam, &next);
 				/* If not all text is a number, just assume it's a string. */
-				if (next != sparam.length()) { 
+				if (next != sparam.length()) {
 					return sparam;
 				}
 				return value;
@@ -66,6 +66,4 @@ namespace VrsTunnel
 			return std::get<double>(*arg);
 		}
 	}
-
 }
-

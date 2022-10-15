@@ -1,5 +1,6 @@
-#include "tcp_client.hpp"
 #include <stdexcept>
+
+#include "tcp_client.hpp"
 
 
 namespace VrsTunnel::Ntrip
@@ -21,7 +22,7 @@ namespace VrsTunnel::Ntrip
 		int sfd;
 
 		/* Obtain address(es) matching host/port */
-		// memset(&hints, 0, sizeof(struct addrinfo));
+		::memset(&hints, 0, sizeof(struct addrinfo));
 		hints.ai_family     = AF_UNSPEC;	/* Allow IPv4 or IPv6 */
 		hints.ai_socktype   = SOCK_STREAM;	/* TCP socket */
 		hints.ai_flags      = 0;
@@ -36,9 +37,9 @@ namespace VrsTunnel::Ntrip
 		}
 
 		/* getaddrinfo() returns a list of address structures.
-		Try each address until we successfully connect(2).
-		If socket(2) (or connect(2)) fails, we (close the socket
-		and) try the next address. */
+		 * Try each address until we successfully connect(2).
+		 * If socket(2) (or connect(2)) fails, we (close the socket
+		 * and) try the next address. */
 		for (rp = result; rp != nullptr; rp = rp->ai_next) {
 			sfd = ::socket(rp->ai_family, rp->ai_socktype,
 							rp->ai_protocol);
@@ -46,7 +47,7 @@ namespace VrsTunnel::Ntrip
 				continue;
 
 			if (::connect(sfd, rp->ai_addr, rp->ai_addrlen) != -1) {
-				break;						/* Success */
+				break;				/* Success */
 			}
 
 			::close(sfd);

@@ -1,5 +1,6 @@
-#include "base64_encoder.hpp"
 #include <cstdint>
+
+#include "base64_encoder.hpp"
 
 
 static const std::string base64_chars {

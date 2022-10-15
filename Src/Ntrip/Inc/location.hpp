@@ -1,5 +1,5 @@
-#ifndef VRSTUNNEL_NTRIP_LOCATION_
-#define VRSTUNNEL_NTRIP_LOCATION_
+#ifndef VRSTUNNEL_NTRIP_LOCATION_HPP_
+#define VRSTUNNEL_NTRIP_LOCATION_HPP_
 
 namespace VrsTunnel::Ntrip
 {
@@ -27,4 +27,4 @@ namespace VrsTunnel::Ntrip
 	
 }
 
-#endif /* _VRSTUNNEL_NTRIP_LOCATION_ */
+#endif /* _VRSTUNNEL_NTRIP_LOCATION_HPP_ */

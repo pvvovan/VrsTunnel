@@ -4,6 +4,7 @@
 
 #include "mount_point.hpp"
 
+
 namespace VrsTunnel::Ntrip
 {
 	std::vector<mount_point> mount_point::parse_table(std::string_view data)
@@ -78,7 +79,7 @@ namespace VrsTunnel::Ntrip
 
 		find_Nth = [&find_Nth]
 			(string_view haystack, std::size_t pos, string_view needle, std::size_t nth)
-				-> std::size_t 
+				-> std::size_t
 		{
 			std::size_t found_pos = haystack.find(needle, pos);
 			if (nth == 0 || std::string::npos == found_pos) {

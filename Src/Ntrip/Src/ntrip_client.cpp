@@ -11,11 +11,11 @@
 namespace VrsTunnel::Ntrip
 {
 	std::unique_ptr<char[]> ntrip_client::build_request(const char* mountpoint,
-			std::string name, std::string password)
+						std::string name, std::string password)
 	{
 		const char* requestFormat = "GET /%s HTTP/1.0\r\n"
 			"User-Agent: NTRIP PvvovanNTRIPClient/1.0.0\r\n"
-			"Accept: */*\r\n" "Connection: close\r\n" 
+			"Accept: */*\r\n" "Connection: close\r\n"
 			"Authorization: Basic %s\r\n" "\r\n";
 		
 		std::unique_ptr<char[]> request;
@@ -24,13 +24,14 @@ namespace VrsTunnel::Ntrip
 			std::unique_ptr<login_encode> encoder = login_encode::make_instance();
 			auth = (*encoder).get(name, password);
 		}
-		request = std::make_unique<char[]>(::strlen(requestFormat) + ::strlen(mountpoint) + auth.length() + 2);
+		request = std::make_unique<char[]>(::strlen(requestFormat) +
+							::strlen(mountpoint) + auth.length() + 2);
 		::sprintf(request.get(), requestFormat, mountpoint, auth.c_str());
 		return request;
 	}
 
 	std::variant<std::vector<mount_point>, io_status>
-	ntrip_client::getMountPoints(std::string address, uint16_t tcpPort, 
+	ntrip_client::getMountPoints(std::string address, uint16_t tcpPort,
 			std::string name, std::string password)
 	{
 		tcp_client tc{};
@@ -99,7 +100,10 @@ namespace VrsTunnel::Ntrip
 			return m_status;
 		}
 		m_aio = std::make_unique<async_io>(m_tcp->get_sockfd());
-		std::unique_ptr<char[]> request = build_request(nlogin.mountpoint.data(), nlogin.username, nlogin.password);
+		std::unique_ptr<char[]> request = build_request(nlogin.mountpoint.data(),
+								nlogin.username,
+								nlogin.password);
+
 		auto res = m_aio->write(request.get(), ::strlen(request.get()));
 		if (res != io_status::Success) {
 			m_status = status::error;
@@ -150,10 +154,10 @@ namespace VrsTunnel::Ntrip
 		}
 		else if (startsWith("HTTP/1.1 401 Unauthorized\r\n")) {
 			m_status = status::authfailure;
-		} 
+		}
 		else if (startsWith("HTTP/1.1 404 Not Found\r\n")) {
 			m_status = status::nomount;
-		} 
+		}
 		else {
 			m_status = status::error;
 		}
@@ -204,7 +208,7 @@ namespace VrsTunnel::Ntrip
 	{
 		constexpr int timeout = 50;
 		int time = 0;
-		while (m_aio->check() == io_status::InProgress) 
+		while (m_aio->check() == io_status::InProgress)
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			++time;

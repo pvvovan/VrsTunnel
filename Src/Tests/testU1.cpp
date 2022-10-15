@@ -1,14 +1,13 @@
 
 #include <future>
 #include <CppUTest/TestHarness.h>
-// // #include <CppUTestExt/MockSupport.h>
 #include <string>
 #include <thread>
 
 
 TEST_GROUP(FirstTestGroup)
 {
-    
+
 };
 
 TEST(FirstTestGroup, FirstTest)
@@ -22,10 +21,10 @@ TEST_GROUP(ListTestGroup)
 {
     void setup()
     {
-        
+
     }
     void teardown()
     {
-        
+
     }
 };

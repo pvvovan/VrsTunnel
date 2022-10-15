@@ -1,5 +1,5 @@
-#ifndef TCP_ASYNCHRONOUS_CLIENT_
-#define TCP_ASYNCHRONOUS_CLIENT_
+#ifndef TCP_ASYNCHRONOUS_CLIENT_HPP_
+#define TCP_ASYNCHRONOUS_CLIENT_HPP_
 
 #include <string>
 #include <sys/types.h>
@@ -8,6 +8,7 @@
 #include <unistd.h>
 
 #include "async_io.hpp"
+
 
 namespace VrsTunnel::Ntrip
 {
@@ -60,4 +61,4 @@ namespace VrsTunnel::Ntrip
 	};
 }
 
-#endif /* TCP_ASYNCHRONOUS_CLIENT_ */
+#endif /* TCP_ASYNCHRONOUS_CLIENT_HPP_ */

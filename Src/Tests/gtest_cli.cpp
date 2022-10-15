@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "../cli.hpp"
+#include "cli.hpp"
+
 
 TEST(test_cli, test_cli_addr)
 {

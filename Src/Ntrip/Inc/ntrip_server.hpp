@@ -1,16 +1,17 @@
-#ifndef VRSTUNNEL_NTRIP_NTRIP_SERVER_
-#define VRSTUNNEL_NTRIP_NTRIP_SERVER_
+#ifndef VRSTUNNEL_NTRIP_NTRIP_SERVER_HPP_
+#define VRSTUNNEL_NTRIP_NTRIP_SERVER_HPP_
 
 #include "ntrip_login.hpp"
 #include "ntrip_client.hpp"
 #include <bits/c++config.h>
 
+
 namespace VrsTunnel::Ntrip
 {
 	/**
-	* NTRIP Server supplies GNSS correction 
-	* from RTK base station to NTRIP Caster.
-	*/
+	 * NTRIP Server supplies GNSS correction
+	 * from RTK base station to NTRIP Caster.
+	 */
 	class ntrip_server
 	{
 	private:
@@ -19,10 +20,10 @@ namespace VrsTunnel::Ntrip
 		status m_status {status::uninitialized};        /**< Current status of the client */
 
 		/**
-		* Build HTTP POST request
-		* @param nlogin NTRIP login data
-		* @return HTTP POST null terminated request buffer
-		*/
+		 * Build HTTP POST request
+		 * @param nlogin NTRIP login data
+		 * @return HTTP POST null terminated request buffer
+		 */
 		std::unique_ptr<char[]> build_request(const ntrip_login& nlogin);
 
 	public:
@@ -34,35 +35,35 @@ namespace VrsTunnel::Ntrip
 		ntrip_server& operator=(ntrip_server&&) = delete;       /**< No move operator */
 
 		/**
-		* Create connection with NTRIP Caster
-		* @param nlogin login information
-		* @return result of the connection
-		*/
+		 * Create connection with NTRIP Caster
+		 * @param nlogin login information
+		 * @return result of the connection
+		 */
 		[[nodiscard]] status connect(const ntrip_login& nlogin);
 
 		/**
-		* Disconnect from NTRIP Caster
-		*/
+		 * Disconnect from NTRIP Caster
+		 */
 		void disconnect();
 
 		/**
-		* Send the correction to NTRIP Caster (asyncronously)
-		* @param data correction buffer
-		* @param size the buffer size
-		* @return status of the operation
-		*/
+		 * Send the correction to NTRIP Caster (asyncronously)
+		 * @param data correction buffer
+		 * @param size the buffer size
+		 * @return status of the operation
+		 */
 		[[nodiscard]] status send_begin(const char* data, std::size_t size);
 
 		/**
-		* @return status associated with AIOCBP.
-		*/
+		 * @return status associated with AIOCBP.
+		 */
 		[[nodiscard]] ssize_t send_end();
 
 		/**
-		* @return current status of the operation
-		*/
+		 * @return current status of the operation
+		 */
 		[[nodiscard]] status get_status();
 	};
 }
 
-#endif
+#endif /* VRSTUNNEL_NTRIP_NTRIP_SERVER_HPP_ */

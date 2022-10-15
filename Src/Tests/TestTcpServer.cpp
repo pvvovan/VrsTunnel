@@ -1,3 +1,4 @@
+#include "accept_listener.hpp"
 
 #include <bits/c++config.h>
 #include <bits/stdint-uintn.h>
@@ -6,12 +7,9 @@
 #include <thread>
 #include <atomic>
 #include <vector>
+#include <CppUTest/TestHarness.h>
 
 #include "tcp_server.hpp.cpp"
-#include "accept_listener.hpp"
-
-#include <CppUTest/TestHarness.h>
-// // #include <CppUTestExt/MockSupport.h>
 
 
 class accept_listener_test
@@ -71,11 +69,11 @@ TEST_GROUP(ServThTestGroup)
 {
     void setup()
     {
-        
+
     }
     void teardown()
     {
-        
+
     }
 };
 

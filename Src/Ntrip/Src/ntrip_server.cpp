@@ -1,8 +1,9 @@
-#include "ntrip_server.hpp"
 #include "login_encode.hpp"
 #include <bits/c++config.h>
 #include <sys/types.h>
 #include <stdexcept>
+
+#include "ntrip_server.hpp"
 
 
 namespace VrsTunnel::Ntrip
@@ -71,10 +72,10 @@ namespace VrsTunnel::Ntrip
 		}
 		else if (startsWith("HTTP/1.1 401 Unauthorized\r\n")) {
 			m_status = status::authfailure;
-		} 
+		}
 		else if (startsWith("HTTP/1.1 404 Not Found\r\n")) {
 			m_status = status::nomount;
-		} 
+		}
 		else {
 			m_status = status::error;
 		}

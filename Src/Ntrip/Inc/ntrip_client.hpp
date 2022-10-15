@@ -1,5 +1,5 @@
-#ifndef VRSTUNNEL_NTRIP_NTRIP_CLIENT_
-#define VRSTUNNEL_NTRIP_NTRIP_CLIENT_
+#ifndef VRSTUNNEL_NTRIP_NTRIP_CLIENT_HPP_
+#define VRSTUNNEL_NTRIP_NTRIP_CLIENT_HPP_
 
 #include <bits/c++config.h>
 #include <string>
@@ -15,6 +15,7 @@
 #include "ntrip_login.hpp"
 #include "tcp_client.hpp"
 #include "mount_point.hpp"
+
 
 namespace VrsTunnel::Ntrip
 {
@@ -57,7 +58,7 @@ namespace VrsTunnel::Ntrip
 		* Download mount point table
 		*/
 		std::variant<std::vector<mount_point>, io_status>
-		getMountPoints(std::string address, uint16_t tcpPort, 
+		getMountPoints(std::string address, uint16_t tcpPort,
 			std::string name = std::string(), std::string password = std::string());
 
 		/**
@@ -109,4 +110,4 @@ namespace VrsTunnel::Ntrip
 	};
 }
 
-#endif
+#endif /* VRSTUNNEL_NTRIP_NTRIP_CLIENT_HPP_ */

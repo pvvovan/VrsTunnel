@@ -1,5 +1,5 @@
-#ifndef VRS_TUNNEL_TCP_SERVER_
-#define VRS_TUNNEL_TCP_SERVER_
+#ifndef VRS_TUNNEL_TCP_SERVER_HPP_
+#define VRS_TUNNEL_TCP_SERVER_HPP_
 
 #include <memory>
 #include <thread>
@@ -8,7 +8,6 @@
 
 #include "tcp_client.hpp"
 
-#include <iostream>
 
 namespace VrsTunnel::Ntrip
 {
@@ -37,8 +36,7 @@ namespace VrsTunnel::Ntrip
 
 		template<typename connect_listen>
 		void run_accepting(struct sockaddr* addr, int sockfd, connect_listen& listener);
-
 	};
 }
 
-#endif /* VRS_TUNNEL_TCP_SERVER_ */
+#endif /* VRS_TUNNEL_TCP_SERVER_HPP_ */

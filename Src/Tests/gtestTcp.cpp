@@ -1,12 +1,10 @@
 #include <gtest/gtest.h>
-
 #include <string>
 #include <chrono>
 #include <thread>
 
 #include "tcp_client.hpp"
 #include "ntrip_client.hpp"
-
 
 
 TEST(TcpTestGroup, TestTcpClient)
@@ -21,7 +19,7 @@ TEST(TcpTestGroup, TestTcpClient)
     const char* request = "GET / HTTP/1.0\r\n"
         "User-Agent: NTRIP PvvovanNTRIPClient/\r\n"
         "Accept: */*\r\n" "Connection: close\r\n" "\r\n";
-    
+
     auto res = aio.write(request, strlen(request));
     if (res != VrsTunnel::Ntrip::io_status::Success) {
         EXPECT_TRUE(false);

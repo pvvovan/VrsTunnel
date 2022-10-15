@@ -1,6 +1,7 @@
 #include <bits/c++config.h>
 #include <bits/stdint-uintn.h>
 #include <string>
+#include <string_view>
 #include <cinttypes>
 
 #include "nmea.hpp"
@@ -43,7 +44,7 @@ namespace VrsTunnel::Ntrip
 			location.Longitude = -location.Longitude;
 		}
 
-		int print_res = ::snprintf(buf, bsize, "GPGGA,%02" PRId64 "%02" PRId64 "%02" PRId64 ".%02d,%02d%011.8f,%s,%03d%011.8f,%s,4,12,0.9,%.3f,M,%.3f,M,0,0000", 
+		int print_res = ::snprintf(buf, bsize, "GPGGA,%02" PRId64 "%02" PRId64 "%02" PRId64 ".%02d,%02d%011.8f,%s,%03d%011.8f,%s,4,12,0.9,%.3f,M,%.3f,M,0,0000",
 			hours.count(), minutes.count(), seconds.count(), centiseconds,
 			static_cast<int>(location.Latitude), (location.Latitude - static_cast<int>(location.Latitude))*60, NS,
 			static_cast<int>(location.Longitude), (location.Longitude - static_cast<int>(location.Longitude))*60, EW,

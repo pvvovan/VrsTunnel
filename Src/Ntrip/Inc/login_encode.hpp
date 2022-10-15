@@ -1,8 +1,9 @@
-#ifndef VRSTUNNEL_NTRIP_LOGIN_ENCODE_
-#define VRSTUNNEL_NTRIP_LOGIN_ENCODE_
+#ifndef VRSTUNNEL_NTRIP_LOGIN_ENCODE_HPP_
+#define VRSTUNNEL_NTRIP_LOGIN_ENCODE_HPP_
 
 #include <string>
 #include <memory>
+
 
 namespace VrsTunnel::Ntrip
 {
@@ -25,4 +26,4 @@ namespace VrsTunnel::Ntrip
 	};
 }
 
-#endif /* __VRSTUNNEL_NTRIP_LOGIN_ENCODE_ */
+#endif /* __VRSTUNNEL_NTRIP_LOGIN_ENCODE_HPP_ */

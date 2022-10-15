@@ -1,10 +1,12 @@
 #include <memory>
 #include <sys/types.h>
+#include <stdexcept>
 
 #include "ntrip_client.hpp"
 #include "login_encode.hpp"
 #include "nmea.hpp"
 #include "mount_point.hpp"
+
 
 namespace VrsTunnel::Ntrip
 {

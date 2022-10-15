@@ -1,17 +1,13 @@
 cmake_minimum_required (VERSION 3.16.3)
 
+
 ################################################################################
 # Compiler can be selected as shown at the end
 ################################################################################
 
-#set(CMAKE_CXX_COMPILER             "clang++-8")
-#set(CMAKE_CXX_COMPILER             "g++-8")
-#set(CMAKE_CXX_COMPILER             "/home/vovan/llvm-project/build/bin/clang++")
-
 project(ntrip)
 
-#set(CMAKE_CXX_FLAGS                "${CMAKE_CXX_FLAGS} -Wall -Werror -Wextra -Wno-psabi")
-set(CMAKE_CXX_FLAGS                "-Wall -Werror -Wextra -pedantic -pedantic-errors -Wconversion -Wsign-conversion -Werror=pedantic")
+set(CMAKE_CXX_FLAGS                "-Wall -Wextra -Wpedantic -Wconversion -Werror")
 set(CMAKE_CXX_STANDARD 17)
 set(COMPILE_WARNING_MODE HIGH)
 
@@ -39,7 +35,6 @@ set(ntserver_src
 )
 
 include_directories(Ntrip/Inc)
-#include <cli.hpp>
 
 add_executable(ntclient ntclient.cpp ${ntclient_src})
 target_link_libraries(ntclient rt)
@@ -57,6 +52,7 @@ set(caster_src
 set(prog_src ${caster_src} prog.cpp)
 add_executable(prog ${prog_src})
 target_link_libraries(prog pthread rt)
+
 
 ################################################################################
 # Unit Tests
@@ -77,10 +73,6 @@ add_executable(${PROJECT_NAME}_CppUtest ${testcppu_src})
 target_link_libraries(${PROJECT_NAME}_CppUtest CppUTest pthread rt)
 add_test(NAME ${PROJECT_NAME}_TCppU COMMAND ${PROJECT_NAME}_CppUtest)
 
-# Google Test
-# gtbuild is output directory of googletest build
-#link_directories(../gtest/googletest-release-1.8.1/gtbuild/)
-
 set(testgsuite_src
 	${ntclient_src}
 	Tests/testGoo1.cpp
@@ -98,13 +90,3 @@ add_custom_target(coverage
 	COMMAND ${CMAKE_BINARY_DIR}/${PROJECT_NAME}_gtest
 	COMMAND gcovr -r ${CMAKE_SOURCE_DIR} --html --html-details -o cov.html ${CMAKE_BINARY_DIR}
 )
-
-################################################################################
-# Makefile generation
-################################################################################
-# cmake -DCMAKE_BUILD_TYPE=Debug ../Src/
-# CC=gcc-4.2 CXX=/usr/bin/g++-4.2 cmake -G "Your Generator" path/to/your/source
-# cmake -G "Your Generator" -D CMAKE_C_COMPILER=gcc-4.2 -D CMAKE_CXX_COMPILER=g++-4.2 path/to/your/source
-# cmake -D CMAKE_CXX_COMPILER="/home/vovan/Desktop/uboot-x15/vanilla/toolchain/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf/bin/arm-linux-gnueabihf-g++" ../Src
-# cmake -DCMAKE_CXX_COMPILER="clang++-8" -DCMAKE_BUILD_TYPE=Debug ../Src
-# cmake -DCMAKE_CXX_COMPILER="/home/vovan/Desktop/uboot-x15/vanilla/toolchain/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf/bin/arm-linux-gnueabihf-g++" -DCMAKE_BUILD_TYPE=Debug ../Src

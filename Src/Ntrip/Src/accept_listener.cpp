@@ -20,7 +20,7 @@ namespace VrsTunnel::Ntrip
 	{
 		std::list<std::weak_ptr<async_io>> list{};
 		std::scoped_lock sl(the_mutex);
-		for (const auto el : m_clients) {
+		for (const auto& el : m_clients) {
 			list.emplace_back(std::weak_ptr(el.second.asy_io));
 		}
 		return list;

@@ -1,6 +1,9 @@
 #include "async_io.hpp"
 #include <aio.h>
+#include <errno.h>
 #include <bits/c++config.h>
+#include <stdexcept>
+
 
 namespace VrsTunnel::Ntrip
 {

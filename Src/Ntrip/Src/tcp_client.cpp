@@ -1,4 +1,6 @@
 #include "tcp_client.hpp"
+#include <stdexcept>
+
 
 namespace VrsTunnel::Ntrip
 {

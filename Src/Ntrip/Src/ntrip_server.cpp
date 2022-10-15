@@ -2,6 +2,8 @@
 #include "login_encode.hpp"
 #include <bits/c++config.h>
 #include <sys/types.h>
+#include <stdexcept>
+
 
 namespace VrsTunnel::Ntrip
 {

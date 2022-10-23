@@ -1,12 +1,10 @@
 #include <sys/types.h>
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <unistd.h>
 #include <cstring>
 #include <sys/socket.h>
 #include <netdb.h>
 #include <string>
 #include <sys/un.h>
+#include <fcntl.h>
 
 #include "tcp_server.hpp"
 
@@ -19,15 +17,14 @@ void tcp_server::stop() {
 	this->m_thread.join();
 }
 
-void tcp_server::task(uint16_t srv_fd, const std::function<void(async_io)>& client_connected) {
+void tcp_server::task(int srv_fd, const std::function<void(async_io)>& client_connected) {
 	while (this->stop_required == false) {
-		sockaddr cl_addr;
-		socklen_t addr_size = sizeof(cl_addr);
-		int cl_fd = ::accept(srv_fd, &cl_addr, &addr_size);
+		int cl_fd = ::accept(srv_fd, nullptr, nullptr);
 		if (cl_fd > 0) {
 			client_connected(async_io(cl_fd));
+		} else {
+			::sleep(1);
 		}
-		break;
 	}
 	::close(srv_fd);
 }
@@ -64,7 +61,12 @@ void tcp_server::task(uint16_t srv_fd, const std::function<void(async_io)>& clie
 		}
 
 		int optval{1};
-		if (::setsockopt(srv_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &optval, sizeof(optval)) == -1) {
+		int optname = SO_REUSEADDR | SO_REUSEPORT;
+		if (::setsockopt(srv_fd, SOL_SOCKET, optname, &optval, sizeof(optval)) == -1) {
+			continue;
+		}
+
+		if (::fcntl(srv_fd, F_SETFL, O_NONBLOCK) == -1) {
 			continue;
 		}
 
@@ -75,13 +77,13 @@ void tcp_server::task(uint16_t srv_fd, const std::function<void(async_io)>& clie
 		::close(srv_fd);
 	}
 
-	::freeaddrinfo(result); /* No longer needed */
+	::freeaddrinfo(result);
 
 	if (rp == nullptr) { /* No address succeeded */
 		return false;
 	}
 
-	constexpr int BACKLOG{5};
+	constexpr int BACKLOG{25};
 	if (::listen(srv_fd, BACKLOG) == -1) {
 		return false;
 	}

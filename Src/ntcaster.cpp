@@ -19,9 +19,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	VrsTunnel::Ntrip::tcp_server ts{};
 	if (ts.start(8023, client_connected) == false ) {
 		std::cerr << "Failed to start server" << std::endl;
+	} else {
+		::sleep(5);
+		ts.stop();
 	}
-
-	::sleep(10);
-	ts.stop();
-	::sleep(1);
 }

@@ -27,16 +27,9 @@ namespace VrsTunnel::Ntrip
 		void stop();
 		
 	private:
-		// uint16_t m_port{};
 		std::thread m_thread{};
-		void task(uint16_t srv_fd, const std::function<void(async_io)>& client_connected);
+		void task(int srv_fd, const std::function<void(async_io)>& client_connected);
 		std::atomic<bool> stop_required{false};
-		// int m_servfd4{-1};
-		// struct sockaddr_in m_addr4{};
-		// void close(int& servfd);
-
-		// // template<typename connect_listen>
-		// void run_accepting(struct sockaddr* addr, int sockfd, connect_listen& listener);
 	};
 }
 

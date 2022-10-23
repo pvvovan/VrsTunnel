@@ -23,7 +23,6 @@ namespace VrsTunnel::Ntrip
 	{
 		async_io(const async_io&)               = delete;
 		async_io& operator=(const async_io&)    = delete;
-		async_io(async_io&&)                    = delete;
 		async_io& operator=(async_io&&)         = delete;
 
 		/**
@@ -38,6 +37,8 @@ namespace VrsTunnel::Ntrip
 		std::unique_ptr<char[]> m_data{}; /**< Buffer for transmission */
 
 	public:
+		async_io(async_io&&)                    = default;
+
 		/**
 		 * Init asyncronous operation fields
 		 */
@@ -75,6 +76,8 @@ namespace VrsTunnel::Ntrip
 		 * 'InProgress' any more.
 		 */
 		[[nodiscard]] ssize_t end() noexcept;
+
+		void close() noexcept;
 	};
 }
 

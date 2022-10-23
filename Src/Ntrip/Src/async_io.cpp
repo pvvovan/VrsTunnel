@@ -76,4 +76,9 @@ namespace VrsTunnel::Ntrip
 		}
 		return ::aio_return(&m_read_cb);
 	}
+
+	void async_io::close() noexcept
+	{
+		::close(m_read_cb.aio_fildes);
+	}
 }

@@ -5,8 +5,9 @@
 #include <thread>
 #include <atomic>
 #include <sys/socket.h>
+#include <functional>
 
-#include "tcp_client.hpp"
+#include "async_io.hpp"
 
 
 namespace VrsTunnel::Ntrip
@@ -15,27 +16,27 @@ namespace VrsTunnel::Ntrip
 	{
 	public:
 		tcp_server() = default;
-		~tcp_server();
-		tcp_server(const tcp_server&) = delete;
-		tcp_server(tcp_server&&) = delete;
-		tcp_server& operator=(const tcp_server&) = delete;
-		tcp_server& operator=(tcp_server&&) = delete;
-	
-		template<typename connect_listen>
-		[[nodiscard]] bool start(uint16_t port, connect_listen& listener);
+		tcp_server(const tcp_server&)			= delete;
+		tcp_server(tcp_server&&)			= delete;
+		tcp_server& operator=(const tcp_server&)	= delete;
+		tcp_server& operator=(tcp_server&&)		= delete;
+
+		[[nodiscard]] bool start(
+			uint16_t port, const std::function<void(async_io)>& client_connected);
 
 		void stop();
 		
 	private:
-		uint16_t m_port{};
-		std::thread m_thread_v4{};
-		std::atomic<bool> stop_required{true};
-		int m_servfd4{-1};
-		struct sockaddr_in m_addr4{};
-		void close(int& servfd);
+		// uint16_t m_port{};
+		std::thread m_thread{};
+		void task(uint16_t srv_fd, const std::function<void(async_io)>& client_connected);
+		std::atomic<bool> stop_required{false};
+		// int m_servfd4{-1};
+		// struct sockaddr_in m_addr4{};
+		// void close(int& servfd);
 
-		template<typename connect_listen>
-		void run_accepting(struct sockaddr* addr, int sockfd, connect_listen& listener);
+		// // template<typename connect_listen>
+		// void run_accepting(struct sockaddr* addr, int sockfd, connect_listen& listener);
 	};
 }
 

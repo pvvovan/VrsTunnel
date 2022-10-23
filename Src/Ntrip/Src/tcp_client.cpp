@@ -40,10 +40,10 @@ namespace VrsTunnel::Ntrip
 		 * If socket(2) (or connect(2)) fails, we (close the socket
 		 * and) try the next address. */
 		for (rp = result; rp != nullptr; rp = rp->ai_next) {
-			sfd = ::socket(rp->ai_family, rp->ai_socktype,
-							rp->ai_protocol);
-			if (sfd == -1)
+			sfd = ::socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+			if (sfd == -1) {
 				continue;
+			}
 
 			if (::connect(sfd, rp->ai_addr, rp->ai_addrlen) != -1) {
 				break;				/* Success */

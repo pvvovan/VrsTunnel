@@ -13,8 +13,8 @@
 namespace VrsTunnel::Ntrip
 {
 	/**
-	* TCP client class. Copy and move operations are disabled.
-	*/
+	 * TCP client class. Copy and move operations are disabled.
+	 */
 	class tcp_client
 	{
 	private:
@@ -22,14 +22,9 @@ namespace VrsTunnel::Ntrip
 
 	public:
 		/**
-		* default constructor
-		*/
-		tcp_client() = default;
-
-		/**
-		* constructor for existing socket file descriptor
-		*/
-		tcp_client(int fd) noexcept;
+		 * constructor for existing socket file descriptor
+		 */
+		explicit tcp_client(int fd) noexcept;
 
 		tcp_client(const tcp_client&)               = delete;
 		tcp_client& operator=(const tcp_client&)    = delete;
@@ -37,26 +32,26 @@ namespace VrsTunnel::Ntrip
 		tcp_client& operator=(tcp_client&&)         = delete;
 
 		/**
-		* desctructor closes TCP connection.
-		*/
+		 * desctructor closes TCP connection.
+		 */
 		~tcp_client();
 
 		/**
-		* closes TCP connection if it is open.
-		*/
+		 * closes TCP connection if it is open.
+		 */
 		void close();
 
 		/**
-		* connect method creates tcp connection.
-		* @param addr server address
-		* @param port TCP port of the server
-		* @return connection result
-		*/
+		 * connect method creates tcp connection.
+		 * @param addr server address
+		 * @param port TCP port of the server
+		 * @return connection result
+		 */
 		[[nodiscard]] io_status connect(std::string addr, uint16_t port);
 
 		/**
-		* @return file descriptor of TCP connection
-		*/
+		 * @return file descriptor of TCP connection
+		 */
 		int get_sockfd() noexcept;
 	};
 }

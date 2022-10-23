@@ -34,6 +34,9 @@ set(ntserver_src
 	Ntrip/Src/ntrip_server.cpp
 )
 
+set(ntcaster_src
+	)
+
 include_directories(
 .
 Ntrip/Inc)
@@ -43,6 +46,8 @@ target_link_libraries(ntclient rt)
 
 add_executable(ntserver ntserver.cpp ${ntserver_src})
 target_link_libraries(ntserver rt)
+
+# add_executable(ntcaster ntcaster.cpp)
 
 
 set(caster_src

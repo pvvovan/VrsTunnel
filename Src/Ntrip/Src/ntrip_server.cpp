@@ -13,7 +13,7 @@ namespace VrsTunnel::Ntrip
 		if (m_tcp) {
 			throw std::runtime_error("tcp connection already created");
 		}
-		m_tcp = std::make_unique<tcp_client>();
+		m_tcp = std::make_unique<tcp_client>(-1);
 		auto con_res = m_tcp->connect(nlogin.address, nlogin.port);
 		if (con_res != io_status::Success) {
 			m_tcp.reset();

@@ -54,7 +54,7 @@ namespace VrsTunnel::Ntrip
 	{
 		stop_required.store(true);
 		if (m_port > 0) {
-			tcp_client tc{};
+			tcp_client tc{-1};
 			auto res = tc.connect("localhost", m_port);
 			if (res == io_status::Success) {
 				tc.close();

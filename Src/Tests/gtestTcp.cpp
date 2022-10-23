@@ -9,7 +9,7 @@
 
 TEST(TcpTestGroup, TestTcpClient)
 {
-    VrsTunnel::Ntrip::tcp_client tc{};
+    VrsTunnel::Ntrip::tcp_client tc{-1};
     auto con_res = tc.connect("195.16.76.194", 2101);
     if (con_res != VrsTunnel::Ntrip::io_status::Success) {
         EXPECT_TRUE(false);

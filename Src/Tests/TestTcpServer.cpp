@@ -53,7 +53,7 @@ TEST(TservTestGroup, ClientCountTest)
     CHECK_TRUE(isOk);
 
     for(int i = total; i > 0; --i) {
-        VrsTunnel::Ntrip::tcp_client tc{};
+        VrsTunnel::Ntrip::tcp_client tc{-1};
         auto stat = tc.connect("localhost", tcp_port);
         CHECK_TRUE(stat == VrsTunnel::Ntrip::io_status::Success);
         tc.close();

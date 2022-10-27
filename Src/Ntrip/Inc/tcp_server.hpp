@@ -6,6 +6,7 @@
 #include <atomic>
 #include <sys/socket.h>
 #include <functional>
+#include <future>
 
 #include "async_io.hpp"
 
@@ -21,14 +22,13 @@ namespace VrsTunnel::Ntrip
 		tcp_server& operator=(const tcp_server&)	= delete;
 		tcp_server& operator=(tcp_server&&)		= delete;
 
-		[[nodiscard]] bool start(
-			uint16_t port, const std::function<void(async_io)>& client_connected);
+		[[nodiscard]] bool start(uint16_t port, const std::function<void(async_io)>& client_connected);
 
 		void stop();
 		
 	private:
 		std::thread m_thread{};
-		void task(int srv_fd, const std::function<void(async_io)>& client_connected);
+		void task(uint16_t port, const std::function<void(async_io)>& client_connected, std::promise<bool>&& promise);
 		std::atomic<bool> stop_required{false};
 	};
 }

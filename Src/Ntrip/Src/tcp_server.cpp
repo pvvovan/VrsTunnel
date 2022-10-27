@@ -5,6 +5,10 @@
 #include <string>
 #include <sys/un.h>
 #include <fcntl.h>
+#include <chrono>
+#include <thread>
+#include <atomic>
+#include <future>
 
 #include "tcp_server.hpp"
 
@@ -17,21 +21,7 @@ void tcp_server::stop() {
 	this->m_thread.join();
 }
 
-void tcp_server::task(int srv_fd, const std::function<void(async_io)>& client_connected) {
-	while (this->stop_required == false) {
-		int cl_fd = ::accept(srv_fd, nullptr, nullptr);
-		if (cl_fd > 0) {
-			client_connected(async_io(cl_fd));
-		} else {
-			::sleep(1);
-		}
-	}
-	::close(srv_fd);
-}
-
-[[nodiscard]] bool tcp_server::start(
-	uint16_t port, const std::function<void(async_io)>& client_connected)
-{
+void tcp_server::task(uint16_t port, const std::function<void(async_io)>& client_connected, std::promise<bool>&& promise) {
 	addrinfo hints{};
 	::memset(&hints, 0, sizeof(hints));
 	hints.ai_family = AF_UNSPEC;		/* Allow IPv4 or IPv6 */
@@ -45,7 +35,8 @@ void tcp_server::task(int srv_fd, const std::function<void(async_io)>& client_co
 	std::string port_str = std::to_string(port);
 	addrinfo* result{nullptr};
 	if (::getaddrinfo(nullptr, port_str.c_str(), &hints, &result) != 0) {
-		return false;
+		promise.set_value(false);
+		return;
 	}
 
 	/* getaddrinfo() returns a list of address structures.
@@ -80,16 +71,37 @@ void tcp_server::task(int srv_fd, const std::function<void(async_io)>& client_co
 	::freeaddrinfo(result);
 
 	if (rp == nullptr) { /* No address succeeded */
-		return false;
+		promise.set_value(false);
+		return;
 	}
 
 	constexpr int BACKLOG{25};
 	if (::listen(srv_fd, BACKLOG) == -1) {
-		return false;
+		promise.set_value(false);
+		return;
 	}
 
-	m_thread = std::thread{&tcp_server::task, this, srv_fd, std::cref(client_connected)};
-	return true;
+	promise.set_value(true);
+
+	while (this->stop_required == false) {
+		int cl_fd = ::accept(srv_fd, nullptr, nullptr);
+		if (cl_fd > 0) {
+			client_connected(async_io(cl_fd));
+		} else {
+			using namespace std::chrono_literals;
+			std::this_thread::sleep_for(10ms);
+		}
+	}
+	::close(srv_fd);
+}
+
+[[nodiscard]] bool tcp_server::start(uint16_t port, const std::function<void(async_io)>& client_connected)
+{
+	std::promise<bool> barrier{};
+	std::future<bool> future = barrier.get_future();
+	m_thread = std::thread{&tcp_server::task, this, port, std::cref(client_connected), std::move(barrier)};
+	future.wait();
+	return future.get();
 }
 
 }

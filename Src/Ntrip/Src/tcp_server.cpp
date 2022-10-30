@@ -16,11 +16,6 @@
 namespace VrsTunnel::Ntrip
 {
 
-void tcp_server::stop() {
-	stop_required = true;
-	this->m_thread.join();
-}
-
 void tcp_server::task(uint16_t port, std::function<void(async_io)> client_connected, std::promise<bool>&& promise) {
 	addrinfo hints{};
 	::memset(&hints, 0, sizeof(hints));
@@ -57,10 +52,6 @@ void tcp_server::task(uint16_t port, std::function<void(async_io)> client_connec
 			continue;
 		}
 
-		if (::fcntl(srv_fd, F_SETFL, O_NONBLOCK) == -1) {
-			continue;
-		}
-
 		if (::bind(srv_fd, rp->ai_addr, rp->ai_addrlen) == 0) {
 			break; /* Success */
 		}
@@ -83,16 +74,12 @@ void tcp_server::task(uint16_t port, std::function<void(async_io)> client_connec
 
 	promise.set_value(true);
 
-	while (this->stop_required == false) {
+	for ( ; ; ) {
 		int cl_fd = ::accept(srv_fd, nullptr, nullptr);
 		if (cl_fd > 0) {
 			client_connected(async_io(cl_fd));
-		} else {
-			using namespace std::chrono_literals;
-			std::this_thread::sleep_for(10ms);
 		}
 	}
-	::close(srv_fd);
 }
 
 [[nodiscard]] bool tcp_server::start(uint16_t port, std::function<void(async_io)> client_connected)

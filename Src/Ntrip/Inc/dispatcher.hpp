@@ -29,8 +29,6 @@ class dispatcher {
 				uint16_t srv_port,
 				std::set<std::string> srv_auth);
 
-	void stop();
-
  private:
 	tcp_server m_cli_tcp{};
 	tcp_server m_srv_tcp{};

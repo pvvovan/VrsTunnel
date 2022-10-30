@@ -24,7 +24,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	} else {
 		::sleep(1);
 		::sleep(1);
-		::sleep(5);
-		dispatch.stop();
+		::sleep(50);
 	}
 }

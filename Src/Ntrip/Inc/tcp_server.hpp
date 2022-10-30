@@ -24,13 +24,10 @@ class tcp_server
 	tcp_server& operator=(tcp_server&&)		= delete;
 
 	[[nodiscard]] bool start(uint16_t port, std::function<void(async_io)> client_connected);
-
-	void stop();
 	
  private:
 	std::thread m_thread{};
 	void task(uint16_t port, std::function<void(async_io)> client_connected, std::promise<bool>&& promise);
-	std::atomic<bool> stop_required{false};
 };
 
 }

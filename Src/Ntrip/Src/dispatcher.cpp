@@ -20,19 +20,12 @@ namespace VrsTunnel::Ntrip
 		this->server_connected(std::move(server));
 	};
 	if (m_srv_tcp.start(srv_port, std::move(sv_con)) == false) {
-		m_cli_tcp.stop();
 		return false;
 	}
 
 	m_cli_auth = cli_auth;
 	m_srv_auth = srv_auth;
 	return true;
-}
-
-void dispatcher::stop()
-{
-	m_cli_tcp.stop();
-	m_srv_tcp.stop();
 }
 
 void dispatcher::client_connected(async_io client) {

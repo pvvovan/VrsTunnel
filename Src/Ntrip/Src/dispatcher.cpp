@@ -1,5 +1,6 @@
 #include "dispatcher.hpp"
 
+
 namespace VrsTunnel::Ntrip
 {
 
@@ -11,14 +12,14 @@ namespace VrsTunnel::Ntrip
 	std::function<void(async_io)> cl_con = [this] (async_io client) {
 		this->client_connected(std::move(client));
 	};
-	if (m_cli_tcp.start(cli_port, cl_con) == false) {
+	if (m_cli_tcp.start(cli_port, std::move(cl_con)) == false) {
 		return false;
 	}
 
 	std::function<void(async_io)> sv_con = [this] (async_io server) {
 		this->server_connected(std::move(server));
 	};
-	if (m_srv_tcp.start(srv_port, sv_con) == false) {
+	if (m_srv_tcp.start(srv_port, std::move(sv_con)) == false) {
 		m_cli_tcp.stop();
 		return false;
 	}
@@ -39,7 +40,7 @@ void dispatcher::client_connected(async_io client) {
 }
 
 void dispatcher::server_connected(async_io server) {
-
+	m_suppliers.emplace_back(corr_supply(std::move(server)));
 }
 
 }

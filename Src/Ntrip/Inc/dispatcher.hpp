@@ -5,9 +5,11 @@
 #include <set>
 #include <string>
 #include <map>
+#include <list>
 
 #include "tcp_server.hpp"
 #include "async_io.hpp"
+#include "corr_supply.hpp"
 
 
 namespace VrsTunnel::Ntrip
@@ -34,8 +36,9 @@ class dispatcher {
 	tcp_server m_srv_tcp{};
 	void client_connected(async_io client);
 	void server_connected(async_io server);
-	std::map<std::string, std::set<std::string>> m_cli_auth;
-	std::set<std::string> m_srv_auth;
+	std::map<std::string, std::set<std::string>> m_cli_auth{};
+	std::set<std::string> m_srv_auth{};
+	std::list<corr_supply> m_suppliers{};
 };
 
 }

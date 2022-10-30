@@ -99,7 +99,7 @@ void tcp_server::task(uint16_t port, std::function<void(async_io)> client_connec
 {
 	std::promise<bool> barrier{};
 	std::future<bool> future = barrier.get_future();
-	m_thread = std::thread{&tcp_server::task, this, port, client_connected, std::move(barrier)};
+	m_thread = std::thread{&tcp_server::task, this, port, std::move(client_connected), std::move(barrier)};
 	future.wait();
 	return future.get();
 }

@@ -21,7 +21,7 @@ void tcp_server::stop() {
 	this->m_thread.join();
 }
 
-void tcp_server::task(uint16_t port, const std::function<void(async_io)>& client_connected, std::promise<bool>&& promise) {
+void tcp_server::task(uint16_t port, std::function<void(async_io)> client_connected, std::promise<bool>&& promise) {
 	addrinfo hints{};
 	::memset(&hints, 0, sizeof(hints));
 	hints.ai_family = AF_UNSPEC;		/* Allow IPv4 or IPv6 */
@@ -95,11 +95,11 @@ void tcp_server::task(uint16_t port, const std::function<void(async_io)>& client
 	::close(srv_fd);
 }
 
-[[nodiscard]] bool tcp_server::start(uint16_t port, const std::function<void(async_io)>& client_connected)
+[[nodiscard]] bool tcp_server::start(uint16_t port, std::function<void(async_io)> client_connected)
 {
 	std::promise<bool> barrier{};
 	std::future<bool> future = barrier.get_future();
-	m_thread = std::thread{&tcp_server::task, this, port, std::cref(client_connected), std::move(barrier)};
+	m_thread = std::thread{&tcp_server::task, this, port, client_connected, std::move(barrier)};
 	future.wait();
 	return future.get();
 }

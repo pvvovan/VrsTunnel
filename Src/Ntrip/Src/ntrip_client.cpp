@@ -1,6 +1,7 @@
 #include <memory>
 #include <sys/types.h>
 #include <stdexcept>
+#include <cstdio>
 
 #include "ntrip_client.hpp"
 #include "login_encode.hpp"
@@ -18,15 +19,16 @@ namespace VrsTunnel::Ntrip
 			"Accept: */*\r\n" "Connection: close\r\n"
 			"Authorization: Basic %s\r\n" "\r\n";
 		
-		std::unique_ptr<char[]> request;
-		std::string auth{""};
+		std::unique_ptr<char[]> request{};
+		std::string auth{};
 		if (name.size() > 0) {
 			std::unique_ptr<login_encode> encoder = login_encode::make_instance();
-			auth = (*encoder).get(name, password);
+			auth = encoder->get(name, password);
 		}
-		request = std::make_unique<char[]>(::strlen(requestFormat) +
-							::strlen(mountpoint) + auth.length() + 2);
-		::sprintf(request.get(), requestFormat, mountpoint, auth.c_str());
+
+		size_t len = ::strlen(requestFormat) + ::strlen(mountpoint) + auth.length() + 1;
+		request = std::make_unique<char[]>(len);
+		::snprintf(request.get(), len, requestFormat, mountpoint, auth.c_str());
 		return request;
 	}
 
@@ -43,7 +45,7 @@ namespace VrsTunnel::Ntrip
 		async_io aio{tc.get_sockfd()};
 		std::unique_ptr<char[]> request = build_request("", name, password);
 		
-		auto res = aio.write(request.get(), strlen(request.get()));
+		auto res = aio.write(request.get(), ::strlen(request.get()));
 		if (res != io_status::Success) {
 			return res;
 		}
@@ -64,7 +66,7 @@ namespace VrsTunnel::Ntrip
 			}
 		}
 		ssize_t end_res = aio.end();
-		if (end_res != (ssize_t)strlen(request.get())) {
+		if (end_res != static_cast<ssize_t>(::strlen(request.get()))) {
 			return io_status::Error;
 		}
 

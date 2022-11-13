@@ -10,6 +10,8 @@ namespace VrsTunnel::Ntrip
 class corr_supply {
  public:
 	explicit corr_supply(async_io&& aio);
+	bool process();
+	void close();
 
 	~corr_supply()			= default;
 	corr_supply(corr_supply&&)	= default;

@@ -81,4 +81,9 @@ namespace VrsTunnel::Ntrip
 	{
 		::close(m_read_cb->aio_fildes);
 	}
+
+	int async_io::get_fd() noexcept
+	{
+		return m_read_cb->aio_fildes;
+	}
 }

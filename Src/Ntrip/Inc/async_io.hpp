@@ -65,6 +65,7 @@ class async_io
 	[[nodiscard]] ssize_t end() noexcept;
 
 	void close() noexcept;
+	int get_fd() noexcept;
 
  private:
 	async_io()				= delete;

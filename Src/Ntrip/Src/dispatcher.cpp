@@ -74,13 +74,13 @@ void dispatcher::server_processing()
 
 void dispatcher::server_connected(async_io server) {
 	const int server_fd = server.get_fd();
-	std::shared_ptr<corr_supply> supply = std::make_shared<corr_supply>(std::move(server));
+	std::unique_ptr<corr_supply> supply = std::make_unique<corr_supply>(std::move(server));
 	if (supply->process()) {
 		epoll_event ev;
 		ev.events = EPOLLIN;
 		ev.data.ptr = supply.get();
 		if (::epoll_ctl(m_epoll_srvfd, EPOLL_CTL_ADD, server_fd, &ev) == 0) {
-			m_suppliers.emplace_back(supply);
+			m_suppliers.emplace_back(std::move(supply));
 		}
 	}
 }

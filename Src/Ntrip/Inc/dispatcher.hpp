@@ -38,7 +38,7 @@ class dispatcher {
 	void server_connected(async_io server);
 	std::map<std::string, std::set<std::string>> m_cli_auth{};
 	std::set<std::string> m_srv_auth{};
-	std::list<std::shared_ptr<corr_supply>> m_suppliers{};
+	std::list<std::unique_ptr<corr_supply>> m_suppliers{};
 	int m_epoll_srvfd{};
 	std::thread m_srv_thread{};
 	void server_processing();

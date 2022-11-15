@@ -20,6 +20,7 @@ bool corr_supply::process() {
 		}
 		return true;
 	}
+	std::cout << "supply error" << std::endl;
 	return false;
 }
 

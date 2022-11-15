@@ -55,11 +55,11 @@ void dispatcher::server_processing()
 				if (evlist[i].events & EPOLLIN) {
 					corr_supply* supply = static_cast<corr_supply*>(evlist[i].data.ptr);
 					if (supply->process() == false) {
-						supply->close();
+						// supply->close();
 					}
 					using namespace std::chrono_literals;
 					std::this_thread::sleep_for(1s);
-					supply->close(); // no data timeout seems to be needed
+					// supply->close(); // no data timeout seems to be needed
 				} else {
 					std::cout << "epoll event error" << std::endl;
 				}

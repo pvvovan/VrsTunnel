@@ -53,6 +53,8 @@ target_link_libraries(ntserver rt)
 
 add_executable(ntcaster ntcaster.cpp ${ntcaster_src})
 
+add_executable(dummy_supply Tests/dummy_supply.cpp)
+
 
 # set(caster_src
 # 	${ntrip_src}

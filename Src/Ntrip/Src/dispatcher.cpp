@@ -62,7 +62,7 @@ void dispatcher::server_processing()
 						});
 					}
 					using namespace std::chrono_literals;
-					std::this_thread::sleep_for(1s);
+					std::this_thread::sleep_for(100ms);
 					// supply->close(); // no data timeout seems to be needed
 				} else {
 					std::cout << "epoll event error" << std::endl;

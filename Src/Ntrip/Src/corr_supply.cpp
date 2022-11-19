@@ -10,12 +10,16 @@
 namespace VrsTunnel::Ntrip
 {
 
-corr_supply::corr_supply(async_io&& aio) : m_aio{std::move(aio)} { }
+corr_supply::corr_supply(async_io&& aio) :
+				m_aio{std::move(aio)},
+				m_lastepoch {std::chrono::steady_clock::now()}
+				{ }
 
 bool corr_supply::process() {
 	if (m_aio.check() == io_status::Success) {
 		int avail = m_aio.available();
 		if (avail > 0) {
+			m_lastepoch = std::chrono::steady_clock::now();
 			size_t len = static_cast<size_t>(avail);
 			std::unique_ptr<char[]> chunk = m_aio.read(len);
 			if (m_state == conn_state::auth) {
@@ -24,7 +28,11 @@ bool corr_supply::process() {
 				return process_corr(std::move(chunk), len);
 			}
 		} else {
-			std::cout << "No data from server" << std::endl;
+			using namespace std::chrono_literals;
+			if ((std::chrono::steady_clock::now() - m_lastepoch) > 20s) {
+				std::cout << "No data from ntrip server" << std::endl;
+				return false;
+			}
 		}
 		return true;
 	}

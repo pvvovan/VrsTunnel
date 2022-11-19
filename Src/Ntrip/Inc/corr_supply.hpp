@@ -5,6 +5,7 @@
 #include <vector>
 #include <set>
 #include <string>
+#include <chrono>
 
 #include "async_io.hpp"
 
@@ -35,6 +36,8 @@ class corr_supply {
 	bool process_auth(std::unique_ptr<char[]> chunk, size_t len);
 	bool process_corr(std::unique_ptr<char[]> chunk, size_t len);
 	bool parse_auth();
+	std::chrono::time_point<std::chrono::steady_clock> m_lastepoch;
+
 	static std::set<std::string> s_auths;
 };
 

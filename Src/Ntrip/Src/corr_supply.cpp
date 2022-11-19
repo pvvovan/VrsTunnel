@@ -46,10 +46,19 @@ bool corr_supply::parse_auth()
 		c++;
 		if (c == 13) {
 			std::string auth = line;
-			std::cout << auth << std::endl;
+			if (auto search = s_auths.find(auth); search != s_auths.end()) {
+				std::cout << "Found " << (*search) << '\n';
+				constexpr std::string_view resp {"HTTP/1.1 200 OK\r\n\r\n"};
+				if (m_aio.write(resp.data(), resp.size()) == io_status::Success) {
+					m_state = conn_state::run;
+					return true;
+				}
+			} else {
+				std::cout << "Not found\n";
+			}
 		}
 	}
-	return true;
+	return false;
 }
 
 bool corr_supply::process_auth(std::unique_ptr<char[]> chunk, size_t len) {
@@ -76,7 +85,11 @@ bool corr_supply::process_auth(std::unique_ptr<char[]> chunk, size_t len) {
 }
 
 bool corr_supply::process_corr(std::unique_ptr<char[]> chunk, size_t len) {
+	std::string str {chunk.get(), len};
+	std::cout << str << std::flush;
 	return true;
 }
+
+std::set<std::string> corr_supply::s_auths {std::string{"bXluYW1lOm15d29yZA=="}};
 
 }

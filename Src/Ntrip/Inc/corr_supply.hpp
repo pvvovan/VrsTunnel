@@ -3,6 +3,8 @@
 
 #include <memory>
 #include <vector>
+#include <set>
+#include <string>
 
 #include "async_io.hpp"
 
@@ -33,6 +35,7 @@ class corr_supply {
 	bool process_auth(std::unique_ptr<char[]> chunk, size_t len);
 	bool process_corr(std::unique_ptr<char[]> chunk, size_t len);
 	bool parse_auth();
+	static std::set<std::string> s_auths;
 };
 
 }

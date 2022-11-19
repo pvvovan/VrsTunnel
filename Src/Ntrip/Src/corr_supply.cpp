@@ -55,6 +55,10 @@ bool corr_supply::parse_auth()
 				}
 			} else {
 				std::cout << "Not found\n";
+				constexpr std::string_view resp {"HTTP/1.1 401 Unauthorized\r\n\r\n"};
+				if (m_aio.write(resp.data(), resp.size()) == io_status::Success) {
+					return false;
+				}
 			}
 		}
 	}

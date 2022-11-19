@@ -55,7 +55,11 @@ void dispatcher::server_processing()
 				if (evlist[i].events & EPOLLIN) {
 					corr_supply* supply = static_cast<corr_supply*>(evlist[i].data.ptr);
 					if (supply->process() == false) {
-						// supply->close();
+						supply->close();
+						std::scoped_lock<std::mutex> sl {m_suppliers_lock};
+						m_suppliers.remove_if([&supply] (auto& elem) {
+							return elem.get() == supply;
+						});
 					}
 					using namespace std::chrono_literals;
 					std::this_thread::sleep_for(1s);
@@ -80,6 +84,7 @@ void dispatcher::server_connected(async_io server) {
 		ev.events = EPOLLIN;
 		ev.data.ptr = supply.get();
 		if (::epoll_ctl(m_epoll_srvfd, EPOLL_CTL_ADD, server_fd, &ev) == 0) {
+			std::scoped_lock<std::mutex> sl {m_suppliers_lock};
 			m_suppliers.emplace_back(std::move(supply));
 		}
 	}

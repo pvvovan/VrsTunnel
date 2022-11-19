@@ -8,6 +8,7 @@
 #include <list>
 #include <thread>
 #include <memory>
+#include <mutex>
 
 #include "tcp_server.hpp"
 #include "async_io.hpp"
@@ -39,6 +40,7 @@ class dispatcher {
 	std::map<std::string, std::set<std::string>> m_cli_auth{};
 	std::set<std::string> m_srv_auth{};
 	std::list<std::unique_ptr<corr_supply>> m_suppliers{};
+	std::mutex m_suppliers_lock{};
 	int m_epoll_srvfd{};
 	std::thread m_srv_thread{};
 	void server_processing();

@@ -61,9 +61,6 @@ void dispatcher::server_processing()
 							return elem.get() == supply;
 						});
 					}
-					using namespace std::chrono_literals;
-					std::this_thread::sleep_for(100ms);
-					// supply->close(); // no data timeout seems to be needed
 				} else {
 					std::cout << "epoll event error" << std::endl;
 				}
@@ -73,6 +70,8 @@ void dispatcher::server_processing()
 		} else {
 			std::cout << "epoll_wait error" << std::endl;
 		}
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(100ms);
 	}
 }
 

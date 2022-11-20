@@ -78,7 +78,7 @@ void dispatcher::server_processing()
 
 void dispatcher::server_connected(async_io server) {
 	const int server_fd = server.get_fd();
-	std::unique_ptr<corr_supply> supply = std::make_unique<corr_supply>(std::move(server));
+	auto supply = std::make_unique<corr_supply>(std::move(server), m_srv_auth);
 	if (supply->process()) {
 		epoll_event ev;
 		ev.events = EPOLLIN;

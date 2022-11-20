@@ -15,7 +15,7 @@ namespace VrsTunnel::Ntrip
 
 class corr_supply {
  public:
-	explicit corr_supply(async_io&& aio);
+	explicit corr_supply(async_io&& aio, std::set<std::string>& auths);
 	bool process();
 	void close();
 
@@ -38,7 +38,7 @@ class corr_supply {
 	bool parse_auth();
 	std::chrono::time_point<std::chrono::steady_clock> m_lastepoch;
 
-	static std::set<std::string> s_auths;
+	const std::set<std::string>& m_auths;
 };
 
 }

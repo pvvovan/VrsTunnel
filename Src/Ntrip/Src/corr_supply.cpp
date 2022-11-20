@@ -10,9 +10,10 @@
 namespace VrsTunnel::Ntrip
 {
 
-corr_supply::corr_supply(async_io&& aio) :
-				m_aio{std::move(aio)},
-				m_lastepoch {std::chrono::steady_clock::now()}
+corr_supply::corr_supply(async_io&& aio, std::set<std::string>& auths) :
+				m_aio {std::move(aio)},
+				m_lastepoch {std::chrono::steady_clock::now()},
+				m_auths {auths}
 				{ }
 
 bool corr_supply::process() {
@@ -54,18 +55,18 @@ bool corr_supply::parse_auth()
 		c++;
 		if (c == 13) {
 			std::string auth = line;
-			if (auto search = s_auths.find(auth); search != s_auths.end()) {
-				std::cout << "Found " << (*search) << '\n';
+			if (auto search = m_auths.find(auth); search != m_auths.end()) {
+				std::cout << "Base Found " << (*search) << '\n';
 				constexpr std::string_view resp {"HTTP/1.1 200 OK\r\n\r\n"};
 				if (m_aio.write(resp.data(), resp.size()) == io_status::Success) {
 					m_state = conn_state::run;
 					return true;
 				}
 			} else {
-				std::cout << "Not found\n";
+				std::cout << "Base Not found\n";
 				constexpr std::string_view resp {"HTTP/1.1 401 Unauthorized\r\n\r\n"};
 				if (m_aio.write(resp.data(), resp.size()) == io_status::Success) {
-					return false;
+					return true; // wait for timeout?
 				}
 			}
 		}
@@ -101,7 +102,5 @@ bool corr_supply::process_corr(std::unique_ptr<char[]> chunk, size_t len) {
 	std::cout << str << std::flush;
 	return true;
 }
-
-std::set<std::string> corr_supply::s_auths {std::string{"bXluYW1lOm15d29yZA=="}};
 
 }

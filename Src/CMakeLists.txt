@@ -39,6 +39,7 @@ set(ntcaster_src
 	Ntrip/Src/async_io.cpp
 	Ntrip/Src/dispatcher.cpp
 	Ntrip/Src/corr_supply.cpp
+	Ntrip/Src/corr_consume.cpp
 )
 
 include_directories(

@@ -42,7 +42,17 @@ namespace VrsTunnel::Ntrip
 }
 
 void dispatcher::client_connected(async_io client) {
-
+	const int client_fd = client.get_fd();
+	auto consumer = std::make_unique<corr_consume>(std::move(client), m_cli_auth);
+	if (consumer->process()) {
+		epoll_event ev;
+		ev.events = EPOLLIN;
+		ev.data.ptr = consumer.get();
+		if (::epoll_ctl(m_epoll_clifd, EPOLL_CTL_ADD, client_fd, &ev) == 0) {
+			std::scoped_lock<std::mutex> sl {m_consumers_lock};
+			m_consumers.emplace_back(std::move(consumer));
+		}
+	}
 }
 
 void dispatcher::server_processing()

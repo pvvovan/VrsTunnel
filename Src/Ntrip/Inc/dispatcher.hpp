@@ -13,6 +13,7 @@
 #include "tcp_server.hpp"
 #include "async_io.hpp"
 #include "corr_supply.hpp"
+#include "corr_consume.hpp"
 
 
 namespace VrsTunnel::Ntrip
@@ -44,6 +45,10 @@ class dispatcher {
 	int m_epoll_srvfd{};
 	std::thread m_srv_thread{};
 	void server_processing();
+
+	int m_epoll_clifd{};
+	std::list<std::unique_ptr<corr_consume>> m_consumers{};
+	std::mutex m_consumers_lock{};
 };
 
 }

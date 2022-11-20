@@ -38,10 +38,43 @@ namespace VrsTunnel::Ntrip
 	}
 	m_srv_thread = std::thread{&dispatcher::server_processing, this};
 
+	constexpr int EPOLL_CLI_SIZE {1000};
+	m_epoll_clifd = ::epoll_create(EPOLL_CLI_SIZE);
+	if (m_epoll_clifd < 0) {
+		return false;
+	}
+	m_cli_thread = std::thread{&dispatcher::client_processing, this};
+
 	return true;
 }
 
+void dispatcher::client_processing() {
+	for ( ; ; ) {
+		constexpr size_t MAX_CEVS {1000};
+		epoll_event evlist[MAX_CEVS];
+		int res = epoll_wait(m_epoll_clifd, &evlist[0], MAX_CEVS, 5000);
+		if (res > 0) {
+			for (int i = 0; i < res; i++) {
+				if (evlist[i].events & EPOLLIN) {
+					corr_consume* consume = static_cast<corr_consume*>(evlist[i].data.ptr);
+					if (consume->process() == false) {
+					}
+				} else {
+					std::cout << "cli epoll event error" << std::endl;
+				}
+			}
+		} else if (res == 0) {
+			std::cout << "cli epoll_wait timeout" << std::endl;
+		} else {
+			std::cout << "cli epoll_wait error" << std::endl;
+		}
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(1000ms);
+	}
+}
+
 void dispatcher::client_connected(async_io client) {
+	std::cout << "Client connected\n";
 	const int client_fd = client.get_fd();
 	auto consumer = std::make_unique<corr_consume>(std::move(client), m_cli_auth);
 	if (consumer->process()) {
@@ -58,8 +91,9 @@ void dispatcher::client_connected(async_io client) {
 void dispatcher::server_processing()
 {
 	for ( ; ; ) {
-		epoll_event evlist[10];
-		int res = epoll_wait(m_epoll_srvfd, &evlist[0], 10, 5000);
+		constexpr size_t MAX_SEVS {100};
+		epoll_event evlist[MAX_SEVS];
+		int res = epoll_wait(m_epoll_srvfd, &evlist[0], MAX_SEVS, 5000);
 		if (res > 0) {
 			for (int i = 0; i < res; i++) {
 				if (evlist[i].events & EPOLLIN) {
@@ -72,13 +106,13 @@ void dispatcher::server_processing()
 						});
 					}
 				} else {
-					std::cout << "epoll event error" << std::endl;
+					std::cout << "srv epoll event error" << std::endl;
 				}
 			}
 		} else if (res == 0) {
-			std::cout << "epoll_wait timeout" << std::endl;
+			std::cout << "srv epoll_wait timeout" << std::endl;
 		} else {
-			std::cout << "epoll_wait error" << std::endl;
+			std::cout << "srv epoll_wait error" << std::endl;
 		}
 		using namespace std::chrono_literals;
 		std::this_thread::sleep_for(100ms);

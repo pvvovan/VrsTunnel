@@ -49,6 +49,8 @@ class dispatcher {
 	int m_epoll_clifd{};
 	std::list<std::unique_ptr<corr_consume>> m_consumers{};
 	std::mutex m_consumers_lock{};
+	void client_processing();
+	std::thread m_cli_thread{};
 };
 
 }

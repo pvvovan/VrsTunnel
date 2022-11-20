@@ -82,15 +82,15 @@ bool corr_consume::process_auth(std::unique_ptr<char[]> chunk, size_t len) {
 	if (m_auth_raw.size() > 100000) {
 		return false;
 	}
-	constexpr std::string_view auth_ending {"Transfer-Encoding: chunked"};
+	constexpr std::string_view auth_ending {"\r\n\r\n"};
 	constexpr size_t endling_len = auth_ending.size();
 	if (m_auth_raw.size() > auth_ending.size()) {
 		const std::string_view ending(&m_auth_raw.back() - endling_len + 1, endling_len);
 		if (ending.compare(auth_ending) == 0) {
-			std::cout << "RTK base connected" << std::endl;
+			std::cout << "Ntrip client connected" << std::endl;
 			return parse_auth();
 		} else {
-			std::cout << "ending: " << ending << std::endl;
+			std::cout << "Client ending: " << ending << std::endl;
 			return false;
 		}
 	}

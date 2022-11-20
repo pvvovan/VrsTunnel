@@ -19,7 +19,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	srv_auth.insert("bXluYW1lOm15d29yZA==");
 
 	std::map<std::string, std::set<std::string>> cli_auth{};
-	cli_auth["bXluYW1lOm15d29yZA=="].insert("clipassw");
+	cli_auth["bXluYW1lOm15d29yZA=="].insert("bXluYW1lOm15d29yZA==");
 
 	if (dispatch.start(8021, cli_auth, 8025, srv_auth) == false ) {
 		std::cerr << "Failed to start dispatcher" << std::endl;

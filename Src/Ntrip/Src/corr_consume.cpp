@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include <string>
+#include <chrono>
+#include <thread>
 namespace VrsTunnel::Ntrip
 {
 
@@ -25,6 +27,8 @@ bool corr_consume::process() {
 			std::unique_ptr<char[]> chunk = m_aio.read(len);
 			if (m_state == conn_state::auth) {
 				return process_auth(std::move(chunk), len);
+			} else if (m_state == conn_state::wait_mounts) {
+				return send_mount_points();
 			} else {
 				// return process_corr(std::move(chunk), len);
 			}
@@ -53,6 +57,10 @@ bool corr_consume::parse_auth()
 	int c{0};
 	while (ss >> line) {
 		c++;
+		if ((c == 2) && (line.compare("/") == 0)) {
+			m_state = conn_state::send_mounts;
+			return send_mount_points();
+		}
 		if (c == 13) {
 			std::string auth = line;
 			if (auto search = m_auths.find(auth); search != m_auths.end()) {
@@ -97,10 +105,37 @@ bool corr_consume::process_auth(std::unique_ptr<char[]> chunk, size_t len) {
 	return true;
 }
 
-// bool corr_consume::process_corr(std::unique_ptr<char[]> chunk, size_t len) {
-// 	std::string str {chunk.get(), len};
-// 	std::cout << str << std::flush;
-// 	return true;
-// }
+bool corr_consume::send_mount_points() {
+	if (m_state == conn_state::send_mounts) {
+		m_state = conn_state::wait_mounts;
+		constexpr std::string_view mount_resp {
+			"HTTP/1.0 200 OK\r\n"
+			"Content-Type: text/plain\r\n"
+			"Content-Length: 97\r\n\r\n"
+			"STR;tunnel;tunnel;RTCM 3;;2;GPS+GLO;;;55.55;33.33;1;1;VRS Tunnel;none;B;Y;9600;\r\n"
+			"ENDSOURCETABLE\r\n"
+		};
+		if (m_aio.write(mount_resp.data(), mount_resp.size()) == io_status::Success) {
+			using namespace std::chrono_literals;
+			std::this_thread::sleep_for(100ms);
+			m_aio.close();
+			std::cout << "get mounts success\n";
+			return true;
+		} else {
+			std::cout << "get mounts error\n";
+		}
+	} else {
+		io_status status = m_aio.check();
+		if (status == io_status::InProgress) {
+			return true;
+		} else if (status == io_status::Success) {
+			static_cast<void>(m_aio.end());
+			return false;
+		} else {
+			return false;
+		}
+	}
+	return false;
+}
 
 }

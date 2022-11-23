@@ -31,12 +31,13 @@ class corr_consume {
  private:
 	async_io m_aio;
 
-	enum class conn_state { auth, run };
+	enum class conn_state { auth, run, send_mounts, wait_mounts };
 	conn_state m_state {conn_state::auth};
 	std::vector<char> m_auth_raw{};
 
 	bool process_auth(std::unique_ptr<char[]> chunk, size_t len);
 	bool parse_auth();
+	bool send_mount_points();
 	std::chrono::time_point<std::chrono::steady_clock> m_lastepoch;
 
 	const std::map<std::string, std::set<std::string>>& m_auths;

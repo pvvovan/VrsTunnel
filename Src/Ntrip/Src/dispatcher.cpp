@@ -58,6 +58,11 @@ void dispatcher::client_processing() {
 				if (evlist[i].events & EPOLLIN) {
 					corr_consume* consume = static_cast<corr_consume*>(evlist[i].data.ptr);
 					if (consume->process() == false) {
+						consume->close();
+						std::scoped_lock<std::mutex> sl {m_consumers_lock};
+						m_consumers.remove_if([&consume] (auto& elem) {
+							return elem.get() == consume;
+						});
 					}
 				} else {
 					std::cout << "cli epoll event error" << std::endl;

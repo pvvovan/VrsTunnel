@@ -45,7 +45,18 @@ namespace VrsTunnel::Ntrip
 	}
 	m_cli_thread = std::thread{&dispatcher::client_processing, this};
 
+	m_mountreaders_thread = std::thread(&dispatcher::mount_sending, this);
 	return true;
+}
+
+void dispatcher::mount_sending() {
+	for ( ; ; ) {
+		{
+			std::unique_lock<std::mutex> lk {m_consumemounts_lock};
+			m_mountreader_cv.wait(lk, [this] { return !m_mountreaders.empty(); });
+			// TODO: send and remove if done
+		}
+	}
 }
 
 void dispatcher::client_processing() {
@@ -57,12 +68,31 @@ void dispatcher::client_processing() {
 			for (int i = 0; i < res; i++) {
 				if (evlist[i].events & EPOLLIN) {
 					corr_consume* consume = static_cast<corr_consume*>(evlist[i].data.ptr);
-					if (consume->process() == false) {
+					corr_consume::state_t consumer_state = consume->process();
+					if (consumer_state == corr_consume::state_t::disconnect) {
 						consume->close();
 						std::scoped_lock<std::mutex> sl {m_consumers_lock};
 						m_consumers.remove_if([&consume] (auto& elem) {
 							return elem.get() == consume;
 						});
+					} else if (consumer_state == corr_consume::state_t::send_mounts) {
+						// TODO: remove from epoll, move to another list
+						std::unique_ptr<corr_consume> consumer {nullptr};
+						{
+							std::scoped_lock<std::mutex> sl {m_consumers_lock};
+							// remove consumer from m_consumers
+						}
+						epoll_event ev;
+						ev.events = EPOLLIN;
+						ev.data.ptr = consume;
+						if (::epoll_ctl(m_epoll_clifd, EPOLL_CTL_DEL, consume->get_fd(), &ev) == 0) {
+							std::unique_lock<std::mutex> lk {m_consumemounts_lock};
+							m_mountreaders.emplace_back(std::move(consumer));
+							lk.unlock();
+							m_mountreader_cv.notify_one();
+						}
+					} else {
+						continue;
 					}
 				} else {
 					std::cout << "cli epoll event error" << std::endl;
@@ -74,7 +104,7 @@ void dispatcher::client_processing() {
 			std::cout << "cli epoll_wait error" << std::endl;
 		}
 		using namespace std::chrono_literals;
-		std::this_thread::sleep_for(1000ms);
+		std::this_thread::sleep_for(100ms);
 	}
 }
 
@@ -82,7 +112,7 @@ void dispatcher::client_connected(async_io client) {
 	std::cout << "Client connected\n";
 	const int client_fd = client.get_fd();
 	auto consumer = std::make_unique<corr_consume>(std::move(client), m_cli_auth);
-	if (consumer->process()) {
+	if (consumer->process() != corr_consume::state_t::disconnect) {
 		epoll_event ev;
 		ev.events = EPOLLIN;
 		ev.data.ptr = consumer.get();

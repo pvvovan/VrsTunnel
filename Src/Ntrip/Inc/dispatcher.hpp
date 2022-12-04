@@ -9,6 +9,7 @@
 #include <thread>
 #include <memory>
 #include <mutex>
+#include <condition_variable>
 
 #include "tcp_server.hpp"
 #include "async_io.hpp"
@@ -51,6 +52,12 @@ class dispatcher {
 	std::mutex m_consumers_lock{};
 	void client_processing();
 	std::thread m_cli_thread{};
+
+	std::mutex m_consumemounts_lock{};
+	std::condition_variable m_mountreader_cv{};
+	std::thread m_mountreaders_thread{};
+	void mount_sending();
+	std::list<std::unique_ptr<corr_consume>> m_mountreaders{};
 };
 
 }

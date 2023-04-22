@@ -1,6 +1,6 @@
 use crate::ntclient::NtClient;
 use crate::ntserver::NtServer;
-use std::{io::prelude::*, sync::mpsc::Receiver, thread};
+use std::{io::prelude::*, net::TcpStream, sync::mpsc::Receiver, thread};
 
 pub fn launch(serv_recv: Receiver<NtServer>, clnt_recv: Receiver<NtClient>) {
     thread::spawn(|| do_work(serv_recv, clnt_recv));
@@ -30,19 +30,7 @@ fn do_work(serv_recv: Receiver<NtServer>, clnt_recv: Receiver<NtClient>) {
             if let Ok(avail) = cli.tcpstream.peek(&mut buf) {
                 if avail >= get_mounts.len() {
                     if buf.starts_with(get_mounts) {
-                        let mount_point = "STR;DynVrs;DynVrs;RTCM 3;;2;GPS+GLO;;;51.52;30.75;1;1;Rust GNSS Correction;none;B;Y;9600;";
-                        let response = format!(
-                            "{}\r\nContent-Length: {}\r\n\r\n{}\r\nENDSOURCETABLE\r\n",
-                            "HTTP/1.0 200 OK",
-                            mount_point.len(),
-                            mount_point
-                        );
-                        cli.tcpstream
-                            .try_clone()
-                            .unwrap()
-                            .write_all(response.as_bytes())
-                            .unwrap();
-                        cli.tcpstream.shutdown(std::net::Shutdown::Both).unwrap();
+                        send_mounts(&cli.tcpstream);
                         newclients.swap_remove(pos);
                         eprintln!("{pos} disconnected");
                         continue;
@@ -74,4 +62,21 @@ fn do_work(serv_recv: Receiver<NtServer>, clnt_recv: Receiver<NtClient>) {
             pos += 1;
         }
     }
+}
+
+fn send_mounts(tcpstream: &TcpStream) {
+    let mount_point =
+        "STR;DynVrs;DynVrs;RTCM 3;;2;GPS+GLO;;;51.52;30.75;1;1;Rust GNSS Correction;none;B;Y;9600;";
+    let response = format!(
+        "{}\r\nContent-Length: {}\r\n\r\n{}\r\nENDSOURCETABLE\r\n",
+        "HTTP/1.0 200 OK",
+        mount_point.len(),
+        mount_point
+    );
+    tcpstream
+        .try_clone()
+        .unwrap()
+        .write_all(response.as_bytes())
+        .unwrap();
+    tcpstream.shutdown(std::net::Shutdown::Both).unwrap();
 }

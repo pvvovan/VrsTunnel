@@ -71,14 +71,10 @@ fn do_work(serv_recv: Receiver<NtServer>, clnt_recv: Receiver<NtClient>) {
 }
 
 fn send_mounts(tcpstream: &TcpStream) {
-    let mount_point =
-        "STR;DynVrs;DynVrs;RTCM 3;;2;GPS+GLO;;;51.51;32.32;1;1;Rust GNSS Correction;none;B;Y;9600;";
-    let response = format!(
-        "{}\r\nContent-Length: {}\r\n\r\n{}\r\nENDSOURCETABLE\r\n",
-        "HTTP/1.0 200 OK",
+    let mount_point = "STR;DynVrs;8021;CMR+;0(1),5(1);2;GPS+GLONASS;Single Base;ua;49.30;35.77;0;0;Trimble AgGPS_542;;B;N;9600;;\r\nENDSOURCETABLE\r\n";
+    let response = format!("SOURCETABLE 200 OK\r\nNtrip-Version: Ntrip/1.0\r\nServer: NTRIP Caster 1.0\r\nDate:  4/22/2023:15:18:31 GMT\r\nContent-Type: gnss/sourcetable\r\nContent-Length: {}\r\n\r\n{}",
         mount_point.len(),
-        mount_point
-    );
+        mount_point);
     tcpstream
         .try_clone()
         .unwrap()
@@ -88,6 +84,6 @@ fn send_mounts(tcpstream: &TcpStream) {
 }
 
 fn send_icyok(tcpstream: &TcpStream) {
-    let response = b"ICY 200 OK\r\n\r\n";
+    let response = b"ICY 200 OK\r\nNtrip-Version: Ntrip/1.0\r\nServer: NTRIP Caster 1.0\r\nDate:  4/22/2023:14:49: 4 GMT\r\nContent-Type: gnss/data\r\n";
     tcpstream.try_clone().unwrap().write_all(response).unwrap();
 }

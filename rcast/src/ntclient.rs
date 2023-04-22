@@ -7,7 +7,7 @@ pub fn launch(clnt_sender: Sender<NtClient>) {
 }
 
 fn accept_clients(clnt_sender: Sender<NtClient>) {
-    let tcplistener = TcpListener::bind("127.0.0.1:8021").expect("Ntcip client bind failed");
+    let tcplistener = TcpListener::bind("192.168.10.214:8021").expect("Ntcip client bind failed");
     loop {
         let tcpconn = tcplistener.accept();
         if tcpconn.is_ok() {

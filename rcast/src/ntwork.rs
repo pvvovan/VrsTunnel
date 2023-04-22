@@ -9,7 +9,17 @@ pub fn launch(serv_recv: Receiver<NtServer>, clnt_recv: Receiver<NtClient>) {
 fn do_work(serv_recv: Receiver<NtServer>, clnt_recv: Receiver<NtClient>) {
     let mut servers: Vec<NtServer> = Vec::new();
     let mut newclients: Vec<NtClient> = Vec::new();
+    let mut cnt = 0;
     loop {
+        cnt += 1;
+        if cnt >= 100 {
+            cnt = 0;
+            if servers.len() > 0 && servers[0].clients.len() > 0 {
+                let corr =
+                    b"This is dummy GNSS correction to test NTRIP client modem implementation. ";
+                servers[0].clients[0].tcpstream.write_all(corr).unwrap();
+            }
+        }
         thread::sleep(std::time::Duration::from_millis(10));
 
         if let Ok(srv) = serv_recv.try_recv() {
@@ -18,7 +28,6 @@ fn do_work(serv_recv: Receiver<NtServer>, clnt_recv: Receiver<NtClient>) {
 
         if let Ok(cli) = clnt_recv.try_recv() {
             newclients.push(cli);
-            eprintln!("new client added");
         }
 
         let mut pos = 0;
@@ -32,24 +41,21 @@ fn do_work(serv_recv: Receiver<NtServer>, clnt_recv: Receiver<NtClient>) {
                     if buf.starts_with(get_mounts) {
                         send_mounts(&cli.tcpstream);
                         newclients.swap_remove(pos);
-                        eprintln!("{pos} disconnected");
+                        eprintln!("{pos}: sent mount points");
                         continue;
                     } else if buf.starts_with(get_corr) {
-                        let mount_point = "STR;CORR;CORR;RTCM 3;;2;GPS+GLO;;;51.52;30.75;1;1;Rust GNSS Correction;none;B;Y;9600;";
-                        let response = format!(
-                            "{}\r\nContent-Length: {}\r\n\r\n{}\r\nENDSOURCETABLE\r\n",
-                            "HTTP/1.0 200 OK",
-                            mount_point.len(),
-                            mount_point
-                        );
-                        cli.tcpstream
-                            .try_clone()
-                            .unwrap()
-                            .write_all(response.as_bytes())
-                            .unwrap();
-                        cli.tcpstream.shutdown(std::net::Shutdown::Both).unwrap();
-                        newclients.swap_remove(pos);
-                        eprintln!("{pos}: correction requested");
+                        send_icyok(&cli.tcpstream);
+                        let ack_cli = newclients.swap_remove(pos);
+                        if servers.len() > 0 {
+                            servers[0].clients.push(ack_cli);
+                            eprintln!("{pos}: NTRIP client accepted");
+                        } else {
+                            ack_cli
+                                .tcpstream
+                                .shutdown(std::net::Shutdown::Both)
+                                .unwrap();
+                            eprintln!("{pos}: no server available, client not accepted");
+                        }
                         continue;
                     } else {
                         cli.tcpstream.shutdown(std::net::Shutdown::Both).unwrap();
@@ -66,7 +72,7 @@ fn do_work(serv_recv: Receiver<NtServer>, clnt_recv: Receiver<NtClient>) {
 
 fn send_mounts(tcpstream: &TcpStream) {
     let mount_point =
-        "STR;DynVrs;DynVrs;RTCM 3;;2;GPS+GLO;;;51.52;30.75;1;1;Rust GNSS Correction;none;B;Y;9600;";
+        "STR;DynVrs;DynVrs;RTCM 3;;2;GPS+GLO;;;51.51;32.32;1;1;Rust GNSS Correction;none;B;Y;9600;";
     let response = format!(
         "{}\r\nContent-Length: {}\r\n\r\n{}\r\nENDSOURCETABLE\r\n",
         "HTTP/1.0 200 OK",
@@ -79,4 +85,9 @@ fn send_mounts(tcpstream: &TcpStream) {
         .write_all(response.as_bytes())
         .unwrap();
     tcpstream.shutdown(std::net::Shutdown::Both).unwrap();
+}
+
+fn send_icyok(tcpstream: &TcpStream) {
+    let response = b"ICY 200 OK\r\n\r\n";
+    tcpstream.try_clone().unwrap().write_all(response).unwrap();
 }

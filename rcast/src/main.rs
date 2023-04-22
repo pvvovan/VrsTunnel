@@ -12,7 +12,7 @@ fn main() {
     ntclient::launch(clnt_send);
     ntserver::launch(serv_send);
     ntwork::launch(serv_recv, clnt_recv);
-    print!("Quit[y/N]? ");
+    println!("Quit[y/N]? ");
     std::io::stdout().flush().unwrap();
     loop {
         let mut ans = String::new();

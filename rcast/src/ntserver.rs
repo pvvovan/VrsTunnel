@@ -6,7 +6,8 @@ pub fn launch(serv_sender: Sender<NtServer>) {
     thread::spawn(|| accept_servers(serv_sender));
 }
 
-fn accept_servers(_serv_sender: Sender<NtServer>) {
+fn accept_servers(serv_sender: Sender<NtServer>) {
+    serv_sender.send(NtServer { clients: vec![] }).unwrap();
     loop {
         thread::sleep(std::time::Duration::from_secs(1));
         // eprintln!("server correction");

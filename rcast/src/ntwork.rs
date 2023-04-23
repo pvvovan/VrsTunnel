@@ -18,16 +18,25 @@ fn do_work(serv_recv: Receiver<NtServer>, clnt_recv: Receiver<NtClient>) {
         cnt += 1;
         if cnt >= 100 {
             cnt = 0;
-            if servers.len() > 0 && servers[0].clients.len() > 0 {
-                let corr =
-                    b"This is dummy GNSS correction to test NTRIP client modem implementation. ";
-                if servers[0].clients[0].tcpstream.write_all(corr).is_err() {
-                    servers[0].clients[0]
-                        .tcpstream
-                        .shutdown(std::net::Shutdown::Both)
-                        .unwrap_or_default();
-                    servers[0].clients.clear();
+            let mut to_remove: Vec<(usize, usize)> = Vec::new();
+            let mut serv_pos: usize = 0;
+            for srv in servers.iter_mut() {
+                let mut clnt_pos: usize = 0;
+                for cli in srv.clients.iter_mut() {
+                    let corr = b"This is dummy GNSS correction to test NTRIP client modem implementation. ";
+                    if cli.tcpstream.write_all(corr).is_err() {
+                        cli.tcpstream
+                            .shutdown(std::net::Shutdown::Both)
+                            .unwrap_or_default();
+                        to_remove.push((serv_pos, clnt_pos));
+                    }
+                    clnt_pos += 1;
                 }
+                serv_pos += 1;
+            }
+            for (serv_pos, clnt_pos) in to_remove {
+                servers[serv_pos].clients.swap_remove(clnt_pos);
+                eprintln!("{} {} client removed", serv_pos, clnt_pos);
             }
         }
         thread::sleep(std::time::Duration::from_millis(10));

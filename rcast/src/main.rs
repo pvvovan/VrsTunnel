@@ -1,6 +1,7 @@
 use std::io::Write;
 use std::sync::mpsc;
 
+mod cfg;
 mod ntclient;
 mod ntserver;
 mod ntwork;
@@ -12,7 +13,7 @@ fn main() {
     ntclient::launch(clnt_send);
     ntserver::launch(serv_send);
     ntwork::launch(serv_recv, clnt_recv);
-    println!("Quit[y/N]? ");
+    println!("Quit [y/N]?");
     std::io::stdout().flush().unwrap();
     loop {
         let mut ans = String::new();

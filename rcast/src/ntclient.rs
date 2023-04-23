@@ -1,3 +1,4 @@
+use crate::cfg;
 use std::net::{TcpListener, TcpStream};
 use std::sync::mpsc::Sender;
 use std::thread;
@@ -7,14 +8,17 @@ pub fn launch(clnt_sender: Sender<NtClient>) {
 }
 
 fn accept_clients(clnt_sender: Sender<NtClient>) {
-    let tcplistener = TcpListener::bind("192.168.10.214:8021").expect("Ntcip client bind failed");
+    let addr = format!("{}:{}", cfg::BIND_ADDR, cfg::CLIENT_PORT);
+    let tcplistener = TcpListener::bind(addr).expect("Ntrip client bind failed");
     loop {
         let tcpconn = tcplistener.accept();
         if tcpconn.is_ok() {
-            let (tcpstream, sockaddr) = tcpconn.unwrap();
-            eprintln!("client connected: {}", sockaddr.ip().to_string());
-            tcpstream.set_nonblocking(true).unwrap();
-            clnt_sender.send(NtClient { tcpstream }).unwrap();
+            if let Ok((tcpstream, sockaddr)) = tcpconn {
+                if tcpstream.set_nonblocking(true).is_ok() {
+                    clnt_sender.send(NtClient { tcpstream }).unwrap();
+                    println!("client connected: {}", sockaddr.ip().to_string());
+                }
+            }
         }
     }
 }

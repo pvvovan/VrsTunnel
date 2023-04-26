@@ -1,4 +1,6 @@
+use crate::cfg;
 use crate::ntclient::NtClient;
+use std::net::{TcpListener, TcpStream};
 use std::sync::mpsc::Sender;
 use std::thread;
 
@@ -7,13 +9,27 @@ pub fn launch(serv_sender: Sender<NtServer>) {
 }
 
 fn accept_servers(serv_sender: Sender<NtServer>) {
-    serv_sender.send(NtServer { clients: vec![] }).unwrap();
+    let addr = format!("{}:{}", cfg::BIND_ADDR, cfg::SERVER_PORT);
+    let tcplistener = TcpListener::bind(addr).expect("Ntrip server bind failed");
     loop {
-        thread::sleep(std::time::Duration::from_secs(1));
-        // eprintln!("server correction");
+        let tcpconn = tcplistener.accept();
+        if tcpconn.is_ok() {
+            if let Ok((tcpstream, sockaddr)) = tcpconn {
+                if tcpstream.set_nonblocking(true).is_ok() {
+                    serv_sender
+                        .send(NtServer {
+                            tcpstream,
+                            clients: vec![],
+                        })
+                        .unwrap();
+                    println!("server connected: {}", sockaddr.ip().to_string());
+                }
+            }
+        }
     }
 }
 
 pub struct NtServer {
+    pub tcpstream: TcpStream,
     pub clients: Vec<NtClient>,
 }

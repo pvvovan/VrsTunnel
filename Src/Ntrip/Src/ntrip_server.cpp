@@ -91,7 +91,7 @@ namespace VrsTunnel::Ntrip
 			"User-Agent: NTRIP PvvovanServer\r\n"
 			"Authorization: Basic %s\r\n"
 			"NTRIP-STR: %s;CMR-;12(1),12(1);2;GPS+GLONASS;23;ua;"
-			"%9.6f;%9.6f;0;0;Trimble AgGPS_542;none;B;N;9600;none;"
+			"%.6f;%.6f;0;0;Open net GNSS_123;none;B;N;9600;none;"
 			"\r\nTransfer-Encoding: chunked";
 
 		std::unique_ptr<char[]> request;
@@ -101,8 +101,11 @@ namespace VrsTunnel::Ntrip
 			auth = (*encoder).get(nlogin.username, nlogin.password);
 		}
 
-		request = std::make_unique<char[]>(::strlen(requestFormat) + nlogin.mountpoint.size()*2 + 5 + auth.length() + 33);
-		::sprintf(request.get(), requestFormat, nlogin.mountpoint.data(), nlogin.port, auth.c_str(),
+		const size_t port_len = 5;
+		const size_t coord_len = 16;
+		const size_t len = ::strlen(requestFormat) + nlogin.mountpoint.size() + port_len + auth.length() + (coord_len * 2) + 1;
+		request = std::make_unique<char[]>(len);
+		::snprintf(request.get(), len, requestFormat, nlogin.mountpoint.data(), nlogin.port, auth.c_str(),
 			nlogin.mountpoint.data(), nlogin.position.Latitude, nlogin.position.Longitude);
 		return request;
 	}

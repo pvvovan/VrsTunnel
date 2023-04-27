@@ -13,82 +13,120 @@ pub fn launch(serv_recv: Receiver<NtServer>, clnt_recv: Receiver<NtClient>) {
 
 fn do_work(serv_recv: Receiver<NtServer>, clnt_recv: Receiver<NtClient>) {
     let mut servers: Vec<NtServer> = Vec::new();
+    let mut newservers: Vec<NtServer> = Vec::new();
     let mut newclients: Vec<NtClient> = Vec::new();
-    let mut cnt = 0;
+    // let mut cnt = 0;
     loop {
-        cnt += 1;
-        if cnt >= 100 {
-            cnt = 0;
-            let mut to_remove: Vec<(usize, usize)> = Vec::new();
-            let mut serv_pos: usize = 0;
-            for srv in servers.iter_mut() {
-                let mut clnt_pos: usize = 0;
-                for cli in srv.clients.iter_mut() {
-                    let corr = b"This is dummy GNSS correction to test NTRIP client modem implementation. ";
-                    if cli.tcpstream.write_all(corr).is_err() {
-                        cli.tcpstream
-                            .shutdown(std::net::Shutdown::Both)
-                            .unwrap_or_default();
-                        to_remove.push((serv_pos, clnt_pos));
-                    }
-                    clnt_pos += 1;
-                }
-                serv_pos += 1;
-            }
-            for (serv_pos, clnt_pos) in to_remove {
-                servers[serv_pos].clients.swap_remove(clnt_pos);
-                eprintln!("{} {} client removed", serv_pos, clnt_pos);
-            }
-        }
-        thread::sleep(std::time::Duration::from_millis(10));
+        // cnt += 1;
+        // if cnt >= 100 {
+        //     cnt = 0;
+        //     let mut to_remove: Vec<(usize, usize)> = Vec::new();
+        //     let mut serv_pos: usize = 0;
+        //     for srv in servers.iter_mut() {
+        //         let mut clnt_pos: usize = 0;
+        //         for cli in srv.clients.iter_mut() {
+        //             let corr = b"This is dummy GNSS correction to test NTRIP client modem implementation. ";
+        //             if cli.tcpstream.write_all(corr).is_err() {
+        //                 cli.tcpstream
+        //                     .shutdown(std::net::Shutdown::Both)
+        //                     .unwrap_or_default();
+        //                 to_remove.push((serv_pos, clnt_pos));
+        //             }
+        //             clnt_pos += 1;
+        //         }
+        //         serv_pos += 1;
+        //     }
+        //     for (serv_pos, clnt_pos) in to_remove {
+        //         servers[serv_pos].clients.swap_remove(clnt_pos);
+        //         eprintln!("{} {} client removed", serv_pos, clnt_pos);
+        //     }
+        // }
+        // thread::sleep(std::time::Duration::from_millis(10));
 
         if let Ok(srv) = serv_recv.try_recv() {
-            servers.push(srv);
+            newservers.push(srv);
         }
 
         if let Ok(cli) = clnt_recv.try_recv() {
             newclients.push(cli);
         }
 
-        let mut pos = 0;
-        for _ in 0..newclients.len() {
-            let cli = &newclients[pos];
-            let mut buf = [0u8; 4096];
-            let get_mounts = b"GET / ";
-            let get_corr = format!("GET /{}", cfg::MOUNT);
-            if let Ok(avail) = cli.tcpstream.peek(&mut buf) {
-                if avail >= get_mounts.len() {
-                    if buf.starts_with(get_mounts) {
-                        send_mounts(&cli.tcpstream);
-                        newclients.swap_remove(pos);
-                        eprintln!("{pos}: sent mount points");
-                        continue;
-                    } else if buf.starts_with(get_corr.as_bytes()) {
-                        let is_icyok = send_icyok(&cli.tcpstream).is_ok();
-                        let ack_cli = newclients.swap_remove(pos);
-                        if servers.len() > 0 && is_icyok {
-                            servers[0].clients.push(ack_cli);
-                            eprintln!("{pos}: NTRIP client accepted");
-                        } else {
-                            ack_cli
-                                .tcpstream
-                                .shutdown(std::net::Shutdown::Both)
-                                .unwrap_or_default();
-                            eprintln!("{pos}: no server available, client not accepted");
-                        }
-                        continue;
+        accept_newservers(&mut newservers, &mut servers);
+        accept_newclients(&mut newclients, &mut servers);
+    }
+}
+
+fn accept_newservers(newservers: &mut Vec<NtServer>, servers: &mut Vec<NtServer>) {
+    let mut pos = 0;
+    for _ in 0..newservers.len() {
+        let serv = &newservers[pos];
+        let mut buf = [0u8; 4096];
+        if let Ok(avail) = serv.tcpstream.peek(&mut buf) {
+            let post_req = b"POST /";
+            if avail > post_req.len() {
+                let new_serv = newservers.swap_remove(pos);
+                if buf.starts_with(post_req) {
+                    if post_icyok(&new_serv.tcpstream).is_ok() {
+                        servers.push(new_serv);
+                        eprintln!("{pos}: NTRIP server accepted");
                     } else {
-                        cli.tcpstream
+                        new_serv
+                            .tcpstream
                             .shutdown(std::net::Shutdown::Both)
                             .unwrap_or_default();
-                        newclients.swap_remove(pos);
-                        eprintln!("{pos} no mount");
-                        continue;
                     }
+                } else {
+                    new_serv
+                        .tcpstream
+                        .shutdown(std::net::Shutdown::Both)
+                        .unwrap_or_default();
+                }
+                continue;
+            }
+        }
+        pos += 1;
+    }
+}
+
+fn accept_newclients(newclients: &mut Vec<NtClient>, servers: &mut Vec<NtServer>) {
+    let mut pos = 0;
+    for _ in 0..newclients.len() {
+        let cli = &newclients[pos];
+        let mut buf = [0u8; 4096];
+        let get_mounts = b"GET / ";
+        let get_corr = format!("GET /{}", cfg::MOUNT);
+        if let Ok(avail) = cli.tcpstream.peek(&mut buf) {
+            if avail >= get_mounts.len() {
+                if buf.starts_with(get_mounts) {
+                    send_mounts(&cli.tcpstream);
+                    newclients.swap_remove(pos);
+                    eprintln!("{pos}: sent mount points");
+                    continue;
+                } else if buf.starts_with(get_corr.as_bytes()) {
+                    let is_icyok = send_icyok(&cli.tcpstream).is_ok();
+                    let ack_cli = newclients.swap_remove(pos);
+                    if servers.len() > 0 && is_icyok {
+                        servers[0].clients.push(ack_cli);
+                        eprintln!("{pos}: NTRIP client accepted");
+                    } else {
+                        ack_cli
+                            .tcpstream
+                            .shutdown(std::net::Shutdown::Both)
+                            .unwrap_or_default();
+                        eprintln!("{pos}: no server available, client not accepted");
+                    }
+                    continue;
+                } else {
+                    cli.tcpstream
+                        .shutdown(std::net::Shutdown::Both)
+                        .unwrap_or_default();
+                    newclients.swap_remove(pos);
+                    eprintln!("{pos} no mount");
+                    continue;
                 }
             }
-            pos += 1;
         }
+        pos += 1;
     }
 }
 
@@ -108,6 +146,15 @@ fn send_mounts(tcpstream: &TcpStream) {
 
 fn send_icyok(tcpstream: &TcpStream) -> Result<(), std::io::Error> {
     let response = format!("ICY 200 OK\r\nNtrip-Version: Ntrip/1.0\r\nServer: NTRIP Caster 1.0\r\nDate: {}\r\nContent-Type: gnss/data\r\n",
+        datetimenow());
+    if let Ok(mut tcpstream) = tcpstream.try_clone() {
+        return tcpstream.write_all(response.as_bytes());
+    }
+    Err(std::io::Error::from(ErrorKind::ConnectionRefused))
+}
+
+fn post_icyok(tcpstream: &TcpStream) -> Result<(), std::io::Error> {
+    let response = format!("HTTP/1.1 200 OK\r\nICY 200 OK\r\nNtrip-Version: Ntrip/1.0\r\nServer: NTRIP Caster 1.0\r\nDate: {}\r\nContent-Type: gnss/data\r\n\r\n",
         datetimenow());
     if let Ok(mut tcpstream) = tcpstream.try_clone() {
         return tcpstream.write_all(response.as_bytes());

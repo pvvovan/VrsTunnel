@@ -20,6 +20,7 @@ fn accept_servers(serv_sender: Sender<NtServer>) {
                         .send(NtServer {
                             tcpstream,
                             clients: vec![],
+                            nocorr_cnt: 0,
                         })
                         .unwrap();
                     println!("server connected: {}", sockaddr.ip().to_string());
@@ -32,4 +33,5 @@ fn accept_servers(serv_sender: Sender<NtServer>) {
 pub struct NtServer {
     pub tcpstream: TcpStream,
     pub clients: Vec<NtClient>,
+    pub nocorr_cnt: i32,
 }

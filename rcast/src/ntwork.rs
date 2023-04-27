@@ -13,47 +13,77 @@ pub fn launch(serv_recv: Receiver<NtServer>, clnt_recv: Receiver<NtClient>) {
 
 fn do_work(serv_recv: Receiver<NtServer>, clnt_recv: Receiver<NtClient>) {
     let mut servers: Vec<NtServer> = Vec::new();
-    let mut newservers: Vec<NtServer> = Vec::new();
-    let mut newclients: Vec<NtClient> = Vec::new();
-    // let mut cnt = 0;
-    loop {
-        // cnt += 1;
-        // if cnt >= 100 {
-        //     cnt = 0;
-        //     let mut to_remove: Vec<(usize, usize)> = Vec::new();
-        //     let mut serv_pos: usize = 0;
-        //     for srv in servers.iter_mut() {
-        //         let mut clnt_pos: usize = 0;
-        //         for cli in srv.clients.iter_mut() {
-        //             let corr = b"This is dummy GNSS correction to test NTRIP client modem implementation. ";
-        //             if cli.tcpstream.write_all(corr).is_err() {
-        //                 cli.tcpstream
-        //                     .shutdown(std::net::Shutdown::Both)
-        //                     .unwrap_or_default();
-        //                 to_remove.push((serv_pos, clnt_pos));
-        //             }
-        //             clnt_pos += 1;
-        //         }
-        //         serv_pos += 1;
-        //     }
-        //     for (serv_pos, clnt_pos) in to_remove {
-        //         servers[serv_pos].clients.swap_remove(clnt_pos);
-        //         eprintln!("{} {} client removed", serv_pos, clnt_pos);
-        //     }
-        // }
-        // thread::sleep(std::time::Duration::from_millis(10));
 
-        if let Ok(srv) = serv_recv.try_recv() {
+    loop {
+        let mut newservers: Vec<NtServer> = Vec::new();
+        let mut newclients: Vec<NtClient> = Vec::new();
+
+        while let Ok(srv) = serv_recv.try_recv() {
             newservers.push(srv);
         }
 
-        if let Ok(cli) = clnt_recv.try_recv() {
+        while let Ok(cli) = clnt_recv.try_recv() {
             newclients.push(cli);
         }
 
         accept_newservers(&mut newservers, &mut servers);
         accept_newclients(&mut newclients, &mut servers);
+
+        let mut serv_pos = 0;
+        for _ in 0..servers.len() {
+            let serv = &mut servers[serv_pos];
+            let mut buf = [0u8; 4096];
+            if let Ok(avail) = serv.tcpstream.read(&mut buf) {
+                if avail > 0 {
+                    // println!("server avail: {avail}");
+                    serv.nocorr_cnt = 0;
+                    let corr = &buf[0..avail];
+                    let mut cli_pos = 0;
+                    for _ in 0..serv.clients.len() {
+                        let cli = &mut serv.clients[cli_pos];
+                        if cli.tcpstream.write(corr).is_err() {
+                            cli.tcpstream
+                                .shutdown(std::net::Shutdown::Both)
+                                .unwrap_or_default();
+                            serv.clients.swap_remove(cli_pos);
+                            println!("client closed");
+                            continue;
+                        }
+                        cli_pos += 1;
+                    }
+                } else {
+                    if is_server_timeout(serv) {
+                        servers.swap_remove(serv_pos);
+                        continue;
+                    }
+                }
+            } else {
+                if is_server_timeout(serv) {
+                    servers.swap_remove(serv_pos);
+                    continue;
+                }
+            }
+            serv_pos += 1;
+        }
+        thread::sleep(std::time::Duration::from_millis(10));
     }
+}
+
+fn is_server_timeout(serv: &mut NtServer) -> bool {
+    serv.nocorr_cnt += 1;
+    if serv.nocorr_cnt > 1000 {
+        for cli in serv.clients.iter() {
+            cli.tcpstream
+                .shutdown(std::net::Shutdown::Both)
+                .unwrap_or_default();
+        }
+        serv.tcpstream
+            .shutdown(std::net::Shutdown::Both)
+            .unwrap_or_default();
+        println!("server closed");
+        return true;
+    }
+    return false;
 }
 
 fn accept_newservers(newservers: &mut Vec<NtServer>, servers: &mut Vec<NtServer>) {
@@ -106,7 +136,7 @@ fn accept_newclients(newclients: &mut Vec<NtClient>, servers: &mut Vec<NtServer>
                     let is_icyok = send_icyok(&cli.tcpstream).is_ok();
                     let ack_cli = newclients.swap_remove(pos);
                     if servers.len() > 0 && is_icyok {
-                        servers[0].clients.push(ack_cli);
+                        servers[0].clients.push(ack_cli); // select server?
                         eprintln!("{pos}: NTRIP client accepted");
                     } else {
                         ack_cli

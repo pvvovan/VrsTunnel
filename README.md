@@ -14,3 +14,7 @@ One NTRIP Caster can be bridged to another by piping ntclient to ntserver:
 
 Detailed description of the source code
 https://pvvovan.github.io/VrsTunnel/index.html
+
+
+Nearest reference station NTRIP Caster
+https://github.com/pvvovan/VrsTunnel/tree/master/rcast

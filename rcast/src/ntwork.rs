@@ -1,4 +1,4 @@
-use crate::{cfg, ntclient::NtClient, ntserver::NtServer, wgs84};
+use crate::{cfg, ntclient::NtClient, ntserver::*, wgs84};
 use chrono::{self, Datelike, Timelike};
 use std::{
     io::{prelude::*, ErrorKind},
@@ -7,15 +7,15 @@ use std::{
     thread,
 };
 
-pub fn launch(serv_recv: Receiver<NtServer>, clnt_recv: Receiver<NtClient>) {
+pub fn launch(serv_recv: Receiver<NewServer>, clnt_recv: Receiver<NtClient>) {
     thread::spawn(|| do_work(serv_recv, clnt_recv));
 }
 
-fn do_work(serv_recv: Receiver<NtServer>, clnt_recv: Receiver<NtClient>) {
-    let mut servers: Vec<NtServer> = Vec::new();
+fn do_work(serv_recv: Receiver<NewServer>, clnt_recv: Receiver<NtClient>) {
+    let mut servers: Vec<AckServer> = Vec::new();
 
     loop {
-        let mut newservers: Vec<NtServer> = Vec::new();
+        let mut newservers: Vec<NewServer> = Vec::new();
         let mut newclients: Vec<NtClient> = Vec::new();
 
         while let Ok(srv) = serv_recv.try_recv() {
@@ -27,7 +27,6 @@ fn do_work(serv_recv: Receiver<NtServer>, clnt_recv: Receiver<NtClient>) {
         }
 
         accept_newservers(&mut newservers, &mut servers);
-        accept_newclients(&mut newclients, &mut servers);
 
         let mut serv_pos = 0;
         for _ in 0..servers.len() {
@@ -65,11 +64,14 @@ fn do_work(serv_recv: Receiver<NtServer>, clnt_recv: Receiver<NtClient>) {
             }
             serv_pos += 1;
         }
+
+        accept_newclients(&mut newclients, &mut servers);
+
         thread::sleep(std::time::Duration::from_millis(10));
     }
 }
 
-fn is_server_timeout(serv: &mut NtServer) -> bool {
+fn is_server_timeout(serv: &mut AckServer) -> bool {
     serv.nocorr_cnt += 1;
     if serv.nocorr_cnt > 1000 {
         for cli in serv.clients.iter() {
@@ -86,7 +88,7 @@ fn is_server_timeout(serv: &mut NtServer) -> bool {
     return false;
 }
 
-fn accept_newservers(newservers: &mut Vec<NtServer>, servers: &mut Vec<NtServer>) {
+fn accept_newservers(newservers: &mut Vec<NewServer>, servers: &mut Vec<AckServer>) {
     let mut pos = 0;
     for _ in 0..newservers.len() {
         let serv = &newservers[pos];
@@ -147,7 +149,12 @@ fn accept_newservers(newservers: &mut Vec<NtServer>, servers: &mut Vec<NtServer>
                     let geo = wgs84::Location::new(lat, lon, 0.0);
                     let geo2 = wgs84::Location::new(lat, 0.0, 0.0);
                     println!("Distance: {}", geo.distance(&geo2));
-                    servers.push(new_serv);
+                    servers.push(AckServer {
+                        tcpstream: new_serv.tcpstream,
+                        clients: vec![],
+                        location: wgs84::Location::new(lat, lon, 0.0),
+                        nocorr_cnt: 0,
+                    });
                     eprintln!("{pos}: NTRIP server accepted");
                 }
 
@@ -163,7 +170,7 @@ fn accept_newservers(newservers: &mut Vec<NtServer>, servers: &mut Vec<NtServer>
     }
 }
 
-fn accept_newclients(newclients: &mut Vec<NtClient>, servers: &mut Vec<NtServer>) {
+fn accept_newclients(newclients: &mut Vec<NtClient>, servers: &mut Vec<AckServer>) {
     let mut pos = 0;
     for _ in 0..newclients.len() {
         let cli = &newclients[pos];

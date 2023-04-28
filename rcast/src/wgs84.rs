@@ -1,41 +1,22 @@
-pub struct GeoLoc {
-    cart_loc: CartLoc,
-}
-
-pub struct CartLoc {
+pub struct Location {
     x: f64,
     y: f64,
     z: f64,
 }
 
-impl GeoLoc {
+impl Location {
     pub fn new(lat: f64, lon: f64, ele: f64) -> Self {
         let lat = std::f64::consts::PI * lat / 180.0;
         let lon = std::f64::consts::PI * lon / 180.0;
         let chi = (1.0 - WGS84_E_S * lat.sin().powf(2.0)).sqrt();
 
-        let cart_loc = CartLoc {
+        Location {
             x: (WGS84_A / chi + ele) * lat.cos() * lon.cos(),
             y: (WGS84_A / chi + ele) * lat.cos() * lon.sin(),
             z: (WGS84_A / chi * (1.0 - WGS84_E_S) + ele) * lat.sin(),
-        };
-        GeoLoc { cart_loc }
-    }
-
-    pub fn distance(&self, other: &Self) -> f64 {
-        self.to_cart().distance(&other.to_cart())
-    }
-
-    fn to_cart(&self) -> CartLoc {
-        CartLoc {
-            x: self.cart_loc.x,
-            y: self.cart_loc.y,
-            z: self.cart_loc.z,
         }
     }
-}
 
-impl CartLoc {
     pub fn distance(&self, other: &Self) -> f64 {
         ((self.x - other.x).powf(2.0) + (self.y - other.y).powf(2.0) + (self.z - other.z).powf(2.0))
             .sqrt()
@@ -56,12 +37,12 @@ mod tests {
 
     #[test]
     fn distance_1() {
-        let loc1 = CartLoc {
+        let loc1 = Location {
             x: 0.0,
             y: 0.0,
             z: 0.0,
         };
-        let loc2 = CartLoc {
+        let loc2 = Location {
             x: 1.0,
             y: 0.0,
             z: 0.0,
@@ -71,12 +52,12 @@ mod tests {
 
     #[test]
     fn distance_2() {
-        let loc1 = CartLoc {
+        let loc1 = Location {
             x: 0.0,
             y: 2.0,
             z: 0.0,
         };
-        let loc2 = CartLoc {
+        let loc2 = Location {
             x: 0.0,
             y: 0.0,
             z: 0.0,
@@ -86,12 +67,12 @@ mod tests {
 
     #[test]
     fn distance_5() {
-        let loc1 = CartLoc {
+        let loc1 = Location {
             x: 3.0,
             y: 0.0,
             z: 0.0,
         };
-        let loc2 = CartLoc {
+        let loc2 = Location {
             x: 0.0,
             y: 0.0,
             z: 4.0,
@@ -101,28 +82,25 @@ mod tests {
 
     #[test]
     fn to_cart_1() {
-        let geo = GeoLoc::new(0.0, 0.0, 0.0);
-        let cart = geo.to_cart();
-        approx::assert_relative_eq!(cart.x, 6378137.0, epsilon = f64::EPSILON);
-        approx::assert_relative_eq!(cart.y, 0.0, epsilon = f64::EPSILON);
-        approx::assert_relative_eq!(cart.z, 0.0, epsilon = f64::EPSILON);
+        let loc = Location::new(0.0, 0.0, 0.0);
+        approx::assert_relative_eq!(loc.x, 6378137.0, epsilon = f64::EPSILON);
+        approx::assert_relative_eq!(loc.y, 0.0, epsilon = f64::EPSILON);
+        approx::assert_relative_eq!(loc.z, 0.0, epsilon = f64::EPSILON);
     }
 
     #[test]
     fn to_cart_2() {
-        let geo = GeoLoc::new(0.0, 90.0, 0.0);
-        let cart = geo.to_cart();
-        approx::assert_relative_eq!(cart.x, 0.0, epsilon = 0.000_000_1);
-        approx::assert_relative_eq!(cart.y, 6378137.0, epsilon = f64::EPSILON);
-        approx::assert_relative_eq!(cart.z, 0.0, epsilon = f64::EPSILON);
+        let loc = Location::new(0.0, 90.0, 0.0);
+        approx::assert_relative_eq!(loc.x, 0.0, epsilon = 0.000_000_1);
+        approx::assert_relative_eq!(loc.y, 6378137.0, epsilon = f64::EPSILON);
+        approx::assert_relative_eq!(loc.z, 0.0, epsilon = f64::EPSILON);
     }
 
     #[test]
     fn to_cart_3() {
-        let geo = GeoLoc::new(90.0, 0.0, 0.0);
-        let cart = geo.to_cart();
-        approx::assert_relative_eq!(cart.x, 0.0, epsilon = 0.000_000_1);
-        approx::assert_relative_eq!(cart.y, 0.0, epsilon = f64::EPSILON);
-        approx::assert_relative_eq!(cart.z, 6356752.314245, epsilon = 0.000_000_2);
+        let loc = Location::new(90.0, 0.0, 0.0);
+        approx::assert_relative_eq!(loc.x, 0.0, epsilon = 0.000_000_1);
+        approx::assert_relative_eq!(loc.y, 0.0, epsilon = f64::EPSILON);
+        approx::assert_relative_eq!(loc.z, 6356752.314245, epsilon = 0.000_000_2);
     }
 }

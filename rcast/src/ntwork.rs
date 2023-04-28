@@ -144,8 +144,8 @@ fn accept_newservers(newservers: &mut Vec<NtServer>, servers: &mut Vec<NtServer>
                 }
 
                 if is_srv_ok {
-                    let geo = wgs84::GeoLoc::new(lat, lon, 0.0);
-                    let geo2 = wgs84::GeoLoc::new(lat, 0.0, 0.0);
+                    let geo = wgs84::Location::new(lat, lon, 0.0);
+                    let geo2 = wgs84::Location::new(lat, 0.0, 0.0);
                     println!("Distance: {}", geo.distance(&geo2));
                     servers.push(new_serv);
                     eprintln!("{pos}: NTRIP server accepted");

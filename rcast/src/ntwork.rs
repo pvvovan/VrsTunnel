@@ -13,11 +13,11 @@ pub fn launch(serv_recv: Receiver<NewServer>, clnt_recv: Receiver<NtClient>) {
 
 fn do_work(serv_recv: Receiver<NewServer>, clnt_recv: Receiver<NtClient>) {
     let mut servers: Vec<AckServer> = Vec::new();
+    let mut newservers: Vec<NewServer> = Vec::new();
+    let mut newclients: Vec<NtClient> = Vec::new();
+    let mut ackclients: Vec<NtClient> = Vec::new();
 
     loop {
-        let mut newservers: Vec<NewServer> = Vec::new();
-        let mut newclients: Vec<NtClient> = Vec::new();
-
         while let Ok(srv) = serv_recv.try_recv() {
             newservers.push(srv);
         }
@@ -65,9 +65,28 @@ fn do_work(serv_recv: Receiver<NewServer>, clnt_recv: Receiver<NtClient>) {
             serv_pos += 1;
         }
 
-        accept_newclients(&mut newclients, &mut servers);
+        accept_newclients(&mut newclients, &mut ackclients);
+        subscribe_clients(&mut ackclients, &mut servers);
 
         thread::sleep(std::time::Duration::from_millis(10));
+    }
+}
+
+fn subscribe_clients(ackclients: &mut Vec<NtClient>, servers: &mut Vec<AckServer>) {
+    if servers.len() == 0 {
+        return;
+    }
+
+    let mut cli_pos = 0;
+    for _ in 0..ackclients.len() {
+        let cli = &mut ackclients[cli_pos];
+        let mut buf = [0u8; 4096];
+        if let Ok(avail) = cli.tcpstream.read(&mut buf) {
+            if avail > 0 {
+                println!("{}", std::str::from_utf8(&buf[0..avail]).unwrap());
+            }
+        }
+        cli_pos += 1;
     }
 }
 
@@ -95,12 +114,11 @@ fn accept_newservers(newservers: &mut Vec<NewServer>, servers: &mut Vec<AckServe
         let mut buf = [0u8; 4096];
         if let Ok(avail) = serv.tcpstream.peek(&mut buf) {
             let post_req = b"POST /";
-            let req_ending = b"Transfer-Encoding: chunked";
+            let req_ending = b"Transfer-Encoding: chunked\r\n\r\n";
             if avail > post_req.len() + req_ending.len() {
                 let new_serv = newservers.swap_remove(pos);
                 let new_serv_tcpstream = new_serv.tcpstream.try_clone().unwrap();
                 let buf = &buf[0..avail];
-
                 let mut is_srv_ok = buf.starts_with(post_req);
 
                 if is_srv_ok {
@@ -170,7 +188,7 @@ fn accept_newservers(newservers: &mut Vec<NewServer>, servers: &mut Vec<AckServe
     }
 }
 
-fn accept_newclients(newclients: &mut Vec<NtClient>, servers: &mut Vec<AckServer>) {
+fn accept_newclients(newclients: &mut Vec<NtClient>, ackclients: &mut Vec<NtClient>) {
     let mut pos = 0;
     for _ in 0..newclients.len() {
         let cli = &newclients[pos];
@@ -187,8 +205,8 @@ fn accept_newclients(newclients: &mut Vec<NtClient>, servers: &mut Vec<AckServer
                 } else if buf.starts_with(get_corr.as_bytes()) {
                     let is_icyok = send_icyok(&cli.tcpstream).is_ok();
                     let ack_cli = newclients.swap_remove(pos);
-                    if servers.len() > 0 && is_icyok {
-                        servers[0].clients.push(ack_cli); // select server?
+                    if is_icyok {
+                        ackclients.push(ack_cli);
                         eprintln!("{pos}: NTRIP client accepted");
                     } else {
                         ack_cli

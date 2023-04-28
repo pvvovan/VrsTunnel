@@ -1,4 +1,4 @@
-use crate::{cfg, ntclient::NtClient, ntserver::NtServer};
+use crate::{cfg, ntclient::NtClient, ntserver::NtServer, wgs84};
 use chrono::{self, Datelike, Timelike};
 use std::{
     io::{prelude::*, ErrorKind},
@@ -93,21 +93,66 @@ fn accept_newservers(newservers: &mut Vec<NtServer>, servers: &mut Vec<NtServer>
         let mut buf = [0u8; 4096];
         if let Ok(avail) = serv.tcpstream.peek(&mut buf) {
             let post_req = b"POST /";
-            if avail > post_req.len() {
+            let req_ending = b"Transfer-Encoding: chunked";
+            if avail > post_req.len() + req_ending.len() {
                 let new_serv = newservers.swap_remove(pos);
-                if buf.starts_with(post_req) {
-                    if post_icyok(&new_serv.tcpstream).is_ok() {
-                        servers.push(new_serv);
-                        eprintln!("{pos}: NTRIP server accepted");
+                let new_serv_tcpstream = new_serv.tcpstream.try_clone().unwrap();
+                let buf = &buf[0..avail];
+
+                let mut is_srv_ok = buf.starts_with(post_req);
+
+                if is_srv_ok {
+                    is_srv_ok = buf.ends_with(req_ending);
+                }
+
+                let mut req_str = String::new();
+                if is_srv_ok {
+                    if let Ok(st) = std::str::from_utf8(buf) {
+                        req_str = st.to_string();
                     } else {
-                        new_serv
-                            .tcpstream
-                            .shutdown(std::net::Shutdown::Both)
-                            .unwrap_or_default();
+                        is_srv_ok = false;
                     }
-                } else {
-                    new_serv
-                        .tcpstream
+                }
+
+                let req_str: Vec<&str> = req_str.lines().collect();
+                if is_srv_ok {
+                    is_srv_ok = req_str.len() > 5;
+                }
+
+                let mut lat = 0.0;
+                let mut lon = 0.0;
+                if is_srv_ok {
+                    let strs: Vec<&str> = req_str[5].split(";").collect();
+                    is_srv_ok = strs.len() > 8;
+                    if is_srv_ok {
+                        match strs[7].parse() {
+                            Ok(num) => lat = num,
+                            _ => is_srv_ok = false,
+                        }
+                    }
+
+                    if is_srv_ok {
+                        match strs[8].parse() {
+                            Ok(num) => lon = num,
+                            _ => is_srv_ok = false,
+                        }
+                    }
+                }
+
+                if is_srv_ok {
+                    is_srv_ok = post_icyok(&new_serv.tcpstream).is_ok();
+                }
+
+                if is_srv_ok {
+                    let geo = wgs84::GeoLoc::new(lat, lon, 0.0);
+                    let geo2 = wgs84::GeoLoc::new(lat, 0.0, 0.0);
+                    println!("Distance: {}", geo.distance(&geo2));
+                    servers.push(new_serv);
+                    eprintln!("{pos}: NTRIP server accepted");
+                }
+
+                if !is_srv_ok {
+                    new_serv_tcpstream
                         .shutdown(std::net::Shutdown::Both)
                         .unwrap_or_default();
                 }

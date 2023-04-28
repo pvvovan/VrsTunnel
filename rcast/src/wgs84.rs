@@ -1,7 +1,4 @@
 pub struct GeoLoc {
-    lat: f64,
-    lon: f64,
-    ele: f64,
     cart_loc: CartLoc,
 }
 
@@ -22,12 +19,7 @@ impl GeoLoc {
             y: (WGS84_A / chi + ele) * lat.cos() * lon.sin(),
             z: (WGS84_A / chi * (1.0 - WGS84_E_S) + ele) * lat.sin(),
         };
-        GeoLoc {
-            lat,
-            lon,
-            ele,
-            cart_loc,
-        }
+        GeoLoc { cart_loc }
     }
 
     pub fn distance(&self, other: &Self) -> f64 {
@@ -53,8 +45,8 @@ impl CartLoc {
 const WGS84_A: f64 = 6378137.0; // earth semimajor axis in meters
 const WGS84_F: f64 = 1.0 / 298.257223563; // reciprocal flattening
 const WGS84_E_S: f64 = (2.0 * WGS84_F) - (WGS84_F * WGS84_F); // eccentricity squared
-const WGS84_B: f64 = WGS84_A * (1.0 - WGS84_F); // semi-minor axis
-const WGS84_E_S2: f64 = WGS84_F * (2.0 - WGS84_F) / ((1.0 - WGS84_F) * (1.0 - WGS84_F)); // second eccentricity squared
+/// const WGS84_B: f64 = WGS84_A * (1.0 - WGS84_F); // semi-minor axis
+/// const WGS84_E_S2: f64 = WGS84_F * (2.0 - WGS84_F) / ((1.0 - WGS84_F) * (1.0 - WGS84_F)); // second eccentricity squared
 
 #[cfg(test)]
 mod tests {

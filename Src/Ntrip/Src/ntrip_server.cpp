@@ -92,7 +92,7 @@ namespace VrsTunnel::Ntrip
 			"Authorization: Basic %s\r\n"
 			"NTRIP-STR: %s;CMR-;12(1),12(1);2;GPS+GLONASS;23;ua;"
 			"%.6f;%.6f;0;0;Open net GNSS_123;none;B;N;9600;none;"
-			"\r\nTransfer-Encoding: chunked";
+			"\r\nTransfer-Encoding: chunked\r\n\r\n";
 
 		std::unique_ptr<char[]> request;
 		std::string auth{""};

@@ -34,7 +34,6 @@ fn do_work(serv_recv: Receiver<NewServer>, clnt_recv: Receiver<NtClient>) {
             let mut buf = [0u8; 4096];
             if let Ok(avail) = serv.tcpstream.read(&mut buf) {
                 if avail > 0 {
-                    // println!("server avail: {avail}");
                     serv.nocorr_cnt = 0;
                     let corr = &buf[0..avail];
                     let mut cli_pos = 0;
@@ -83,7 +82,35 @@ fn subscribe_clients(ackclients: &mut Vec<NtClient>, servers: &mut Vec<AckServer
         let mut buf = [0u8; 4096];
         if let Ok(avail) = cli.tcpstream.read(&mut buf) {
             if avail > 0 {
-                println!("{}", std::str::from_utf8(&buf[0..avail]).unwrap());
+                let cli_location = crate::nmea::gga(&buf[0..avail]);
+                if cli_location.is_err() && avail < 4000 {
+                    cli_pos += 1;
+                    continue;
+                }
+
+                if cli_location.is_err() {
+                    let cli = ackclients.swap_remove(cli_pos);
+                    cli.tcpstream
+                        .shutdown(std::net::Shutdown::Both)
+                        .unwrap_or_default();
+                    continue;
+                }
+
+                let cli_location = cli_location.unwrap();
+                let mut min_distance = servers[0].location.distance(&cli_location);
+                let mut min_serv_pos = 0;
+                for i in 1..servers.len() {
+                    let distance = servers[i].location.distance(&cli_location);
+                    if distance < min_distance {
+                        min_distance = distance;
+                        min_serv_pos = i;
+                    }
+                }
+                servers[min_serv_pos]
+                    .clients
+                    .push(ackclients.swap_remove(cli_pos));
+                println!("{}: client subscribed", cli_pos);
+                continue;
             }
         }
         cli_pos += 1;
@@ -164,9 +191,6 @@ fn accept_newservers(newservers: &mut Vec<NewServer>, servers: &mut Vec<AckServe
                 }
 
                 if is_srv_ok {
-                    let geo = wgs84::Location::new(lat, lon, 0.0);
-                    let geo2 = wgs84::Location::new(lat, 0.0, 0.0);
-                    println!("Distance: {}", geo.distance(&geo2));
                     servers.push(AckServer {
                         tcpstream: new_serv.tcpstream,
                         clients: vec![],

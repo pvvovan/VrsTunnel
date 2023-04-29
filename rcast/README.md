@@ -1,3 +1,3 @@
 ## NTRIP Multi Caster
 
-Nearest reference station solution
+Solution to provide correction from the nearest reference station automatically

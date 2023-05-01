@@ -1,5 +1,4 @@
 use crate::{cfg, ntclient::NtClient, ntserver::*, wgs84};
-use chrono::{self, Datelike, Timelike};
 use std::{
     io::{prelude::*, ErrorKind},
     net::TcpStream,
@@ -286,16 +285,25 @@ fn post_icyok(tcpstream: &TcpStream) -> Result<(), std::io::Error> {
     Err(std::io::Error::from(ErrorKind::ConnectionRefused))
 }
 
-fn datetimenow() -> String {
-    let dt = chrono::Utc::now();
-    let m = dt.month();
-    let d = dt.day();
-    let y = dt.year();
-    let h = dt.hour();
-    let mm = dt.minute();
-    let s = dt.second();
+pub fn datetimenow() -> String {
+    let systime = std::time::SystemTime::now()
+        .duration_since(std::time::SystemTime::UNIX_EPOCH)
+        .expect("SystemTime failed")
+        .as_secs() as i64;
+
+    let unixdate = time::Date::from_calendar_date(1970, time::Month::January, 1)
+        .expect("UnitDate failed")
+        .checked_add(time::Duration::new(systime, 0))
+        .unwrap();
+
+    let month = unixdate.month() as u8;
+    let day = unixdate.day();
+    let year = unixdate.year();
+    let hour = (systime % (24 * 60 * 60)) / (60 * 60);
+    let minute = (systime % (60 * 60)) / 60;
+    let second = systime % 60;
     format!(
         "{: >2}/{: >2}/{: >4}:{: >2}:{: >2}:{: >2} GMT",
-        m, d, y, h, mm, s
+        month, day, year, hour, minute, second
     )
 }

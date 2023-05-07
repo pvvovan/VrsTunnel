@@ -81,17 +81,26 @@ fn subscribe_clients(ackclients: &mut Vec<NtClient>, servers: &mut Vec<AckServer
         let mut buf = [0u8; 4096];
         if let Ok(avail) = cli.tcpstream.read(&mut buf) {
             if avail > 0 {
+                if cli.noavail_cnt > CLIENT_TIMEOUT {
+                    cli.tcpstream
+                        .shutdown(std::net::Shutdown::Both)
+                        .unwrap_or_default();
+                    ackclients.swap_remove(cli_pos);
+                    continue;
+                }
+
                 let cli_location = crate::nmea::gga(&buf[0..avail]);
                 if cli_location.is_err() && avail < 4000 {
+                    cli.noavail_cnt += 1;
                     cli_pos += 1;
                     continue;
                 }
 
                 if cli_location.is_err() {
-                    let cli = ackclients.swap_remove(cli_pos);
                     cli.tcpstream
                         .shutdown(std::net::Shutdown::Both)
                         .unwrap_or_default();
+                    ackclients.swap_remove(cli_pos);
                     continue;
                 }
 
@@ -111,14 +120,25 @@ fn subscribe_clients(ackclients: &mut Vec<NtClient>, servers: &mut Vec<AckServer
                 println!("{}: client subscribed", cli_pos);
                 continue;
             }
+        } else {
+            cli.noavail_cnt += 1;
         }
+
+        if cli.noavail_cnt > CLIENT_TIMEOUT {
+            cli.tcpstream
+                .shutdown(std::net::Shutdown::Both)
+                .unwrap_or_default();
+            ackclients.swap_remove(cli_pos);
+            continue;
+        }
+
         cli_pos += 1;
     }
 }
 
 fn is_server_timeout(serv: &mut AckServer) -> bool {
     serv.nocorr_cnt += 1;
-    if serv.nocorr_cnt > 1000 {
+    if serv.nocorr_cnt > SERVER_TIMEOUT {
         for cli in serv.clients.iter() {
             cli.tcpstream
                 .shutdown(std::net::Shutdown::Both)
@@ -214,7 +234,7 @@ fn accept_newservers(newservers: &mut Vec<NewServer>, servers: &mut Vec<AckServe
 fn accept_newclients(newclients: &mut Vec<NtClient>, ackclients: &mut Vec<NtClient>) {
     let mut pos = 0;
     for _ in 0..newclients.len() {
-        let cli = &newclients[pos];
+        let mut cli = &mut newclients[pos];
         let mut buf = [0u8; 4096];
         let get_mounts = b"GET / ";
         let get_corr = format!("GET /{}", cfg::MOUNT);
@@ -248,7 +268,18 @@ fn accept_newclients(newclients: &mut Vec<NtClient>, ackclients: &mut Vec<NtClie
                     continue;
                 }
             }
+        } else {
+            cli.noavail_cnt += 1;
         }
+
+        if cli.noavail_cnt > CLIENT_TIMEOUT {
+            cli.tcpstream
+                .shutdown(std::net::Shutdown::Both)
+                .unwrap_or_default();
+            newclients.swap_remove(pos);
+            continue;
+        }
+
         pos += 1;
     }
 }
@@ -307,3 +338,6 @@ pub fn datetimenow() -> String {
         month, day, year, hour, minute, second
     )
 }
+
+const SERVER_TIMEOUT: i32 = 1000;
+const CLIENT_TIMEOUT: i32 = 6000;

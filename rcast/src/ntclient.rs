@@ -15,7 +15,12 @@ fn accept_clients(clnt_sender: Sender<NtClient>) {
         if tcpconn.is_ok() {
             if let Ok((tcpstream, sockaddr)) = tcpconn {
                 if tcpstream.set_nonblocking(true).is_ok() {
-                    clnt_sender.send(NtClient { tcpstream }).unwrap();
+                    clnt_sender
+                        .send(NtClient {
+                            tcpstream,
+                            noavail_cnt: 0,
+                        })
+                        .unwrap();
                     println!("client connected: {}", sockaddr.ip().to_string());
                 }
             }
@@ -25,4 +30,5 @@ fn accept_clients(clnt_sender: Sender<NtClient>) {
 
 pub struct NtClient {
     pub tcpstream: TcpStream,
+    pub noavail_cnt: i32,
 }

@@ -9,7 +9,16 @@ mod ntwork;
 mod wgs84;
 
 fn main() {
-    println!("NTRIP multi caster started running...");
+    println!("NTRIP multi caster started running:");
+    println!(
+        "Listening on port {} for ntrip client connections",
+        cfg::CLIENT_PORT
+    );
+    println!(
+        "Listening on port {} for ntrip server connections",
+        cfg::SERVER_PORT
+    );
+
     let (serv_send, serv_recv) = mpsc::channel();
     let (clnt_send, clnt_recv) = mpsc::channel();
     ntclient::launch(clnt_send);

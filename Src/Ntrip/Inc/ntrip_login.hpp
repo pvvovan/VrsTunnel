@@ -2,6 +2,7 @@
 #define VRSTUNNEL_NTRIP_NTRIP_LOGIN_HPP_
 
 #include <string>
+#include <cstdint>
 
 #include "location.hpp"
 

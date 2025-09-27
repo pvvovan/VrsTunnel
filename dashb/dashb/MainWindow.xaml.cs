@@ -19,6 +19,20 @@ namespace dashb
         public MainWindow()
         {
             InitializeComponent();
+            Ntrip.Client client = new(name: "RTK rover", password: "psw");
+            client.ToString();
+
+            Ntrip.Server server = new()
+            {
+                Name = "server",
+                Password = "Password"
+            };
+            server.ToString();
+
+            ViewModel.ClientVm clientVm = new(client);
+            ViewModel.MainVm mainVm = new();
+            mainVm.SelectedClient = clientVm;
+            DataContext = mainVm;
         }
     }
 }

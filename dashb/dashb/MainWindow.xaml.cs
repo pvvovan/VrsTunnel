@@ -19,8 +19,7 @@ namespace dashb
         public MainWindow()
         {
             InitializeComponent();
-            Ntrip.Client client = new(name: "RTK rover", password: "psw");
-            client.ToString();
+            DAL.IUnitOfWork unitOfWork = new DAL.UoW_stub();
 
             Ntrip.Server server = new()
             {
@@ -29,7 +28,7 @@ namespace dashb
             };
             server.ToString();
 
-            ViewModel.ClientVm clientVm = new(client);
+            ViewModel.ClientVm clientVm = new(unitOfWork.Repo<Ntrip.Client>().Items.Last());
             ViewModel.MainVm mainVm = new();
             mainVm.SelectedClient = clientVm;
             DataContext = mainVm;

@@ -12,5 +12,6 @@ namespace dashb.ViewModel
         public ClientVm? SelectedClient { get; set; }
 
         public ObservableCollection<ClientVm>? Clients { get; set; }
+        public ObservableCollection<ServerVm>? Servers { get; set; }
     }
 }

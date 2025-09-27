@@ -20,22 +20,21 @@ namespace dashb
         public MainWindow()
         {
             InitializeComponent();
+
             DAL.IUnitOfWork unitOfWork = new DAL.UoW_stub();
 
-            Ntrip.Server server = new()
-            {
-                Name = "server",
-                Password = "Password"
-            };
-            server.ToString();
-
             ViewModel.ClientVm clientVm = new(unitOfWork.Repo<Ntrip.Client>().Items.Last());
+
             ViewModel.MainVm mainVm = new();
             mainVm.SelectedClient = clientVm;
 
             mainVm.Clients = new ObservableCollection<ViewModel.ClientVm>(
                 from cl in unitOfWork.Repo<Ntrip.Client>().Items
                 select new ViewModel.ClientVm(cl));
+
+            mainVm.Servers = new ObservableCollection<ViewModel.ServerVm>(
+                from sv in unitOfWork.Repo<Ntrip.Server>().Items
+                select new ViewModel.ServerVm(sv));
 
             DataContext = mainVm;
         }

@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:dashb"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" MinHeight="320" MinWidth="480" Height="600" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="199*"/>
             <ColumnDefinition Width="201*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Margin="100,100,98,292" Text="{Binding Path=SelectedClient.Title}" Background="AliceBlue"></TextBlock>
-        <ListBox Margin="10,0,92,81" ItemsSource="{Binding Path=Clients}" DisplayMemberPath="Title" Height="136" VerticalAlignment="Bottom" Grid.Column="1"/>
-        <ListBox Margin="10,0,92,245" ItemsSource="{Binding Servers}" DisplayMemberPath="Caption" Height="136" VerticalAlignment="Bottom" Grid.Column="1"/>
+        <TextBlock Margin="10,10,0,0" Text="{Binding Path=SelectedClient.Title}" Background="AliceBlue" HorizontalAlignment="Left" MinWidth="50" VerticalAlignment="Top"/>
+        <ListBox Margin="10,200,10,10" ItemsSource="{Binding Path=Clients}" DisplayMemberPath="Title" Grid.Column="1"/>
+        <ListBox Margin="10,20,10,0" ItemsSource="{Binding Servers}" DisplayMemberPath="Caption" Height="136" VerticalAlignment="Top" Grid.Column="1"/>
     </Grid>
 </Window>

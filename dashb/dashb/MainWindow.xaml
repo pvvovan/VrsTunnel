@@ -7,6 +7,11 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <TextBlock Margin="100, 100, 100, 100" Text="{Binding SelectedClient.Title}"></TextBlock>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="199*"/>
+            <ColumnDefinition Width="201*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Margin="100,100,98,292" Text="{Binding Path=SelectedClient.Title}" Background="AliceBlue"></TextBlock>
+        <ListBox Margin="10,0,92,81" ItemsSource="{Binding Path=Clients}" DisplayMemberPath="Title" Height="136" VerticalAlignment="Bottom" Grid.Column="1"/>
     </Grid>
 </Window>

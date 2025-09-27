@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.ObjectModel;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -31,6 +32,11 @@ namespace dashb
             ViewModel.ClientVm clientVm = new(unitOfWork.Repo<Ntrip.Client>().Items.Last());
             ViewModel.MainVm mainVm = new();
             mainVm.SelectedClient = clientVm;
+
+            mainVm.Clients = new ObservableCollection<ViewModel.ClientVm>(
+                from cl in unitOfWork.Repo<Ntrip.Client>().Items
+                select new ViewModel.ClientVm(cl));
+
             DataContext = mainVm;
         }
     }

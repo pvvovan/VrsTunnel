@@ -8,4 +8,9 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\dashb.Ntrip\dashb.Ntrip.csproj" />
+    <ProjectReference Include="..\dashb.Test\dashb.Test.csproj" />
+  </ItemGroup>
+
 </Project>

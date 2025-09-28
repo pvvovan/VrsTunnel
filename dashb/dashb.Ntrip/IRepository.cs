@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace dashb.DAL
 {
-    internal interface IRepository<T> where T : class
+    public interface IRepository<T> where T : class
     {
         IQueryable<T> Items { get; }
         void Add(T item);

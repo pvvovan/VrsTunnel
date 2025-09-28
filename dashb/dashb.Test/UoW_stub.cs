@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace dashb.DAL
 {
-    internal class UoW_stub : IUnitOfWork
+    public class UoW_stub : IUnitOfWork
     {
         public void Commit()
         {

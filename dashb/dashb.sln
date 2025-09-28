@@ -5,6 +5,10 @@ VisualStudioVersion = 17.14.36511.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dashb.WPF", "dashb.WPF\dashb.WPF.csproj", "{ABACAC3B-867E-44FE-B22D-DD576D088387}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dashb.Ntrip", "dashb.Ntrip\dashb.Ntrip.csproj", "{52E79AF3-41AA-4C6A-9E7F-A38E31A36663}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dashb.Test", "dashb.Test\dashb.Test.csproj", "{5C6A4715-26A9-4A64-97F7-CF07807D409C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{ABACAC3B-867E-44FE-B22D-DD576D088387}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABACAC3B-867E-44FE-B22D-DD576D088387}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABACAC3B-867E-44FE-B22D-DD576D088387}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52E79AF3-41AA-4C6A-9E7F-A38E31A36663}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52E79AF3-41AA-4C6A-9E7F-A38E31A36663}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52E79AF3-41AA-4C6A-9E7F-A38E31A36663}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52E79AF3-41AA-4C6A-9E7F-A38E31A36663}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C6A4715-26A9-4A64-97F7-CF07807D409C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C6A4715-26A9-4A64-97F7-CF07807D409C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C6A4715-26A9-4A64-97F7-CF07807D409C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C6A4715-26A9-4A64-97F7-CF07807D409C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

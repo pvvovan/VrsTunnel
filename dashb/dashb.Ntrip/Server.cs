@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace dashb.Ntrip
 {
-    internal class Server : IUser
+    public class Server : IUser
     {
         private string _name = string.Empty;
         private string _password = string.Empty;

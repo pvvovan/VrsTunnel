@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace dashb.Ntrip
 {
-    internal class Client : IUser
+    public class Client : IUser
     {
         [SetsRequiredMembers]
         public Client(string name, string password) =>

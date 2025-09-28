@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace dashb.DAL
 {
-    internal interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork : IDisposable
     {
         void Commit();
         IRepository<T> Repo<T>() where T : class;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace dashb.Ntrip
 {
-    internal interface IUser
+    public interface IUser
     {
         string Name { get; set; }
         string Password { get; set; }

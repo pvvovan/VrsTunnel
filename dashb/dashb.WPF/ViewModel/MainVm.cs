@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace dashb.ViewModel
 {
@@ -25,5 +26,35 @@ namespace dashb.ViewModel
         public ObservableCollection<ServerVm>? Servers { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        private string _NewName = "Enter new name";
+        public string NewName
+        {
+            get
+            {
+                return _NewName;
+            }
+            set
+            {
+                _NewName = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(_NewName)));
+                AddClientCmd.OnCanExecuteChanged();
+            }
+        }
+
+        private CmdVm? _AddClientCmd;
+        public CmdVm AddClientCmd
+        {
+            get
+            {
+                _AddClientCmd ??= new(p => NewName.Length > 0, p => AddClient());
+                return _AddClientCmd;
+            }
+        }
+
+        private void AddClient()
+        {
+            MessageBox.Show("Client added: " + NewName);
+        }
     }
 }

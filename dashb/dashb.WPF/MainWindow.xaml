@@ -13,10 +13,13 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="2*"></RowDefinition>
         </Grid.RowDefinitions>
         <TextBlock Margin="10,10,0,0" Text="{Binding Path=SelectedClient.Title}" Background="AliceBlue" HorizontalAlignment="Left" MinWidth="50" VerticalAlignment="Top"/>
-        <ListBox Margin="10,10,10,10" ItemsSource="{Binding Path=Clients}" DisplayMemberPath="Title" Grid.Column="1" Grid.Row="1"  SelectedItem="{Binding Path=SelectedClient, Mode=TwoWay}"/>
+        <ListBox Margin="10,10,10,10" ItemsSource="{Binding Path=Clients}" DisplayMemberPath="Title" Grid.Column="1" Grid.Row="2"  SelectedItem="{Binding Path=SelectedClient, Mode=TwoWay}"/>
         <ListBox Margin="10,10,10,10" ItemsSource="{Binding Servers}" DisplayMemberPath="Caption" Grid.Column="1"/>
+        <GridSplitter ResizeDirection="Rows" Grid.Column="1" Grid.Row="1" Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.ColumnSpan="2"></GridSplitter>
+        <GridSplitter Width="5" Grid.RowSpan="3"></GridSplitter>
     </Grid>
 </Window>

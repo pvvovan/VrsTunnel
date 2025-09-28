@@ -12,7 +12,7 @@
             <ColumnDefinition Width="201*"/>
         </Grid.ColumnDefinitions>
         <TextBlock Margin="10,10,0,0" Text="{Binding Path=SelectedClient.Title}" Background="AliceBlue" HorizontalAlignment="Left" MinWidth="50" VerticalAlignment="Top"/>
-        <ListBox Margin="10,200,10,10" ItemsSource="{Binding Path=Clients}" DisplayMemberPath="Title" Grid.Column="1"/>
+        <ListBox Margin="10,200,10,10" ItemsSource="{Binding Path=Clients}" DisplayMemberPath="Title" Grid.Column="1" SelectedItem="{Binding Path=SelectedClient, Mode=TwoWay}"/>
         <ListBox Margin="10,20,10,0" ItemsSource="{Binding Servers}" DisplayMemberPath="Caption" Height="136" VerticalAlignment="Top" Grid.Column="1"/>
     </Grid>
 </Window>

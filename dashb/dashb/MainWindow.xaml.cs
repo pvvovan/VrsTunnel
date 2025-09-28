@@ -21,7 +21,7 @@ namespace dashb
         {
             InitializeComponent();
 
-            DAL.IUnitOfWork unitOfWork = new DAL.UoW_stub();
+            using DAL.IUnitOfWork unitOfWork = new DAL.UoW_stub();
 
             ViewModel.ClientVm clientVm = new(unitOfWork.Repo<Ntrip.Client>().Items.Last());
 

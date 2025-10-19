@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace dashb.ViewModel
 {
-    internal class MainVm : INotifyPropertyChanged
+    internal class MainVm(DAL.IUnitOfWork _unitOfWork) : INotifyPropertyChanged
     {
         private ClientVm? _selectedClient;
         public ClientVm? SelectedClient
@@ -22,8 +22,13 @@ namespace dashb.ViewModel
             }
         }
 
-        public ObservableCollection<ClientVm>? Clients { get; set; }
-        public ObservableCollection<ServerVm>? Servers { get; set; }
+        public ObservableCollection<ClientVm>? Clients { get; set; } = new ObservableCollection<ViewModel.ClientVm>(
+                from cl in _unitOfWork.Repo<Ntrip.Client>().Items
+                select new ViewModel.ClientVm(cl));
+
+        public ObservableCollection<ServerVm>? Servers { get; set; } = new ObservableCollection<ViewModel.ServerVm>(
+                from sv in _unitOfWork.Repo<Ntrip.Server>().Items
+                select new ViewModel.ServerVm(sv));
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Unity.Configuration" Version="5.11.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\dashb.Ntrip\dashb.Ntrip.csproj" />
     <ProjectReference Include="..\dashb.Test\dashb.Test.csproj" />
   </ItemGroup>

@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Unity;
 
 namespace dashb
 {
@@ -20,23 +21,9 @@ namespace dashb
         public MainWindow()
         {
             InitializeComponent();
-
-            using DAL.IUnitOfWork unitOfWork = new DAL.UoW_stub();
-
-            ViewModel.ClientVm clientVm = new(unitOfWork.Repo<Ntrip.Client>().Items.Last());
-
-            ViewModel.MainVm mainVm = new();
-            mainVm.SelectedClient = clientVm;
-
-            mainVm.Clients = new ObservableCollection<ViewModel.ClientVm>(
-                from cl in unitOfWork.Repo<Ntrip.Client>().Items
-                select new ViewModel.ClientVm(cl));
-
-            mainVm.Servers = new ObservableCollection<ViewModel.ServerVm>(
-                from sv in unitOfWork.Repo<Ntrip.Server>().Items
-                select new ViewModel.ServerVm(sv));
-
-            DataContext = mainVm;
+            IUnityContainer container = new UnityContainer();
+            container.RegisterType<DAL.IUnitOfWork, DAL.UoW_stub>();
+            DataContext = container.Resolve<ViewModel.MainVm>();
         }
     }
 }

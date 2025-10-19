@@ -21,7 +21,7 @@
         <GridSplitter ResizeDirection="Rows" Grid.Column="1" Grid.Row="1" Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Center"></GridSplitter>
         <GridSplitter Width="5" Grid.RowSpan="3"></GridSplitter>
         <Canvas Grid.Column="0" Grid.Row="0" Grid.RowSpan="3">
-            <TextBlock Text="{Binding Path=SelectedClient.Title}" Background="Blue" HorizontalAlignment="Left" MinWidth="50" VerticalAlignment="Top"/>
+            <TextBlock Text="{Binding Path=SelectedClient.Title}" Background="Cyan" HorizontalAlignment="Left" MinWidth="50" VerticalAlignment="Top"/>
             <Button Canvas.Left="10" Canvas.Top="20" Command="{Binding Path=AddClientCmd}">Add</Button>
             <TextBox Canvas.Left="10" Canvas.Top="45" MinWidth="50" Text="{Binding Path=NewName, Mode=TwoWay}"></TextBox>
         </Canvas>

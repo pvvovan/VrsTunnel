@@ -18,17 +18,41 @@
     <Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <ListBox>
-			<ListBoxItem Content="1"></ListBoxItem>
-            <ListBoxItem Content="1"></ListBoxItem>
-            <ListBoxItem Content="1"></ListBoxItem>
-        </ListBox>
+        <Grid>
+            <ListBox>
+			    <ListBoxItem Content="Ntrip server 1"></ListBoxItem>
+                <ListBoxItem Content="Ntrip server 2"></ListBoxItem>
+                <ListBoxItem Content="Ntrip server 3"></ListBoxItem>
+            </ListBox>
+        </Grid>
+
+        <GridSplitter Grid.Row="1"></GridSplitter>
+
+        <Grid Grid.Row="2">
+            <ListBox>
+			    <ListBoxItem Content="Ntrip client 1"></ListBoxItem>
+                <ListBoxItem Content="Ntrip client 2"></ListBoxItem>
+                <ListBoxItem Content="Ntrip client 3"></ListBoxItem>
+            </ListBox>
+        </Grid>
+
+        <GridSplitter Grid.Column="1" Grid.RowSpan="3"></GridSplitter>
+
+        <Grid Grid.Column="2" Grid.RowSpan="3">
+            <ListBox>
+			    <ListBoxItem Content="Ntrip client 1"></ListBoxItem>
+                <ListBoxItem Content="Ntrip client 2"></ListBoxItem>
+                <ListBoxItem Content="Ntrip client 3"></ListBoxItem>
+            </ListBox>
+        </Grid>
     </Grid>
 </Window>

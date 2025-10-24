@@ -28,27 +28,42 @@
         </Grid.ColumnDefinitions>
 
         <Grid>
-            <ListBox>
+            <Grid.RowDefinitions>
+			    <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Ntrip servers" FontWeight="Bold" Padding="10 5 0 0"></TextBlock>
+            <ListBox Grid.Row="1">
 			    <ListBoxItem Content="Ntrip server 1"></ListBoxItem>
                 <ListBoxItem Content="Ntrip server 2"></ListBoxItem>
                 <ListBoxItem Content="Ntrip server 3"></ListBoxItem>
             </ListBox>
         </Grid>
 
-        <GridSplitter Grid.Row="1"></GridSplitter>
+        <GridSplitter Grid.Row="1" Background="Gray"></GridSplitter>
 
         <Grid Grid.Row="2">
-            <ListBox>
+            <Grid.RowDefinitions>
+			    <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Assigned Ntrip clients" FontWeight="Bold" Padding="10 5 0 0"></TextBlock>
+            <ListBox Grid.Row="1">
 			    <ListBoxItem Content="Ntrip client 1"></ListBoxItem>
                 <ListBoxItem Content="Ntrip client 2"></ListBoxItem>
                 <ListBoxItem Content="Ntrip client 3"></ListBoxItem>
             </ListBox>
         </Grid>
 
-        <GridSplitter Grid.Column="1" Grid.RowSpan="3"></GridSplitter>
+        <GridSplitter Grid.Column="1" Grid.RowSpan="3" Background="Gray"></GridSplitter>
 
         <Grid Grid.Column="2" Grid.RowSpan="3">
-            <ListBox>
+            <Grid.RowDefinitions>
+			    <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Ntrip clients" FontWeight="Bold" Padding="10 5 0 0"></TextBlock>
+            <ListBox Grid.Row="1">
 			    <ListBoxItem Content="Ntrip client 1"></ListBoxItem>
                 <ListBoxItem Content="Ntrip client 2"></ListBoxItem>
                 <ListBoxItem Content="Ntrip client 3"></ListBoxItem>

@@ -32,8 +32,18 @@
 			    <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
-            <TextBlock Text="Ntrip servers" FontWeight="Bold" Padding="10 5 0 0"></TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Ntrip servers" FontWeight="Bold" Padding="10 5 10 0"></TextBlock>
+                <Button>Add new server</Button>
+            </StackPanel>
             <ListBox Grid.Row="1">
+                <ListBoxItem>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock FontSize="16" Padding="0 0 8 0" VerticalAlignment="Center">Ntrip server 0</TextBlock>
+                        <Button FontSize="20">&#x1F589;</Button>
+                        <Button FontSize="20">&#9003;</Button>
+                    </StackPanel>
+                </ListBoxItem>
 			    <ListBoxItem Content="Ntrip server 1"></ListBoxItem>
                 <ListBoxItem Content="Ntrip server 2"></ListBoxItem>
                 <ListBoxItem Content="Ntrip server 3"></ListBoxItem>
@@ -49,7 +59,10 @@
             </Grid.RowDefinitions>
             <TextBlock Text="Assigned Ntrip clients" FontWeight="Bold" Padding="10 5 0 0"></TextBlock>
             <ListBox Grid.Row="1">
-			    <ListBoxItem Content="Ntrip client 1"></ListBoxItem>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock FontSize="16" Padding="0 0 8 0" VerticalAlignment="Center">Ntrip client 1</TextBlock>
+                    <Button FontSize="20">&#9003;</Button>
+                </StackPanel>
                 <ListBoxItem Content="Ntrip client 2"></ListBoxItem>
                 <ListBoxItem Content="Ntrip client 3"></ListBoxItem>
             </ListBox>
@@ -62,9 +75,19 @@
 			    <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
-            <TextBlock Text="Ntrip clients" FontWeight="Bold" Padding="10 5 0 0"></TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Ntrip clients" FontWeight="Bold" Padding="10 5 10 0"></TextBlock>
+                <Button>Add new client</Button>
+            </StackPanel>
             <ListBox Grid.Row="1">
-			    <ListBoxItem Content="Ntrip client 1"></ListBoxItem>
+                <ListBoxItem>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock FontSize="16" Padding="0 0 8 0" VerticalAlignment="Center">Ntrip client 1</TextBlock>
+                        <Button FontSize="20">&#x1F517;</Button>
+                        <Button FontSize="20">&#x1F589;</Button>
+                        <Button FontSize="20">&#9003;</Button>
+                    </StackPanel>
+                </ListBoxItem>
                 <ListBoxItem Content="Ntrip client 2"></ListBoxItem>
                 <ListBoxItem Content="Ntrip client 3"></ListBoxItem>
             </ListBox>

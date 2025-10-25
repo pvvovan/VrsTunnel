@@ -70,19 +70,19 @@
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Ntrip clients" FontWeight="Bold" Padding="10 5 10 0"></TextBlock>
-                <Button>Add new client</Button>
+                <Button Command="{Binding AddClientCmd}">Add new client</Button>
             </StackPanel>
-            <ListBox Grid.Row="1">
-                <ListBoxItem>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock FontSize="16" Padding="0 0 8 0" VerticalAlignment="Center">Ntrip client 1</TextBlock>
-                        <Button FontSize="20">&#x1F517;</Button>
-                        <Button FontSize="20">&#x1F589;</Button>
-                        <Button FontSize="20">&#9003;</Button>
-                    </StackPanel>
-                </ListBoxItem>
-                <ListBoxItem Content="Ntrip client 2"></ListBoxItem>
-                <ListBoxItem Content="Ntrip client 3"></ListBoxItem>
+            <ListBox Grid.Row="1" ItemsSource="{Binding Clients}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock FontSize="16" Padding="0 0 8 0" VerticalAlignment="Center" Text="{Binding Name}"></TextBlock>
+                            <Button FontSize="20">&#x1F517;</Button>
+                            <Button FontSize="20">&#x1F589;</Button>
+                            <Button FontSize="20">&#9003;</Button>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
             </ListBox>
         </Grid>
     </Grid>

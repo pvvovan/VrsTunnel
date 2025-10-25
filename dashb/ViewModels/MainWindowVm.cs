@@ -4,10 +4,9 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace dashb.ViewModels;
 
-public interface IShowDialog
+public interface IDialog
 {
-    void ShowAddServer(InputVm inputVm);
-    void ShowAddClient();
+    void Show(InputVm inputVm);
 }
 
 public interface IWnd
@@ -17,16 +16,18 @@ public interface IWnd
 
 public partial class MainWindowVm : ViewModelBase
 {
-    private readonly IShowDialog _showDialog;
+    private readonly IDialog _dialog;
 
-    public MainWindowVm(IShowDialog showDialog)
+    public MainWindowVm(IDialog dialog)
     {
         AddServerCmd = new(AddServer);
-        _showDialog = showDialog;
+        AddClientCmd = new(AddClient);
+        _dialog = dialog;
     }
 
-    [ObservableProperty]
-    private ObservableCollection<NtripClientVm> _clients = [];
+
+    private InputVm? _inputVm;
+
 
     [ObservableProperty]
     private ObservableCollection<NtripServerVm> _servers = [];
@@ -44,14 +45,40 @@ public partial class MainWindowVm : ViewModelBase
         };
         _inputVm.User.PropertyChanged += _inputVm.User_PropertyChanged;
         _inputVm.OkCmd = new(AddServerFromInput, _inputVm.CanOkExecute);
-        _showDialog.ShowAddServer(_inputVm);
+        _dialog.Show(_inputVm);
     }
 
-    private InputVm? _inputVm;
     private void AddServerFromInput()
     {
         _inputVm!.User!.PropertyChanged -= _inputVm.User_PropertyChanged;
         Servers.Add(_serverToAdd!);
+        _inputVm?.Close();
+    }
+
+
+    [ObservableProperty]
+    private ObservableCollection<NtripClientVm> _clients = [];
+
+    [ObservableProperty]
+    private RelayCommand _addClientCmd;
+
+    private NtripClientVm? _clientToAdd;
+    private void AddClient()
+    {
+        _clientToAdd = new();
+        _inputVm = new InputVm()
+        {
+            User = _clientToAdd
+        };
+        _inputVm.User.PropertyChanged += _inputVm.User_PropertyChanged;
+        _inputVm.OkCmd = new(AddClientFromInput, _inputVm.CanOkExecute);
+        _dialog.Show(_inputVm);
+    }
+
+    private void AddClientFromInput()
+    {
+        _inputVm!.User!.PropertyChanged -= _inputVm.User_PropertyChanged;
+        Clients.Add(_clientToAdd!);
         _inputVm?.Close();
     }
 }

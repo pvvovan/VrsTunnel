@@ -5,14 +5,14 @@ using System;
 
 namespace dashb.Views;
 
-public partial class MainWindow : Window, IShowDialog
+public partial class MainWindow : Window, IDialog
 {
     public MainWindow()
     {
         InitializeComponent();
     }
 
-    public void ShowAddServer(InputVm inputVm)
+    public void Show(InputVm inputVm)
     {
         InputView inputView = new()
         {
@@ -20,10 +20,5 @@ public partial class MainWindow : Window, IShowDialog
         };
         inputVm.Wnd = inputView;
         inputView.ShowDialog(this);
-    }
-
-    public void ShowAddClient()
-    {
-        throw new System.NotImplementedException();
     }
 }

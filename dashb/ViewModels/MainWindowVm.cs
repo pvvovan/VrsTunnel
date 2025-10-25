@@ -6,7 +6,7 @@ namespace dashb.ViewModels;
 
 public interface IShowDialog
 {
-    InputVm ShowAddServer(NtripServerVm server, RelayCommand addServerCmd);
+    void ShowAddServer(InputVm inputVm);
     void ShowAddClient();
 }
 
@@ -23,7 +23,6 @@ public partial class MainWindowVm : ViewModelBase
     {
         AddServerCmd = new(AddServer);
         _showDialog = showDialog;
-        _addServerFromInput = new(AddServerFromInput);
     }
 
     [ObservableProperty]
@@ -39,13 +38,19 @@ public partial class MainWindowVm : ViewModelBase
     private void AddServer()
     {
         _serverToAdd = new();
-        _inputVm = _showDialog.ShowAddServer(_serverToAdd, _addServerFromInput);
+        _inputVm = new InputVm()
+        {
+            User = _serverToAdd
+        };
+        _inputVm.User.PropertyChanged += _inputVm.User_PropertyChanged;
+        _inputVm.OkCmd = new(AddServerFromInput, _inputVm.CanOkExecute);
+        _showDialog.ShowAddServer(_inputVm);
     }
 
     private InputVm? _inputVm;
-    private readonly RelayCommand _addServerFromInput;
     private void AddServerFromInput()
     {
+        _inputVm!.User!.PropertyChanged -= _inputVm.User_PropertyChanged;
         Servers.Add(_serverToAdd!);
         _inputVm?.Close();
     }

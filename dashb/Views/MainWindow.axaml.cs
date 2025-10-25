@@ -12,17 +12,14 @@ public partial class MainWindow : Window, IShowDialog
         InitializeComponent();
     }
 
-    public InputVm ShowAddServer(NtripServerVm server, RelayCommand addServerCmd)
+    public void ShowAddServer(InputVm inputVm)
     {
-        InputView inputView = new();
-        var inputVm = new InputVm(inputView)
+        InputView inputView = new()
         {
-            User = server,
-            OkCmd = addServerCmd
+            DataContext = inputVm
         };
-        inputView.DataContext = inputVm;
+        inputVm.Wnd = inputView;
         inputView.ShowDialog(this);
-        return inputVm;
     }
 
     public void ShowAddClient()

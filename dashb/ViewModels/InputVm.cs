@@ -9,11 +9,19 @@ using System.Threading.Tasks;
 
 namespace dashb.ViewModels
 {
-    public partial class InputVm(IWnd wnd) : ViewModelBase
+    public partial class InputVm : ViewModelBase
     {
+        public IWnd? Wnd;
+
+        public void User_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            _CanOkExecute = _user is not null && _user.Name.Length > 0;
+            OkCmd?.NotifyCanExecuteChanged();
+        }
+
         public void Close()
         {
-            wnd.Close();
+            Wnd?.Close();
         }
 
         [ObservableProperty]
@@ -21,5 +29,11 @@ namespace dashb.ViewModels
 
         [ObservableProperty]
         private RelayCommand? _OkCmd;
+
+        private bool _CanOkExecute = false;
+        public bool CanOkExecute()
+        {
+            return _CanOkExecute;
+        }
     }
 }

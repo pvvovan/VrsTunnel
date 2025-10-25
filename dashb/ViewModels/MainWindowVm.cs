@@ -32,13 +32,21 @@ public partial class MainWindowVm : ViewModelBase
     [ObservableProperty]
     private ObservableCollection<NtripServerVm> _servers = [];
 
+    private void RemoveServer(object? param)
+    {
+        if (param is not null && param is NtripServerVm server)
+        {
+            Servers.Remove(server);
+        }
+    }
+
     [ObservableProperty]
     private RelayCommand _addServerCmd;
 
     private NtripServerVm? _serverToAdd;
     private void AddServer()
     {
-        _serverToAdd = new();
+        _serverToAdd = new(new(RemoveServer));
         _inputVm = new InputVm()
         {
             User = _serverToAdd

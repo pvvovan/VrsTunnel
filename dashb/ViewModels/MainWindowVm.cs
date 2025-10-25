@@ -144,7 +144,10 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
     {
         if (param is not null && param is NtripClientVm client)
         {
-            SelectedServer?.Clients.Add(client);
+            if (SelectedServer?.Clients.Contains(client) == false)
+            {
+                SelectedServer?.Clients.Add(client);
+            }
         }
     }
 

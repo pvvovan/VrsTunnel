@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.Input;
+using System.ComponentModel;
 
 namespace dashb.ViewModels;
 
@@ -14,7 +15,7 @@ public interface IWnd
     void Close();
 }
 
-public partial class MainWindowVm : ViewModelBase
+public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
 {
     private readonly IDialog _dialog;
 
@@ -81,7 +82,7 @@ public partial class MainWindowVm : ViewModelBase
     private NtripClientVm? _clientToAdd;
     private void AddClient()
     {
-        _clientToAdd = new(new(RemoveClient));
+        _clientToAdd = new(new(RemoveClient), new(AssignClient));
         _inputVm = new InputVm()
         {
             User = _clientToAdd
@@ -97,4 +98,44 @@ public partial class MainWindowVm : ViewModelBase
         Clients.Add(_clientToAdd!);
         _inputVm?.Close();
     }
+
+
+    private NtripServerVm? _selectedServer;
+    public NtripServerVm SelectedServer
+    {
+        get
+        {
+            return _selectedServer!;
+        }
+        set
+        {
+            _selectedServer = value;
+            PropertyChanged!(this, new PropertyChangedEventArgs(nameof(SelectedServer)));
+            AssignedClients = _selectedServer?.Clients ?? [];
+        }
+    }
+
+    private ObservableCollection<NtripClientVm> _assignedClients;
+    public ObservableCollection<NtripClientVm> AssignedClients
+    {
+        get
+        {
+            return _assignedClients;
+        }
+        set
+        {
+            _assignedClients = value;
+            PropertyChanged(this, new PropertyChangedEventArgs(nameof(AssignedClients)));
+        }
+    }
+
+    private void AssignClient(object? param)
+    {
+        if (param is not null && param is NtripClientVm client)
+        {
+            SelectedServer?.Clients.Add(client);
+        }
+    }
+
+    public new event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged = delegate { };
 }

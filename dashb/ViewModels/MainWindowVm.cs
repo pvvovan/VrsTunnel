@@ -24,6 +24,7 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
         AddServerCmd = new(AddServer);
         AddClientCmd = new(AddClient);
         _editClientCmd = new(EditClient);
+        _editServerCmd = new(EditServer);
         _dialog = dialog;
     }
 
@@ -53,6 +54,7 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
         {
             User = _serverToAdd
         };
+        _inputVm.User.EditCmd = _editServerCmd;
         _inputVm.User.PropertyChanged += _inputVm.User_PropertyChanged;
         _inputVm.OkCmd = new(AddServerFromInput, _inputVm.CanOkExecute);
         _dialog.Show(_inputVm);
@@ -156,13 +158,15 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
 
     private NtripClientVm? _clientToEdit;
     private NtripClientVm? _editedClient;
-    private RelayCommand<UserVm> _editClientCmd;
+    private readonly RelayCommand<UserVm> _editClientCmd;
     private void EditClient(object? param)
     {
         _clientToEdit = (NtripClientVm)param!;
-        _editedClient = new(new(RemoveClient), new(AssignClient), new(UnassignClient));
-        _editedClient.Name = _clientToEdit.Name;
-        _editedClient.Password = _clientToEdit.Password;
+        _editedClient = new(new(RemoveClient), new(AssignClient), new(UnassignClient))
+        {
+            Name = _clientToEdit.Name,
+            Password = _clientToEdit.Password
+        };
         _inputVm = new InputVm()
         {
             User = _editedClient
@@ -177,6 +181,37 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
     {
         _clientToEdit!.Name = _editedClient!.Name;
         _clientToEdit!.Password = _editedClient!.Password;
+        _inputVm!.User!.PropertyChanged -= _inputVm.User_PropertyChanged;
+        _inputVm?.Close();
+    }
+
+
+    private NtripServerVm? _serverToEdit;
+    private NtripServerVm? _editedServer;
+    private readonly RelayCommand<UserVm> _editServerCmd;
+    private void EditServer(object? param)
+    {
+        _serverToEdit = (NtripServerVm)param!;
+        _editedServer = new(new(RemoveServer))
+        {
+            Name = _serverToEdit.Name,
+            Password = _serverToEdit.Password
+        };
+        _inputVm = new InputVm()
+        {
+            User = _editedServer
+        };
+        _inputVm.User.EditCmd = _editServerCmd;
+        _inputVm.User.PropertyChanged += _inputVm.User_PropertyChanged;
+        _inputVm.OkCmd = new(EditServerFromInput, _inputVm.CanOkExecute);
+        _dialog.Show(_inputVm);
+    }
+
+    private void EditServerFromInput()
+    {
+        _serverToEdit!.Name = _editedServer!.Name;
+        _serverToEdit!.Password = _editedServer!.Password;
+        _inputVm!.User!.PropertyChanged -= _inputVm.User_PropertyChanged;
         _inputVm?.Close();
     }
 

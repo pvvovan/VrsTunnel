@@ -67,13 +67,21 @@ public partial class MainWindowVm : ViewModelBase
     [ObservableProperty]
     private ObservableCollection<NtripClientVm> _clients = [];
 
+    private void RemoveClient(object? param)
+    {
+        if (param is not null && param is NtripClientVm client)
+        {
+            Clients.Remove(client);
+        }
+    }
+
     [ObservableProperty]
     private RelayCommand _addClientCmd;
 
     private NtripClientVm? _clientToAdd;
     private void AddClient()
     {
-        _clientToAdd = new();
+        _clientToAdd = new(new(RemoveClient));
         _inputVm = new InputVm()
         {
             User = _clientToAdd

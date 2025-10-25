@@ -79,7 +79,7 @@
                             <TextBlock FontSize="16" Padding="0 0 8 0" VerticalAlignment="Center" Text="{Binding Name}"></TextBlock>
                             <Button FontSize="20">&#x1F517;</Button>
                             <Button FontSize="20">&#x1F589;</Button>
-                            <Button FontSize="20">&#9003;</Button>
+                            <Button Command="{Binding RemoveCmd}" CommandParameter="{Binding}" FontSize="20">&#9003;</Button>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

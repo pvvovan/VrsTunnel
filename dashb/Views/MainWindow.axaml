@@ -60,7 +60,8 @@
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock FontSize="16" Padding="0 0 8 0" VerticalAlignment="Center"
                                        Text="{Binding Name}" />
-                            <Button FontSize="20">&#9003;</Button>
+                            <Button Command="{Binding UnassignCmd}" CommandParameter="{Binding}"
+                                    FontSize="20">&#9003;</Button>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -82,10 +83,13 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock FontSize="16" Padding="0 0 8 0" VerticalAlignment="Center" Text="{Binding Name}"></TextBlock>
-                            <Button Command="{Binding AssignCmd}" CommandParameter="{Binding}" FontSize="20">&#x1F517;</Button>
+                            <TextBlock FontSize="16" Padding="0 0 8 0" VerticalAlignment="Center"
+                                       Text="{Binding Name}"></TextBlock>
+                            <Button Command="{Binding AssignCmd}" CommandParameter="{Binding}"
+                                    FontSize="20">&#x1F517;</Button>
                             <Button FontSize="20">&#x1F589;</Button>
-                            <Button Command="{Binding RemoveCmd}" CommandParameter="{Binding}" FontSize="20">&#9003;</Button>
+                            <Button Command="{Binding RemoveCmd}" CommandParameter="{Binding}"
+                                    FontSize="20">&#9003;</Button>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

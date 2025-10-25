@@ -10,10 +10,14 @@ namespace dashb.ViewModels
 {
     public partial class NtripClientVm : UserVm
     {
-        public NtripClientVm(RelayCommand<NtripClientVm> removeCmd, RelayCommand<NtripClientVm> assignCmd)
+        public NtripClientVm(
+            RelayCommand<NtripClientVm> removeCmd,
+            RelayCommand<NtripClientVm> assignCmd,
+            RelayCommand<NtripClientVm> unassignCmd)
         {
             _removeCmd = removeCmd;
             _assignCmd = assignCmd;
+            _unassignCmd = unassignCmd;
         }
 
         [ObservableProperty]
@@ -21,5 +25,8 @@ namespace dashb.ViewModels
 
         [ObservableProperty]
         private RelayCommand<NtripClientVm> _assignCmd;
+
+        [ObservableProperty]
+        private RelayCommand<NtripClientVm> _unassignCmd;
     }
 }

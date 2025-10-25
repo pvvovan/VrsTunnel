@@ -82,7 +82,7 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
     private NtripClientVm? _clientToAdd;
     private void AddClient()
     {
-        _clientToAdd = new(new(RemoveClient), new(AssignClient));
+        _clientToAdd = new(new(RemoveClient), new(AssignClient), new(UnassignClient));
         _inputVm = new InputVm()
         {
             User = _clientToAdd
@@ -125,7 +125,7 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
         set
         {
             _assignedClients = value;
-            PropertyChanged(this, new PropertyChangedEventArgs(nameof(AssignedClients)));
+            PropertyChanged!(this, new PropertyChangedEventArgs(nameof(AssignedClients)));
         }
     }
 
@@ -134,6 +134,14 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
         if (param is not null && param is NtripClientVm client)
         {
             SelectedServer?.Clients.Add(client);
+        }
+    }
+
+    private void UnassignClient(object? param)
+    {
+        if (param is not null && param is NtripClientVm client)
+        {
+            SelectedServer?.Clients.Remove(client);
         }
     }
 

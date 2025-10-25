@@ -35,6 +35,15 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
                 Id = Guid.NewGuid()
             });
         }
+        foreach (var sv in Servers)
+        {
+            srs.Add(new Models.NtripServer()
+            {
+                Name = sv.Name,
+                Password = sv.Password,
+                Id = Guid.NewGuid()
+            });
+        }
         await _config.Store(cls.AsQueryable(), srs.AsQueryable());
     }
     private readonly IDialog _dialog;

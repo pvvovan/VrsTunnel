@@ -19,19 +19,20 @@ public class JsonConfig : IConfig
 {
     private readonly string _filename = "config.json";
 
-    public (IQueryable<NtripClient> Clients, IQueryable<NtripServer> Servers) Load()
+    public (IQueryable<NtripClient> clients, IQueryable<NtripServer> servers) Load()
     {
         throw new NotImplementedException();
     }
 
-    public async Task Store(IQueryable<NtripClient> Clients, IQueryable<NtripServer> Servers)
+    public async Task Store(IQueryable<NtripClient> clients, IQueryable<NtripServer> servers)
     {
         JsonDal cfg = new()
         {
-            Clients = [..Clients]
+            Clients = [.. clients],
+            Servers = [.. servers]
         };
-        await using FileStream createStream = File.Create(_filename);
+        await using FileStream fileStream = File.Create(_filename);
         var opt = new JsonSerializerOptions { WriteIndented = true };
-        await JsonSerializer.SerializeAsync(createStream, cfg, opt);
+        await JsonSerializer.SerializeAsync(fileStream, cfg, opt);
     }
 }

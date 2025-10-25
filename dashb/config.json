@@ -1,10 +1,17 @@
 {
   "Clients": [
     {
-      "Name": "s",
-      "Password": "",
-      "Id": "35f346cb-feb2-4ebc-a065-a8b0e99f4e29"
+      "Name": "c1",
+      "Password": "ccccc1",
+      "Id": "a537646c-e058-4b8a-b65a-f8f65cb55c1f"
     }
   ],
-  "Servers": []
+  "Servers": [
+    {
+      "Name": "s1",
+      "Password": "ss111",
+      "Id": "f8f64b50-88a4-42e2-b031-c523f18bf165",
+      "Clients": null
+    }
+  ]
 }

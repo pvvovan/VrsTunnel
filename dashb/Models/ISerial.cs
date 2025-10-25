@@ -7,6 +7,6 @@ namespace dashb.Models;
 
 public interface IConfig
 {
-    (IQueryable<NtripClient> Clients, IQueryable<NtripServer> Servers) Load();
-    Task Store(IQueryable<NtripClient> Clients, IQueryable<NtripServer> Servers);
+    (IQueryable<NtripClient> clients, IQueryable<NtripServer> servers) Load();
+    Task Store(IQueryable<NtripClient> clients, IQueryable<NtripServer> servers);
 }

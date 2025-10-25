@@ -2,6 +2,10 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System;
 
 namespace dashb.ViewModels;
 
@@ -17,15 +21,32 @@ public interface IWnd
 
 public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
 {
+    private readonly Models.IConfig _config;
+    public async Task StoreConfig()
+    {
+        List<Models.NtripClient> cls = [];
+        List<Models.NtripServer> srs = [];
+        foreach (var cl in Clients)
+        {
+            cls.Add(new Models.NtripClient()
+            {
+                Name = cl.Name,
+                Password = cl.Password,
+                Id = Guid.NewGuid()
+            });
+        }
+        await _config.Store(cls.AsQueryable(), srs.AsQueryable());
+    }
     private readonly IDialog _dialog;
 
-    public MainWindowVm(IDialog dialog)
+    public MainWindowVm(IDialog dialog, Models.IConfig config)
     {
         AddServerCmd = new(AddServer);
         AddClientCmd = new(AddClient);
         _editClientCmd = new(EditClient);
         _editServerCmd = new(EditServer);
         _dialog = dialog;
+        _config = config;
     }
 
 

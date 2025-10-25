@@ -24,7 +24,13 @@ public partial class App : Application
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
             desktop.MainWindow = new MainWindow();
-            desktop.MainWindow.DataContext = new MainWindowVm((IDialog)desktop.MainWindow);
+            desktop.MainWindow.DataContext = new MainWindowVm(
+                (IDialog)desktop.MainWindow, new DAL.JsonConfig());
+
+            desktop.MainWindow.Closing += async (_, _) =>
+            {
+                await ((MainWindowVm)desktop.MainWindow.DataContext).StoreConfig();
+            };
         }
 
         base.OnFrameworkInitializationCompleted();

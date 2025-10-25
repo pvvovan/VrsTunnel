@@ -26,7 +26,8 @@
             <TextBox Grid.Column="1" Text="{Binding Path=User.Name, Mode=TwoWay}" />
 
             <TextBlock Grid.Column="0" Grid.Row="1" Text="Password" Padding="7" />
-            <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Path=User.Password, Mode=TwoWay}" />
+            <TextBox Grid.Column="1" Grid.Row="1"
+                     Text="{Binding Path=User.Password, Mode=TwoWay}" />
 
             <Button Grid.Row="2" Grid.ColumnSpan="2" Content="OK" Command="{Binding OkCmd}"
                     VerticalAlignment="Bottom" HorizontalAlignment="Center" />

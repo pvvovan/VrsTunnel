@@ -53,7 +53,7 @@
 			    <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
-            <TextBlock Text="Assigned Ntrip clients" FontWeight="Bold" Padding="10 5 0 0"></TextBlock>
+            <TextBlock Text="Assigned Ntrip clients" FontWeight="Bold" Padding="10 5 0 0" />
             <ListBox Grid.Row="1" ItemsSource="{Binding AssignedClients}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -87,7 +87,8 @@
                                        Text="{Binding Name}"></TextBlock>
                             <Button Command="{Binding AssignCmd}" CommandParameter="{Binding}"
                                     FontSize="20">&#x1F517;</Button>
-                            <Button FontSize="20">&#x1F589;</Button>
+                            <Button Command="{Binding EditCmd}" CommandParameter="{Binding}"
+                                    FontSize="20">&#x1F589;</Button>
                             <Button Command="{Binding RemoveCmd}" CommandParameter="{Binding}"
                                     FontSize="20">&#9003;</Button>
                         </StackPanel>

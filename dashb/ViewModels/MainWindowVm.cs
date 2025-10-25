@@ -23,6 +23,7 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
     {
         AddServerCmd = new(AddServer);
         AddClientCmd = new(AddClient);
+        _editClientCmd = new(EditClient);
         _dialog = dialog;
     }
 
@@ -73,6 +74,13 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
         if (param is not null && param is NtripClientVm client)
         {
             Clients.Remove(client);
+            foreach (var srv in Servers)
+            {
+                while (srv.Clients.Contains(client))
+                {
+                    srv.Clients.Remove(client);
+                }
+            }
         }
     }
 
@@ -87,6 +95,7 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
         {
             User = _clientToAdd
         };
+        _inputVm.User.EditCmd = _editClientCmd;
         _inputVm.User.PropertyChanged += _inputVm.User_PropertyChanged;
         _inputVm.OkCmd = new(AddClientFromInput, _inputVm.CanOkExecute);
         _dialog.Show(_inputVm);
@@ -115,7 +124,7 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
         }
     }
 
-    private ObservableCollection<NtripClientVm> _assignedClients;
+    private ObservableCollection<NtripClientVm> _assignedClients = [];
     public ObservableCollection<NtripClientVm> AssignedClients
     {
         get
@@ -145,5 +154,31 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
         }
     }
 
-    public new event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged = delegate { };
+    private NtripClientVm? _clientToEdit;
+    private NtripClientVm? _editedClient;
+    private RelayCommand<UserVm> _editClientCmd;
+    private void EditClient(object? param)
+    {
+        _clientToEdit = (NtripClientVm)param!;
+        _editedClient = new(new(RemoveClient), new(AssignClient), new(UnassignClient));
+        _editedClient.Name = _clientToEdit.Name;
+        _editedClient.Password = _clientToEdit.Password;
+        _inputVm = new InputVm()
+        {
+            User = _editedClient
+        };
+        _inputVm.User.EditCmd = _editClientCmd;
+        _inputVm.User.PropertyChanged += _inputVm.User_PropertyChanged;
+        _inputVm.OkCmd = new(EditClientFromInput, _inputVm.CanOkExecute);
+        _dialog.Show(_inputVm);
+    }
+
+    private void EditClientFromInput()
+    {
+        _clientToEdit!.Name = _editedClient!.Name;
+        _clientToEdit!.Password = _editedClient!.Password;
+        _inputVm?.Close();
+    }
+
+    public new event PropertyChangedEventHandler? PropertyChanged = delegate { };
 }

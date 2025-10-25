@@ -15,7 +15,7 @@ namespace dashb.ViewModels
 
         public void User_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            _CanOkExecute = _user is not null && _user.Name.Length > 0;
+            _CanOkExecute = User is not null && User.Name.Length > 0;
             OkCmd?.NotifyCanExecuteChanged();
         }
 

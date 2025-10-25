@@ -1,20 +1,12 @@
 using Avalonia.Controls;
+using dashb.ViewModels;
 
 namespace dashb.Views;
 
-public partial class InputView : Window
+public partial class InputView : Window, IWnd
 {
     public InputView()
     {
         InitializeComponent();
-    }
-
-    private void TextBlock_ActualThemeVariantChanged(object? sender, System.EventArgs e)
-    {
-    }
-
-    private void Button_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-    {
-        Close();
     }
 }

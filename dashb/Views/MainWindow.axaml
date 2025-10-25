@@ -5,15 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="dashb.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
+        x:DataType="vm:MainWindowVm"
         Icon="/Assets/avalonia-logo.ico"
         Title="dashb">
-
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
 
     <Grid>
 		<Grid.RowDefinitions>
@@ -34,19 +28,18 @@
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Ntrip servers" FontWeight="Bold" Padding="10 5 10 0"></TextBlock>
-                <Button Click="Button_Click">Add new server</Button>
+                <Button Command="{Binding AddServerCmd}">Add new server</Button>
             </StackPanel>
-            <ListBox Grid.Row="1">
-                <ListBoxItem>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock FontSize="16" Padding="0 0 8 0" VerticalAlignment="Center">Ntrip server 0</TextBlock>
-                        <Button FontSize="20">&#x1F589;</Button>
-                        <Button FontSize="20">&#9003;</Button>
-                    </StackPanel>
-                </ListBoxItem>
-			    <ListBoxItem Content="Ntrip server 1"></ListBoxItem>
-                <ListBoxItem Content="Ntrip server 2"></ListBoxItem>
-                <ListBoxItem Content="Ntrip server 3"></ListBoxItem>
+            <ListBox Grid.Row="1" ItemsSource="{Binding Servers}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Name}" FontSize="16" Padding="0 0 8 0" VerticalAlignment="Center" />
+                            <Button FontSize="20">&#x1F589;</Button>
+                            <Button FontSize="20">&#9003;</Button>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
             </ListBox>
         </Grid>
 

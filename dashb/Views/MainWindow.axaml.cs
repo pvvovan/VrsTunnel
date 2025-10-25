@@ -1,16 +1,32 @@
 using Avalonia.Controls;
+using CommunityToolkit.Mvvm.Input;
+using dashb.ViewModels;
+using System;
 
 namespace dashb.Views;
 
-public partial class MainWindow : Window
+public partial class MainWindow : Window, IShowDialog
 {
     public MainWindow()
     {
         InitializeComponent();
     }
 
-    private void Button_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    public InputVm ShowAddServer(NtripServerVm server, RelayCommand addServerCmd)
     {
-        new InputView().ShowDialog(this);
+        InputView inputView = new();
+        var inputVm = new InputVm(inputView)
+        {
+            User = server,
+            OkCmd = addServerCmd
+        };
+        inputView.DataContext = inputVm;
+        inputView.ShowDialog(this);
+        return inputVm;
+    }
+
+    public void ShowAddClient()
+    {
+        throw new System.NotImplementedException();
     }
 }

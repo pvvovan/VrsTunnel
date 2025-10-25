@@ -6,6 +6,7 @@
         mc:Ignorable="d"
         Width="300" Height="130"
         x:Class="dashb.Views.InputView"
+        x:DataType="vm:InputVm"
         Icon="/Assets/avalonia-logo.ico"
         Title="input">
 
@@ -22,12 +23,12 @@
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Column="0" Text="Name" Padding="7" />
-            <TextBox Grid.Column="1" Text="name" />
+            <TextBox Grid.Column="1" Text="{Binding Path=User.Name, Mode=TwoWay}" />
 
             <TextBlock Grid.Column="0" Grid.Row="1" Text="Password" Padding="7" />
-            <TextBox Grid.Column="1" Grid.Row="1" Text="password" />
+            <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Path=User.Password, Mode=TwoWay}" />
 
-            <Button Grid.Row="2" Grid.ColumnSpan="2" Content="OK" Click="Button_Click"
+            <Button Grid.Row="2" Grid.ColumnSpan="2" Content="OK" Command="{Binding OkCmd}"
                     VerticalAlignment="Bottom" HorizontalAlignment="Center" />
         </Grid>
     </Border>

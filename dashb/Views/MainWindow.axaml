@@ -34,7 +34,7 @@
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Ntrip servers" FontWeight="Bold" Padding="10 5 10 0"></TextBlock>
-                <Button>Add new server</Button>
+                <Button Click="Button_Click">Add new server</Button>
             </StackPanel>
             <ListBox Grid.Row="1">
                 <ListBoxItem>

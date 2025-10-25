@@ -25,4 +25,10 @@
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\InputView.axaml.cs">
+      <DependentUpon>InputView.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

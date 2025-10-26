@@ -25,17 +25,29 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
     public async Task StoreConfig()
     {
         var (oldClients, oldServers) = _config.Load();
+        var newClients = new Dictionary<NtripClientVm, Guid>();
+
         List<Models.NtripClient> cls = [];
         foreach (var cl in Clients)
         {
             var oldCl = (from oc in oldClients
-                        where cl.Model != null && oc.Id == cl.Model.Id
-                        select oc).FirstOrDefault();
+                         where cl.Model != null && oc.Id == cl.Model.Id
+                         select oc).FirstOrDefault();
+            Guid clId;
+            if (oldCl is null)
+            {
+                clId = Guid.NewGuid();
+                newClients.Add(cl, clId);
+            }
+            else
+            {
+                clId = oldCl.Id;
+            }
             cls.Add(new Models.NtripClient()
             {
                 Name = cl.Name,
                 Password = cl.Password,
-                Id = oldCl is not null ? oldCl.Id : Guid.NewGuid()
+                Id = clId
             });
         }
 
@@ -45,13 +57,27 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
             var oldSv = (from os in oldServers
                          where sv.Model != null && os.Id == sv.Model.Id
                          select os).FirstOrDefault();
+            List<Guid> clIds = [];
+            foreach (var assignCl in sv.Clients)
+            {
+                if (assignCl.Model is not null)
+                {
+                    clIds.Add(assignCl.Model.Id);
+                }
+                else
+                {
+                    clIds.Add(newClients[assignCl]);
+                }
+            }
             srs.Add(new Models.NtripServer()
             {
                 Name = sv.Name,
                 Password = sv.Password,
-                Id = oldSv is not null ? oldSv.Id : Guid.NewGuid()
+                Id = oldSv is not null ? oldSv.Id : Guid.NewGuid(),
+                Clients = clIds
             });
         }
+
         await _config.Store(cls.AsQueryable(), srs.AsQueryable());
     }
 
@@ -87,6 +113,15 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
             {
                 EditCmd = _editServerCmd
             };
+            if (sv.Clients is not null)
+            {
+                foreach (var assignedCl in sv.Clients)
+                {
+                    svVm.Clients.Add((from cl in Clients
+                                      where cl.Model!.Id == assignedCl
+                                      select cl).First());
+                }
+            }
             Servers.Add(svVm);
         }
     }

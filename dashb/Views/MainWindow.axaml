@@ -9,6 +9,12 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="dashb">
 
+    <Window.Styles>
+        <Style Selector="Button.h1">
+            <Setter Property="Height" Value="38"/>
+        </Style>
+    </Window.Styles>
+
     <Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*"></RowDefinition>
@@ -38,9 +44,9 @@
                             <TextBlock Text="{Binding Name}" FontSize="16" Padding="0 0 8 0"
                                        VerticalAlignment="Center" />
                             <Button Command="{Binding EditCmd}" CommandParameter="{Binding}"
-                                    FontSize="20">&#x1F589;</Button>
+                                    FontSize="20" Classes="h1">&#x1F589;</Button>
                             <Button FontSize="20" Command="{Binding RemoveCmd}"
-                                    CommandParameter="{Binding}">&#9003;</Button>
+                                    CommandParameter="{Binding}" Classes="h1">&#9003;</Button>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -62,7 +68,7 @@
                             <TextBlock FontSize="16" Padding="0 0 8 0" VerticalAlignment="Center"
                                        Text="{Binding Name}" />
                             <Button Command="{Binding UnassignCmd}" CommandParameter="{Binding}"
-                                    FontSize="20">&#9003;</Button>
+                                    FontSize="20" Classes="h1">&#9003;</Button>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -87,11 +93,11 @@
                             <TextBlock FontSize="16" Padding="0 0 8 0" VerticalAlignment="Center"
                                        Text="{Binding Name}"></TextBlock>
                             <Button Command="{Binding AssignCmd}" CommandParameter="{Binding}"
-                                    FontSize="20">&#x1F517;</Button>
+                                    FontSize="20" Classes="h1">&#x1F517;</Button>
                             <Button Command="{Binding EditCmd}" CommandParameter="{Binding}"
-                                    FontSize="20">&#x1F589;</Button>
+                                    FontSize="20" Classes="h1">&#x1F589;</Button>
                             <Button Command="{Binding RemoveCmd}" CommandParameter="{Binding}"
-                                    FontSize="20">&#9003;</Button>
+                                    FontSize="20" Classes="h1">&#9003;</Button>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

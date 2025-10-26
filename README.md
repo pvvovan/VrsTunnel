@@ -19,5 +19,4 @@ Nearest reference station NTRIP Caster
 https://github.com/pvvovan/VrsTunnel/tree/master/rcast
 
 Caster configurator
-
 ![plot](dashb_shot.png)

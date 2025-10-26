@@ -24,12 +24,12 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
     private readonly Models.IConfig _config;
     public async Task StoreConfig()
     {
-        var oldClients = _config.Load().clients;
+        var (oldClients, oldServers) = _config.Load();
         List<Models.NtripClient> cls = [];
         foreach (var cl in Clients)
         {
             var oldCl = (from oc in oldClients
-                        where (cl.Model != null && oc.Id == cl.Model.Id)
+                        where cl.Model != null && oc.Id == cl.Model.Id
                         select oc).FirstOrDefault();
             cls.Add(new Models.NtripClient()
             {
@@ -42,11 +42,14 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
         List<Models.NtripServer> srs = [];
         foreach (var sv in Servers)
         {
+            var oldSv = (from os in oldServers
+                         where sv.Model != null && os.Id == sv.Model.Id
+                         select os).FirstOrDefault();
             srs.Add(new Models.NtripServer()
             {
                 Name = sv.Name,
                 Password = sv.Password,
-                Id = Guid.NewGuid()
+                Id = oldSv is not null ? oldSv.Id : Guid.NewGuid()
             });
         }
         await _config.Store(cls.AsQueryable(), srs.AsQueryable());
@@ -65,12 +68,26 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
         _dialog = dialog;
         _config = config;
 
+        var (cfgClients, cfgServers) = _config.Load();
+
         Clients = [];
-        foreach (var cl in _config.Load().clients)
+        foreach (var cl in cfgClients)
         {
-            NtripClientVm clVm = new(new(RemoveClient), new(AssignClient), new(UnassignClient), cl);
-            clVm.EditCmd = _editClientCmd;
+            NtripClientVm clVm = new(new(RemoveClient), new(AssignClient), new(UnassignClient), cl)
+            {
+                EditCmd = _editClientCmd
+            };
             Clients.Add(clVm);
+        }
+
+        Servers = [];
+        foreach (var sv in cfgServers)
+        {
+            NtripServerVm svVm = new(new(RemoveServer), sv)
+            {
+                EditCmd = _editServerCmd
+            };
+            Servers.Add(svVm);
         }
     }
 
@@ -95,7 +112,7 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
     private NtripServerVm? _serverToAdd;
     private void AddServer()
     {
-        _serverToAdd = new(new(RemoveServer));
+        _serverToAdd = new(new(RemoveServer), null);
         _inputVm = new InputVm()
         {
             User = _serverToAdd
@@ -241,7 +258,7 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
     private void EditServer(object? param)
     {
         _serverToEdit = (NtripServerVm)param!;
-        _editedServer = new(new(RemoveServer))
+        _editedServer = new(new(RemoveServer), null)
         {
             Name = _serverToEdit.Name,
             Password = _serverToEdit.Password

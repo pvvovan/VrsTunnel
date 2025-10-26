@@ -13,12 +13,21 @@ namespace dashb.ViewModels
         public NtripClientVm(
             RelayCommand<NtripClientVm> removeCmd,
             RelayCommand<NtripClientVm> assignCmd,
-            RelayCommand<NtripClientVm> unassignCmd)
+            RelayCommand<NtripClientVm> unassignCmd,
+            Models.NtripClient? model)
         {
             _removeCmd = removeCmd;
             _assignCmd = assignCmd;
             _unassignCmd = unassignCmd;
+            Model = model;
+            if (Model is not null)
+            {
+                Name = Model.Name;
+                Password = Model.Password;
+            }
         }
+
+        public readonly Models.NtripClient? Model;
 
         [ObservableProperty]
         private RelayCommand<NtripClientVm> _removeCmd;

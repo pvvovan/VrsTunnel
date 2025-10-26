@@ -24,17 +24,22 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
     private readonly Models.IConfig _config;
     public async Task StoreConfig()
     {
+        var oldClients = _config.Load().clients;
         List<Models.NtripClient> cls = [];
-        List<Models.NtripServer> srs = [];
         foreach (var cl in Clients)
         {
+            var oldCl = (from oc in oldClients
+                        where (cl.Model != null && oc.Id == cl.Model.Id)
+                        select oc).FirstOrDefault();
             cls.Add(new Models.NtripClient()
             {
                 Name = cl.Name,
                 Password = cl.Password,
-                Id = Guid.NewGuid()
+                Id = oldCl is not null ? oldCl.Id : Guid.NewGuid()
             });
         }
+
+        List<Models.NtripServer> srs = [];
         foreach (var sv in Servers)
         {
             srs.Add(new Models.NtripServer()
@@ -46,6 +51,9 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
         }
         await _config.Store(cls.AsQueryable(), srs.AsQueryable());
     }
+
+
+
     private readonly IDialog _dialog;
 
     public MainWindowVm(IDialog dialog, Models.IConfig config)
@@ -56,6 +64,14 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
         _editServerCmd = new(EditServer);
         _dialog = dialog;
         _config = config;
+
+        Clients = [];
+        foreach (var cl in _config.Load().clients)
+        {
+            NtripClientVm clVm = new(new(RemoveClient), new(AssignClient), new(UnassignClient), cl);
+            clVm.EditCmd = _editClientCmd;
+            Clients.Add(clVm);
+        }
     }
 
 
@@ -122,7 +138,7 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
     private NtripClientVm? _clientToAdd;
     private void AddClient()
     {
-        _clientToAdd = new(new(RemoveClient), new(AssignClient), new(UnassignClient));
+        _clientToAdd = new(new(RemoveClient), new(AssignClient), new(UnassignClient), null);
         _inputVm = new InputVm()
         {
             User = _clientToAdd
@@ -195,7 +211,7 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
     private void EditClient(object? param)
     {
         _clientToEdit = (NtripClientVm)param!;
-        _editedClient = new(new(RemoveClient), new(AssignClient), new(UnassignClient))
+        _editedClient = new(new(RemoveClient), new(AssignClient), new(UnassignClient), null)
         {
             Name = _clientToEdit.Name,
             Password = _clientToEdit.Password

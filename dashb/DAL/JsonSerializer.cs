@@ -21,7 +21,17 @@ public class JsonConfig : IConfig
 
     public (IQueryable<NtripClient> clients, IQueryable<NtripServer> servers) Load()
     {
-        throw new NotImplementedException();
+        JsonDal cfg = new()
+        {
+            Clients = [],
+            Servers = []
+        };
+        if (File.Exists(_filename))
+        {
+            using FileStream fileStream = File.OpenRead(_filename);
+            cfg = JsonSerializer.Deserialize<JsonDal>(fileStream)!;
+        }
+        return (cfg.Clients.AsQueryable(), cfg.Servers.AsQueryable());
     }
 
     public async Task Store(IQueryable<NtripClient> clients, IQueryable<NtripServer> servers)

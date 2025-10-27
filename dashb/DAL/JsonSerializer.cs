@@ -17,7 +17,12 @@ public class JsonDal
 
 public class JsonConfig : IConfig
 {
-    private readonly string _filename = "config.json";
+    public JsonConfig()
+    {
+        _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NtripConfig.json");
+    }
+
+    private readonly string _filename;
 
     public async Task<(IQueryable<NtripClient> clients, IQueryable<NtripServer> servers)> LoadAsync()
     {

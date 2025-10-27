@@ -43,12 +43,7 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
             {
                 clId = oldCl.Id;
             }
-            cls.Add(new Models.NtripClient()
-            {
-                Name = cl.Name,
-                Password = cl.Password,
-                Id = clId
-            });
+            cls.Add(new Models.NtripClient(cl.Name, cl.Password, clId));
         }
 
         List<Models.NtripServer> srs = [];
@@ -69,13 +64,10 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
                     clIds.Add(newClients[assignCl]);
                 }
             }
-            srs.Add(new Models.NtripServer()
-            {
-                Name = sv.Name,
-                Password = sv.Password,
-                Id = oldSv is not null ? oldSv.Id : Guid.NewGuid(),
-                Clients = clIds
-            });
+            srs.Add(new Models.NtripServer(sv.Name,
+                                           sv.Password,
+                                           oldSv is not null ? oldSv.Id : Guid.NewGuid(),
+                                           clIds));
         }
 
         await _config.StoreAsync(cls.AsQueryable(), srs.AsQueryable());

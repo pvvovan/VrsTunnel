@@ -21,16 +21,14 @@ public class JsonConfig : IConfig
 
     public async Task<(IQueryable<NtripClient> clients, IQueryable<NtripServer> servers)> LoadAsync()
     {
-        if (File.Exists(_filename))
+        if (!File.Exists(_filename))
         {
-            await using FileStream fileStream = File.OpenRead(_filename);
-            var cfg = await JsonSerializer.DeserializeAsync<JsonDal>(fileStream).ConfigureAwait(false);
-            return (cfg!.Clients.AsQueryable(), cfg!.Servers.AsQueryable());
+            await StoreAsync(new List<NtripClient>().AsQueryable(),
+                             new List<NtripServer>().AsQueryable()).ConfigureAwait(false);
         }
-        else
-        {
-            return (new List<NtripClient>().AsQueryable(), new List<NtripServer>().AsQueryable());
-        }
+        await using FileStream fileStream = File.OpenRead(_filename);
+        var cfg = await JsonSerializer.DeserializeAsync<JsonDal>(fileStream).ConfigureAwait(false);
+        return (cfg!.Clients.AsQueryable(), cfg!.Servers.AsQueryable());
     }
 
     public async Task StoreAsync(IQueryable<NtripClient> clients, IQueryable<NtripServer> servers)

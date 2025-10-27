@@ -34,7 +34,7 @@ public class JsonConfig : IConfig
         return (cfg.Clients.AsQueryable(), cfg.Servers.AsQueryable());
     }
 
-    public async Task Store(IQueryable<NtripClient> clients, IQueryable<NtripServer> servers)
+    public async Task StoreAsync(IQueryable<NtripClient> clients, IQueryable<NtripServer> servers)
     {
         JsonDal cfg = new()
         {

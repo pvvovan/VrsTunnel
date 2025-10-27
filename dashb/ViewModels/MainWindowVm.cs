@@ -78,7 +78,7 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
             });
         }
 
-        await _config.Store(cls.AsQueryable(), srs.AsQueryable());
+        await _config.StoreAsync(cls.AsQueryable(), srs.AsQueryable());
     }
 
 

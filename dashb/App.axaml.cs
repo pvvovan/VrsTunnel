@@ -6,6 +6,7 @@ using System.Linq;
 using Avalonia.Markup.Xaml;
 using dashb.ViewModels;
 using dashb.Views;
+using System.Threading.Tasks;
 
 namespace dashb;
 
@@ -24,14 +25,16 @@ public partial class App : Application
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
             desktop.MainWindow = new MainWindow();
-            desktop.MainWindow.DataContext = new MainWindowVm(
-                (IDialog)desktop.MainWindow, new DAL.JsonConfig());
-
+            var mainVm = new MainWindowVm((IDialog)desktop.MainWindow, new DAL.JsonConfig());
+            desktop.MainWindow.DataContext = mainVm;
+            Task storeTask = new(() => mainVm.StoreConfig().Wait());
             desktop.MainWindow.Closing += (_, _) =>
             {
-                var storeResult = ((MainWindowVm)desktop.MainWindow.DataContext).StoreConfig();
-                storeResult.ConfigureAwait(false);
-                storeResult.Wait();
+                storeTask.Start();
+            };
+            desktop.MainWindow.Closed += (_, _) =>
+            {
+                storeTask.Wait();
             };
         }
 

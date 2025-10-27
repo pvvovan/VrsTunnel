@@ -24,10 +24,10 @@ public class JsonConfig : IConfig
         if (!File.Exists(_filename))
         {
             await StoreAsync(new List<NtripClient>().AsQueryable(),
-                             new List<NtripServer>().AsQueryable()).ConfigureAwait(false);
+                             new List<NtripServer>().AsQueryable());
         }
         await using FileStream fileStream = File.OpenRead(_filename);
-        var cfg = await JsonSerializer.DeserializeAsync<JsonDal>(fileStream).ConfigureAwait(false);
+        var cfg = await JsonSerializer.DeserializeAsync<JsonDal>(fileStream);
         return (cfg!.Clients.AsQueryable(), cfg!.Servers.AsQueryable());
     }
 
@@ -40,6 +40,6 @@ public class JsonConfig : IConfig
         };
         await using FileStream fileStream = File.Create(_filename);
         var opt = new JsonSerializerOptions { WriteIndented = true };
-        await JsonSerializer.SerializeAsync(fileStream, cfg, opt).ConfigureAwait(false);
+        await JsonSerializer.SerializeAsync(fileStream, cfg, opt);
     }
 }

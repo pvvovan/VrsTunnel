@@ -24,7 +24,7 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
     private readonly Models.IConfig _config;
     public async Task StoreConfig()
     {
-        var (oldClients, oldServers) = await _config.LoadAsync().ConfigureAwait(false);
+        var (oldClients, oldServers) = await _config.LoadAsync();
         var newClients = new Dictionary<NtripClientVm, Guid>();
 
         List<Models.NtripClient> cls = [];
@@ -70,7 +70,7 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
                                            clIds));
         }
 
-        await _config.StoreAsync(cls.AsQueryable(), srs.AsQueryable()).ConfigureAwait(false);
+        await _config.StoreAsync(cls.AsQueryable(), srs.AsQueryable());
     }
 
 
@@ -88,9 +88,7 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
         Clients = [];
         Servers = [];
 
-        var loadResult = _config.LoadAsync();
-        loadResult.ConfigureAwait(true);
-        loadResult.ContinueWith(cfg =>
+        _config.LoadAsync().ContinueWith(cfg =>
         {
             var (cfgClients, cfgServers) = cfg.Result;
 
@@ -120,7 +118,7 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
                 }
                 Servers.Add(svVm);
             }
-        }).ConfigureAwait(true);
+        });
     }
 
 

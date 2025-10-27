@@ -27,9 +27,11 @@ public partial class App : Application
             desktop.MainWindow.DataContext = new MainWindowVm(
                 (IDialog)desktop.MainWindow, new DAL.JsonConfig());
 
-            desktop.MainWindow.Closing += async (_, _) =>
+            desktop.MainWindow.Closing += (_, _) =>
             {
-                await ((MainWindowVm)desktop.MainWindow.DataContext).StoreConfig();
+                var storeResult = ((MainWindowVm)desktop.MainWindow.DataContext).StoreConfig();
+                storeResult.ConfigureAwait(false);
+                storeResult.Wait();
             };
         }
 

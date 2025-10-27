@@ -1,7 +1,5 @@
 using Avalonia.Controls;
-using CommunityToolkit.Mvvm.Input;
 using dashb.ViewModels;
-using System;
 
 namespace dashb.Views;
 

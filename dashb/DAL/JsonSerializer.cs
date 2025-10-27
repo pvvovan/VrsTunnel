@@ -19,19 +19,18 @@ public class JsonConfig : IConfig
 {
     private readonly string _filename = "config.json";
 
-    public (IQueryable<NtripClient> clients, IQueryable<NtripServer> servers) Load()
+    public async Task<(IQueryable<NtripClient> clients, IQueryable<NtripServer> servers)> LoadAsync()
     {
-        JsonDal cfg = new()
-        {
-            Clients = [],
-            Servers = []
-        };
         if (File.Exists(_filename))
         {
-            using FileStream fileStream = File.OpenRead(_filename);
-            cfg = JsonSerializer.Deserialize<JsonDal>(fileStream)!;
+            await using FileStream fileStream = File.OpenRead(_filename);
+            var cfg = await JsonSerializer.DeserializeAsync<JsonDal>(fileStream).ConfigureAwait(false);
+            return (cfg!.Clients.AsQueryable(), cfg!.Servers.AsQueryable());
         }
-        return (cfg.Clients.AsQueryable(), cfg.Servers.AsQueryable());
+        else
+        {
+            return (new List<NtripClient>().AsQueryable(), new List<NtripServer>().AsQueryable());
+        }
     }
 
     public async Task StoreAsync(IQueryable<NtripClient> clients, IQueryable<NtripServer> servers)
@@ -43,6 +42,6 @@ public class JsonConfig : IConfig
         };
         await using FileStream fileStream = File.Create(_filename);
         var opt = new JsonSerializerOptions { WriteIndented = true };
-        await JsonSerializer.SerializeAsync(fileStream, cfg, opt);
+        await JsonSerializer.SerializeAsync(fileStream, cfg, opt).ConfigureAwait(false);
     }
 }

@@ -24,7 +24,7 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
     private readonly Models.IConfig _config;
     public async Task StoreConfig()
     {
-        var (oldClients, oldServers) = _config.Load();
+        var (oldClients, oldServers) = await _config.LoadAsync().ConfigureAwait(false);
         var newClients = new Dictionary<NtripClientVm, Guid>();
 
         List<Models.NtripClient> cls = [];
@@ -70,7 +70,7 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
                                            clIds));
         }
 
-        await _config.StoreAsync(cls.AsQueryable(), srs.AsQueryable());
+        await _config.StoreAsync(cls.AsQueryable(), srs.AsQueryable()).ConfigureAwait(false);
     }
 
 
@@ -85,37 +85,42 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
         _editServerCmd = new(EditServer);
         _dialog = dialog;
         _config = config;
-
-        var (cfgClients, cfgServers) = _config.Load();
-
         Clients = [];
-        foreach (var cl in cfgClients)
-        {
-            NtripClientVm clVm = new(new(RemoveClient), new(AssignClient), new(UnassignClient), cl)
-            {
-                EditCmd = _editClientCmd
-            };
-            Clients.Add(clVm);
-        }
-
         Servers = [];
-        foreach (var sv in cfgServers)
+
+        var loadResult = _config.LoadAsync();
+        loadResult.ConfigureAwait(true);
+        loadResult.ContinueWith(cfg =>
         {
-            NtripServerVm svVm = new(new(RemoveServer), sv)
+            var (cfgClients, cfgServers) = cfg.Result;
+
+            foreach (var cl in cfgClients)
             {
-                EditCmd = _editServerCmd
-            };
-            if (sv.Clients is not null)
-            {
-                foreach (var assignedCl in sv.Clients)
+                NtripClientVm clVm = new(new(RemoveClient), new(AssignClient), new(UnassignClient), cl)
                 {
-                    svVm.Clients.Add((from cl in Clients
-                                      where cl.Model!.Id == assignedCl
-                                      select cl).First());
-                }
+                    EditCmd = _editClientCmd
+                };
+                Clients.Add(clVm);
             }
-            Servers.Add(svVm);
-        }
+
+            foreach (var sv in cfgServers)
+            {
+                NtripServerVm svVm = new(new(RemoveServer), sv)
+                {
+                    EditCmd = _editServerCmd
+                };
+                if (sv.Clients is not null)
+                {
+                    foreach (var assignedCl in sv.Clients)
+                    {
+                        svVm.Clients.Add((from cl in Clients
+                                          where cl.Model is not null && cl.Model.Id == assignedCl
+                                          select cl).First());
+                    }
+                }
+                Servers.Add(svVm);
+            }
+        }).ConfigureAwait(true);
     }
 
 

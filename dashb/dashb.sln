@@ -5,6 +5,8 @@ VisualStudioVersion = 17.14.36616.10 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dashb", "ui\dashb.csproj", "{7052A048-7596-46D2-B0D2-8C0B422AD758}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vm", "vm\vm.csproj", "{996FEAA8-E3EE-447C-9DFD-0B5E28D0ACF1}"
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -33,5 +35,17 @@ Global
 		{7052A048-7596-46D2-B0D2-8C0B422AD758}.Release|x64.Build.0 = Release|Any CPU
 		{7052A048-7596-46D2-B0D2-8C0B422AD758}.Release|x86.ActiveCfg = Release|Any CPU
 		{7052A048-7596-46D2-B0D2-8C0B422AD758}.Release|x86.Build.0 = Release|Any CPU
+		{996FEAA8-E3EE-447C-9DFD-0B5E28D0ACF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{996FEAA8-E3EE-447C-9DFD-0B5E28D0ACF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{996FEAA8-E3EE-447C-9DFD-0B5E28D0ACF1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{996FEAA8-E3EE-447C-9DFD-0B5E28D0ACF1}.Debug|x64.Build.0 = Debug|Any CPU
+		{996FEAA8-E3EE-447C-9DFD-0B5E28D0ACF1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{996FEAA8-E3EE-447C-9DFD-0B5E28D0ACF1}.Debug|x86.Build.0 = Debug|Any CPU
+		{996FEAA8-E3EE-447C-9DFD-0B5E28D0ACF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{996FEAA8-E3EE-447C-9DFD-0B5E28D0ACF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{996FEAA8-E3EE-447C-9DFD-0B5E28D0ACF1}.Release|x64.ActiveCfg = Release|Any CPU
+		{996FEAA8-E3EE-447C-9DFD-0B5E28D0ACF1}.Release|x64.Build.0 = Release|Any CPU
+		{996FEAA8-E3EE-447C-9DFD-0B5E28D0ACF1}.Release|x86.ActiveCfg = Release|Any CPU
+		{996FEAA8-E3EE-447C-9DFD-0B5E28D0ACF1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

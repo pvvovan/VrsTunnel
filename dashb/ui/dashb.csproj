@@ -31,4 +31,8 @@
       <DependentUpon>InputView.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\vm\vm.csproj" />
+  </ItemGroup>
 </Project>

@@ -15,23 +15,9 @@
         </Style>
     </Window.Styles>
 
-    <Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
+    <Grid RowDefinitions="*,Auto,*" ColumnDefinitions="*,Auto,*">
 
-        <Grid>
-            <Grid.RowDefinitions>
-			    <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
+        <Grid RowDefinitions="Auto,*">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Ntrip servers" FontWeight="Bold" Padding="10 5 10 0"></TextBlock>
                 <Button Command="{Binding AddServerCmd}">Add new server</Button>
@@ -55,11 +41,7 @@
 
         <GridSplitter Grid.Row="1" Background="Gray"></GridSplitter>
 
-        <Grid Grid.Row="2">
-            <Grid.RowDefinitions>
-			    <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
+        <Grid Grid.Row="2" RowDefinitions="Auto,*">
             <TextBlock Text="Assigned Ntrip clients" FontWeight="Bold" Padding="10 5 0 0" />
             <ListBox Grid.Row="1" ItemsSource="{Binding AssignedClients}">
                 <ListBox.ItemTemplate>
@@ -77,11 +59,7 @@
 
         <GridSplitter Grid.Column="1" Grid.RowSpan="3" Background="Gray"></GridSplitter>
 
-        <Grid Grid.Column="2" Grid.RowSpan="3">
-            <Grid.RowDefinitions>
-			    <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
+        <Grid Grid.Column="2" Grid.RowSpan="3" RowDefinitions="Auto,*">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Ntrip clients" FontWeight="Bold" Padding="10 5 10 0"></TextBlock>
                 <Button Command="{Binding AddClientCmd}">Add new client</Button>

@@ -4,10 +4,19 @@ using dashb.ViewModels;
 
 namespace test;
 
-public class UnitTest1
+public class UnitTestVm
 {
     [Fact]
     public void Test_NtripServerVm()
+    {
+        NtripServer server = new("Server 1", "Pw1", Guid.NewGuid(), null);
+        RelayCommand<NtripServerVm> stubCmd = new(p => { });
+        NtripServerVm serverVm = new(stubCmd, server);
+        Assert.Equal(serverVm.Name, server.Name);
+    }
+
+    [Fact]
+    public void Test_NtripClientVm()
     {
         NtripClient client = new("Client 1", "Pw1", Guid.NewGuid());
         RelayCommand<NtripClientVm> stubCmd = new(p => { });

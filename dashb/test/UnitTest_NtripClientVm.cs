@@ -2,7 +2,7 @@
 using dashb.Models;
 using dashb.ViewModels;
 
-namespace test;
+namespace TestVm;
 
 public class UnitTestVm
 {

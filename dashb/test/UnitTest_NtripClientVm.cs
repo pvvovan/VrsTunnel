@@ -23,4 +23,13 @@ public class UnitTestVm
         NtripClientVm clientVm = new(stubCmd, stubCmd, stubCmd, client);
         Assert.Equal(clientVm.Name, client.Name);
     }
+
+    [Fact]
+    public void Test_InputVm()
+    {
+        InputVm inputVm = new();
+        inputVm.Close();
+        inputVm.User_PropertyChanged(null, new System.ComponentModel.PropertyChangedEventArgs(""));
+        Assert.False(inputVm.CanOkExecute());
+    }
 }

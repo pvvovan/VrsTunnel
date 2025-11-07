@@ -32,4 +32,19 @@ public class UnitTestVm
         inputVm.User_PropertyChanged(null, new System.ComponentModel.PropertyChangedEventArgs(""));
         Assert.False(inputVm.CanOkExecute());
     }
+
+    [Fact]
+    public void Test_MainWindowVm()
+    {
+        MainWindowVm mainVm = new(new DialogStub(), new dashb.DAL.JsonConfig());
+        mainVm.StoreConfig();
+    }
+}
+
+internal class DialogStub : IDialog
+{
+    public void Show(InputVm inputVm)
+    {
+        inputVm.Close();
+    }
 }

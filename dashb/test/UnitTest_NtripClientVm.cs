@@ -34,10 +34,11 @@ public class UnitTestVm
     }
 
     [Fact]
-    public void Test_MainWindowVm()
+    public async Task Test_MainWindowVm()
     {
         MainWindowVm mainVm = new(new DialogStub(), new dashb.DAL.JsonConfig());
-        mainVm.StoreConfig();
+        mainVm.AddServerCmd.Execute(null);
+        await mainVm.StoreConfig();
     }
 }
 
@@ -45,6 +46,8 @@ internal class DialogStub : IDialog
 {
     public void Show(InputVm inputVm)
     {
+        inputVm.User!.Name = "inputName";
+        inputVm.User!.Password = "inputPass";
         inputVm.Close();
     }
 }

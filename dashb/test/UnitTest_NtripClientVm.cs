@@ -56,12 +56,8 @@ public class UnitTestVm
 
         await mainVm.StoreConfig();
         await Task.Delay(1000);
-    }
 
-    [Fact]
-    public async Task Test_MainWindowVmLoad()
-    {
-        MainWindowVm mainVm = new(new DialogStub(), new dashb.DAL.JsonConfig());
+        mainVm = new(new DialogStub(), new dashb.DAL.JsonConfig());
         await Task.Delay(1000);
         Assert.Equal("inputName", mainVm.Servers[0].Name);
         Assert.Equal("inputName", mainVm.Clients[0].Name);

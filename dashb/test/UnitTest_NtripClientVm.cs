@@ -54,13 +54,21 @@ public class UnitTestVm
         mainVm.Clients[1].AssignCmd.Execute(mainVm.Clients[1]);
         mainVm.Clients[1].RemoveCmd.Execute(mainVm.Clients[1]);
 
+        dialogStub.InputName = "Server2";
+        mainVm.Servers[0].EditCmd?.Execute(mainVm.Servers[0]);
+        Assert.Equal("Server2", mainVm.Servers[0].Name);
+
+        dialogStub.InputName = "Client2";
+        mainVm.Clients[0].EditCmd?.Execute(mainVm.Clients[0]);
+        Assert.Equal("Client2", mainVm.Clients[0].Name);
+
         await mainVm.StoreConfig();
         await Task.Delay(1000);
 
         mainVm = new(new DialogStub(), new dashb.DAL.JsonConfig());
         await Task.Delay(1000);
-        Assert.Equal("inputName", mainVm.Servers[0].Name);
-        Assert.Equal("inputName", mainVm.Clients[0].Name);
+        Assert.Equal("Server2", mainVm.Servers[0].Name);
+        Assert.Equal("Client2", mainVm.Clients[0].Name);
 
         mainVm.Clients[0].RemoveCmd.Execute(mainVm.Clients[0]);
         mainVm.Servers[0].RemoveCmd.Execute(mainVm.Servers[0]);

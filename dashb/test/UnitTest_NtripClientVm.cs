@@ -36,13 +36,22 @@ public class UnitTestVm
     [Fact]
     public async Task Test_MainWindowVm()
     {
-        MainWindowVm mainVm = new(new DialogStub(), new dashb.DAL.JsonConfig());
+        DialogStub dialogStub = new();
+        MainWindowVm mainVm = new(dialogStub, new dashb.DAL.JsonConfig());
 
         mainVm.AddServerCmd.Execute(null);
         Assert.Equal("inputName", mainVm.Servers[0].Name);
 
         mainVm.AddClientCmd.Execute(null);
         Assert.Equal("inputName", mainVm.Clients[0].Name);
+
+        dialogStub.InputName = "Client1";
+        mainVm.AddClientCmd.Execute(null);
+        Assert.Equal("Client1", mainVm.Clients[1].Name);
+
+        mainVm.SelectedServer = mainVm.Servers[0];
+        mainVm.Clients[1].AssignCmd.Execute(null);
+        mainVm.Clients[1].RemoveCmd.Execute(null);
 
         await mainVm.StoreConfig();
         await Task.Delay(1000);
@@ -60,10 +69,13 @@ public class UnitTestVm
 
 internal class DialogStub : IDialog
 {
+    public string InputName = "inputName";
+    public string InputPassword = "inputPassword";
+
     public void Show(InputVm inputVm)
     {
-        inputVm.User!.Name = "inputName";
-        inputVm.User!.Password = "inputPass";
+        inputVm.User!.Name = this.InputName;
+        inputVm.User!.Password = InputPassword;
         inputVm.OkCmd?.Execute(null);
     }
 }

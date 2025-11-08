@@ -34,11 +34,13 @@ public class UnitTestVm
     }
 
     [Fact]
-    public async Task Test_MainWindowVm()
+    public void Test_MainWindowVm()
     {
         MainWindowVm mainVm = new(new DialogStub(), new dashb.DAL.JsonConfig());
         mainVm.AddServerCmd.Execute(null);
-        await mainVm.StoreConfig();
+        mainVm.StoreConfig();
+        mainVm = new(new DialogStub(), new dashb.DAL.JsonConfig());
+        Assert.Equal("inputName", mainVm.Servers[0].Name);
     }
 }
 

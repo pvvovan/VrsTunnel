@@ -37,10 +37,12 @@ public class UnitTestVm
     public void Test_MainWindowVm()
     {
         MainWindowVm mainVm = new(new DialogStub(), new dashb.DAL.JsonConfig());
+
         mainVm.AddServerCmd.Execute(null);
-        mainVm.StoreConfig();
-        mainVm = new(new DialogStub(), new dashb.DAL.JsonConfig());
         Assert.Equal("inputName", mainVm.Servers[0].Name);
+
+        mainVm.AddClientCmd.Execute(null);
+        Assert.Equal("inputName", mainVm.Clients[0].Name);
     }
 }
 
@@ -50,6 +52,6 @@ internal class DialogStub : IDialog
     {
         inputVm.User!.Name = "inputName";
         inputVm.User!.Password = "inputPass";
-        inputVm.Close();
+        inputVm.OkCmd?.Execute(null);
     }
 }

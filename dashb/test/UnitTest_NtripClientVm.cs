@@ -34,7 +34,7 @@ public class UnitTestVm
     }
 
     [Fact]
-    public void Test_MainWindowVm()
+    public async Task Test_MainWindowVm()
     {
         MainWindowVm mainVm = new(new DialogStub(), new dashb.DAL.JsonConfig());
 
@@ -42,6 +42,18 @@ public class UnitTestVm
         Assert.Equal("inputName", mainVm.Servers[0].Name);
 
         mainVm.AddClientCmd.Execute(null);
+        Assert.Equal("inputName", mainVm.Clients[0].Name);
+
+        await mainVm.StoreConfig();
+        await Task.Delay(1000);
+    }
+
+    [Fact]
+    public async Task Test_MainWindowVmLoad()
+    {
+        MainWindowVm mainVm = new(new DialogStub(), new dashb.DAL.JsonConfig());
+        await Task.Delay(1000);
+        Assert.Equal("inputName", mainVm.Servers[0].Name);
         Assert.Equal("inputName", mainVm.Clients[0].Name);
     }
 }

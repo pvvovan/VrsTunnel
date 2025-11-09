@@ -22,8 +22,8 @@ public class MyBrushConverter : IValueConverter
         Verdict verdict = (Verdict)value!;
         return verdict switch
         {
-            Verdict.Error => new SolidColorBrush(Colors.Red),
-            Verdict.OK => new SolidColorBrush(Colors.Green),
+            Verdict.Fail => new SolidColorBrush(Colors.Red),
+            Verdict.Pass => new SolidColorBrush(Colors.Green),
             _ => new SolidColorBrush(Colors.Gray)
         };
     }

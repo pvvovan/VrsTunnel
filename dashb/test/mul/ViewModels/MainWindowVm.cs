@@ -16,12 +16,12 @@ public enum Op
     Div
 }
 
-public partial class MainWindowViewModel : ViewModelBase
+public partial class MainWindowVm : ObservableObject
 {
     [ObservableProperty]
     private ObservableCollection<OperationVm> _operations = [];
 
-    public MainWindowViewModel()
+    public MainWindowVm()
     {
         for (int i = 0; i < 25; i++)
         {
@@ -42,7 +42,7 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             if (op.Result == op.ExpectedResult)
             {
-                op.Error = Verdict.OK;
+                op.Error = Verdict.Pass;
             }
             else if (op.Result == int.MinValue)
             {
@@ -52,7 +52,7 @@ public partial class MainWindowViewModel : ViewModelBase
             else
             {
                 err_cnt++;
-                op.Error = Verdict.Error;
+                op.Error = Verdict.Fail;
             }
         }
 
@@ -63,11 +63,11 @@ public partial class MainWindowViewModel : ViewModelBase
 public enum Verdict
 {
     None,
-    Error,
-    OK
+    Fail,
+    Pass
 }
 
-public partial class OperationVm : ViewModelBase
+public partial class OperationVm : ObservableObject
 {
     [ObservableProperty]
     private int _left;

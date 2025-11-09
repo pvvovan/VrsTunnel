@@ -80,11 +80,16 @@ public class UnitTestVm
         await mainVm.StoreConfig();
         await Task.Delay(100);
 
-        mainVm = new(new DialogStub(), new dashb.DAL.JsonConfig());
+        dialogStub = new();
+        mainVm = new(dialogStub, new dashb.DAL.JsonConfig());
+        dialogStub.InputName = "Client0";
+        mainVm.AddClientCmd.Execute(null);
         await Task.Delay(100);
+        Assert.Equal("Client0", mainVm.Clients[0].Name);
         Assert.Equal("Server2", mainVm.Servers[0].Name);
-        Assert.Equal("Client2", mainVm.Clients[0].Name);
+        Assert.Equal("Client2", mainVm.Clients[1].Name);
 
+        mainVm.Clients[0].RemoveCmd.Execute(mainVm.Clients[0]);
         mainVm.Clients[0].RemoveCmd.Execute(mainVm.Clients[0]);
         mainVm.Servers[0].RemoveCmd.Execute(mainVm.Servers[0]);
         Assert.Empty(mainVm.Clients);

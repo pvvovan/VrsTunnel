@@ -59,7 +59,9 @@ public class UnitTestVm
 
         mainVm.SelectedServer = mainVm.Servers[0];
         mainVm.Clients[1].AssignCmd.Execute(mainVm.Clients[1]);
+        Assert.Single(mainVm.AssignedClients);
         mainVm.Clients[1].UnassignCmd.Execute(mainVm.Clients[1]);
+        Assert.Empty(mainVm.AssignedClients);
         mainVm.Clients[1].RemoveCmd.Execute(mainVm.Clients[1]);
 
         dialogStub.InputName = "Server2";

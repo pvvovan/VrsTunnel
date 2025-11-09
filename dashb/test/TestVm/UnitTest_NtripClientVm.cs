@@ -62,7 +62,10 @@ public class UnitTestVm
         Assert.Single(mainVm.AssignedClients);
         mainVm.Clients[1].UnassignCmd.Execute(mainVm.Clients[1]);
         Assert.Empty(mainVm.AssignedClients);
+        mainVm.Clients[1].AssignCmd.Execute(mainVm.Clients[1]);
+        Assert.Single(mainVm.AssignedClients);
         mainVm.Clients[1].RemoveCmd.Execute(mainVm.Clients[1]);
+        Assert.Empty(mainVm.AssignedClients);
 
         dialogStub.InputName = "Server2";
         mainVm.Servers[0].EditCmd?.Execute(mainVm.Servers[0]);

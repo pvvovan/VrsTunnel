@@ -79,6 +79,10 @@ public class UnitTestVm
 
         await mainVm.StoreConfig();
         await Task.Delay(100);
+        mainVm = new(dialogStub, new dashb.DAL.JsonConfig());
+        await Task.Delay(100);
+        await mainVm.StoreConfig();
+        await Task.Delay(100);
 
         dialogStub = new();
         mainVm = new(dialogStub, new dashb.DAL.JsonConfig());

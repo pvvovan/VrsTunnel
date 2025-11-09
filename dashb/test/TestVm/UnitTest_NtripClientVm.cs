@@ -74,6 +74,8 @@ public class UnitTestVm
         dialogStub.InputName = "Client2";
         mainVm.Clients[0].EditCmd?.Execute(mainVm.Clients[0]);
         Assert.Equal("Client2", mainVm.Clients[0].Name);
+        mainVm.Clients[0].AssignCmd.Execute(mainVm.Clients[0]);
+        Assert.Equal("Client2", mainVm.AssignedClients[0].Name);
 
         await mainVm.StoreConfig();
         await Task.Delay(100);

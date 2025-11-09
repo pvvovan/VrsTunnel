@@ -38,8 +38,15 @@ public class UnitTestVm
     {
         DialogStub dialogStub = new();
         MainWindowVm mainVm = new(dialogStub, new dashb.DAL.JsonConfig());
+        dialogStub.InputName = "Client0";
+        mainVm.AddClientCmd.Execute(null);
         await Task.Delay(1000);
 
+        Assert.Single(mainVm.Clients);
+        Assert.Equal("Client0", mainVm.Clients[0].Name);
+        mainVm.Clients[0].RemoveCmd.Execute(mainVm.Clients[0]);
+
+        dialogStub.InputName = "inputName";
         mainVm.AddServerCmd.Execute(null);
         Assert.Equal("inputName", mainVm.Servers[0].Name);
 

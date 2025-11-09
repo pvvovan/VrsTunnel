@@ -40,7 +40,7 @@ public class UnitTestVm
         MainWindowVm mainVm = new(dialogStub, new dashb.DAL.JsonConfig());
         dialogStub.InputName = "Client0";
         mainVm.AddClientCmd.Execute(null);
-        await Task.Delay(1000);
+        await Task.Delay(100);
 
         Assert.Single(mainVm.Clients);
         Assert.Equal("Client0", mainVm.Clients[0].Name);
@@ -59,6 +59,7 @@ public class UnitTestVm
 
         mainVm.SelectedServer = mainVm.Servers[0];
         mainVm.Clients[1].AssignCmd.Execute(mainVm.Clients[1]);
+        mainVm.Clients[1].UnassignCmd.Execute(mainVm.Clients[1]);
         mainVm.Clients[1].RemoveCmd.Execute(mainVm.Clients[1]);
 
         dialogStub.InputName = "Server2";
@@ -70,10 +71,10 @@ public class UnitTestVm
         Assert.Equal("Client2", mainVm.Clients[0].Name);
 
         await mainVm.StoreConfig();
-        await Task.Delay(1000);
+        await Task.Delay(100);
 
         mainVm = new(new DialogStub(), new dashb.DAL.JsonConfig());
-        await Task.Delay(1000);
+        await Task.Delay(100);
         Assert.Equal("Server2", mainVm.Servers[0].Name);
         Assert.Equal("Client2", mainVm.Clients[0].Name);
 
@@ -82,7 +83,7 @@ public class UnitTestVm
         Assert.Empty(mainVm.Clients);
         Assert.Empty(mainVm.Servers);
         await mainVm.StoreConfig();
-        await Task.Delay(1000);
+        await Task.Delay(100);
     }
 }
 

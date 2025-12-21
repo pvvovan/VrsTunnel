@@ -60,6 +60,6 @@ namespace VrsTunnel::Ntrip
 	}
 
 	unique_ptr<login_encode> base64_encoder::make_instance() {
-		return make_unique<base64_encoder>();
+		return unique_ptr<base64_encoder>(new base64_encoder());
 	}
 }

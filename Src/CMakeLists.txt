@@ -1,18 +1,9 @@
-cmake_minimum_required (VERSION 3.16.3)
-
-
-################################################################################
-# Compiler can be selected as shown at the end
-################################################################################
+cmake_minimum_required (VERSION 3.18)
 
 project(ntrip)
 
-set(CMAKE_CXX_FLAGS                "-Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion")
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 set(COMPILE_WARNING_MODE HIGH)
-
-# set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g3 -O0 -fprofile-arcs -ftest-coverage")
-# set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
 
 set(ntrip_src
 	Ntrip/Src/login_encode.cpp
@@ -42,36 +33,26 @@ set(ntcaster_src
 	Ntrip/Src/corr_consume.cpp
 )
 
-include_directories(
-.
-Ntrip/Inc)
+set(ntrip_inc
+	${CMAKE_SOURCE_DIR}
+	Ntrip/Inc
+)
 
 add_executable(ntclient ntclient.cpp ${ntclient_src})
+target_include_directories(ntclient PRIVATE ${ntrip_inc})
 target_link_libraries(ntclient rt)
 
 add_executable(ntserver ntserver.cpp ${ntserver_src})
+target_include_directories(ntserver PRIVATE ${ntrip_inc})
 target_link_libraries(ntserver rt)
 
 add_executable(ntcaster ntcaster.cpp ${ntcaster_src})
-
-add_executable(dummy_supply Tests/dummy_supply.cpp)
-
-
-# set(caster_src
-# 	${ntrip_src}
-# 	Ntrip/Src/accept_listener.cpp
-# 	Ntrip/Src/tcp_server.tmpl.cpp
-# )
-
-# set(prog_src ${caster_src} prog.cpp)
-# add_executable(prog ${prog_src})
-# target_link_libraries(prog pthread rt)
+target_include_directories(ntcaster PRIVATE ${ntrip_inc})
 
 
 ################################################################################
 # Unit Tests
 ################################################################################
-
 enable_testing()
 
 set(testcppu_src
@@ -83,6 +64,7 @@ set(testcppu_src
 	Tests/TestTcpServer.cpp
 )
 add_executable(${PROJECT_NAME}_CppUtest ${testcppu_src})
+target_include_directories(${PROJECT_NAME}_CppUtest PRIVATE ${ntrip_inc})
 target_link_libraries(${PROJECT_NAME}_CppUtest CppUTest pthread rt)
 add_test(NAME ${PROJECT_NAME}_TCppU COMMAND ${PROJECT_NAME}_CppUtest)
 
@@ -95,6 +77,7 @@ set(testgsuite_src
 	Tests/gtest_cli.cpp
 )
 add_executable(${PROJECT_NAME}_gtest ${testgsuite_src})
+target_include_directories(${PROJECT_NAME}_gtest PRIVATE ${ntrip_inc})
 target_link_libraries(${PROJECT_NAME}_gtest gtest gtest_main pthread rt)
 add_test(NAME ${PROJECT_NAME}_GTest COMMAND ${PROJECT_NAME}_gtest)
 

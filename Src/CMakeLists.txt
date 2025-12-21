@@ -38,21 +38,17 @@ set(ntrip_inc
 	Ntrip/Inc
 )
 
-if(COV)
-	set(LD_COV "gcov")
-endif()
-
 add_executable(ntclient ntclient.cpp ${ntclient_src})
 target_include_directories(ntclient PRIVATE ${ntrip_inc})
-target_link_libraries(ntclient rt ${LD_COV})
+target_link_libraries(ntclient rt)
 
 add_executable(ntserver ntserver.cpp ${ntserver_src})
 target_include_directories(ntserver PRIVATE ${ntrip_inc})
-target_link_libraries(ntserver rt ${LD_COV})
+target_link_libraries(ntserver rt)
 
 add_executable(ntcaster ntcaster.cpp ${ntcaster_src})
 target_include_directories(ntcaster PRIVATE ${ntrip_inc})
-target_link_libraries(ntcaster PRIVATE ${LD_COV})
+target_link_libraries(ntcaster PRIVATE)
 
 
 ################################################################################
@@ -60,8 +56,11 @@ target_link_libraries(ntcaster PRIVATE ${LD_COV})
 ################################################################################
 enable_testing()
 
+add_library(ntclient_cov OBJECT ${ntclient_src})
+target_include_directories(ntclient_cov PRIVATE ${ntrip_inc})
+target_compile_options(ntclient_cov PRIVATE -g3 -O0 -fprofile-arcs -ftest-coverage)
+
 set(testcppu_src
-	${ntclient_src}
 	Ntrip/Src/tcp_server.cpp
 	Tests/RunAllTests.cpp
 	Tests/testU1.cpp
@@ -70,11 +69,10 @@ set(testcppu_src
 )
 add_executable(${PROJECT_NAME}_CppUtest ${testcppu_src})
 target_include_directories(${PROJECT_NAME}_CppUtest PRIVATE ${ntrip_inc})
-target_link_libraries(${PROJECT_NAME}_CppUtest CppUTest pthread rt ${LD_COV})
+target_link_libraries(${PROJECT_NAME}_CppUtest CppUTest pthread rt ntclient_cov gcov)
 add_test(NAME ${PROJECT_NAME}_TCppU COMMAND ${PROJECT_NAME}_CppUtest)
 
 set(testgsuite_src
-	${ntclient_src}
 	Tests/testGoo1.cpp
 	Tests/gtest_cli.cpp
 	Tests/gtestNmea.cpp
@@ -83,17 +81,8 @@ set(testgsuite_src
 )
 add_executable(${PROJECT_NAME}_gtest ${testgsuite_src})
 target_include_directories(${PROJECT_NAME}_gtest PRIVATE ${ntrip_inc})
-target_link_libraries(${PROJECT_NAME}_gtest gtest gtest_main pthread rt ${LD_COV})
+target_link_libraries(${PROJECT_NAME}_gtest gtest gtest_main pthread rt ntclient_cov gcov)
 add_test(NAME ${PROJECT_NAME}_GTest COMMAND ${PROJECT_NAME}_gtest)
-
-if(COV)
-	set_source_files_properties(
-		${ntclient_src}
-		DIRECTORY ${CMAKE_SOURCE_DIR}
-		TARGET_DIRECTORY ${PROJECT_NAME}_CppUtest ${PROJECT_NAME}_gtest
-		PROPERTIES COMPILE_FLAGS "-g3 -O0 -fprofile-arcs -ftest-coverage"
-	)
-endif()
 
 add_custom_target(coverage
 	COMMAND make ${PROJECT_NAME}_gtest

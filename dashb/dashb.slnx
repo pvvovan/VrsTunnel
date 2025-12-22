@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="test/test.csproj" />
+  <Project Path="ui/ui.csproj" />
+  <Project Path="vm/vm.csproj" />
+</Solution>

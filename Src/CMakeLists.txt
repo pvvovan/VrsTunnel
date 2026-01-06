@@ -1,7 +1,17 @@
 cmake_minimum_required (VERSION 3.30)
 project(ntrip LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(COMPILE_WARNING_MODE HIGH)
+
+include(FetchContent)
+FetchContent_Declare(
+	cpputest
+	GIT_REPOSITORY https://github.com/cpputest/cpputest.git
+	GIT_TAG        b6d49e4846963d40eb8e5ff24228e63ccf2221d8
+)
+set(CPPUTEST_MEM_LEAK_DETECTION_DISABLED ON) # cpputest compilation error workaround
+FetchContent_MakeAvailable(cpputest)
 
 set(ntrip_src
 	cli.cpp
@@ -69,7 +79,8 @@ target_link_libraries(${PROJECT_NAME}_gtest PRIVATE gtest gtest_main ntclient_co
 add_test(NAME ${PROJECT_NAME}_GTest COMMAND ${PROJECT_NAME}_gtest)
 
 add_custom_target(coverage
-	COMMAND make ${PROJECT_NAME}_gtest
+	COMMAND ${CMAKE_BINARY_DIR}/${PROJECT_NAME}_CppUtest
 	COMMAND ${CMAKE_BINARY_DIR}/${PROJECT_NAME}_gtest
 	COMMAND gcovr -r ${CMAKE_SOURCE_DIR} --html --html-details -o cov.html ${CMAKE_BINARY_DIR}
 )
+add_dependencies(coverage ${PROJECT_NAME}_CppUtest ${PROJECT_NAME}_gtest)

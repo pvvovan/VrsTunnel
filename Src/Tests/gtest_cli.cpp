@@ -1,6 +1,6 @@
-#include <gtest/gtest.h>
+import cli;
 
-#include "cli.hpp"
+#include <gtest/gtest.h>
 
 
 TEST(test_cli, test_cli_addr)

@@ -1,10 +1,11 @@
+import cli;
+
 #include <bits/c++config.h>
 #include <iostream>
 #include <limits>
 #include <iomanip>
 #include <algorithm>
 
-#include "cli.hpp"
 #include "ntrip_client.hpp"
 
 

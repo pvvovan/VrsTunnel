@@ -1,7 +1,8 @@
+import cli;
+
 #include <iostream>
 #include <vector>
 
-#include "cli.hpp"
 #include "ntrip_server.hpp"
 
 

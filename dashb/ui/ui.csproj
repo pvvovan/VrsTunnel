@@ -29,7 +29,10 @@
 
   <ItemGroup>
     <Compile Update="Views\InputView.axaml.cs">
-      <DependentUpon>InputView.axaml</DependentUpon>
+      <DependentUpon>Views\InputView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MainWindow.axaml.cs">
+      <DependentUpon>Views\MainWindow.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
 

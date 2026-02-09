@@ -31,6 +31,14 @@ public class UnitTestVm
         inputVm.Close();
         inputVm.User_PropertyChanged(null, new System.ComponentModel.PropertyChangedEventArgs(""));
         Assert.False(inputVm.CanOkExecute());
+
+        var wnd = new WndMock()
+        {
+            CloseCalled = false
+        };
+        inputVm.Wnd = wnd;
+        inputVm.Close();
+        Assert.True(wnd.CloseCalled);
     }
 
     [Fact]
@@ -113,5 +121,14 @@ internal class DialogStub : IDialog
         inputVm.User!.Name = this.InputName;
         inputVm.User!.Password = InputPassword;
         inputVm.OkCmd?.Execute(null);
+    }
+}
+
+internal class WndMock : IWnd
+{
+    public bool CloseCalled = false;
+    public void Close()
+    {
+        CloseCalled = true;
     }
 }

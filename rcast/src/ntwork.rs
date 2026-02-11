@@ -234,7 +234,7 @@ fn accept_newservers(newservers: &mut Vec<NewServer>, servers: &mut Vec<AckServe
 fn accept_newclients(newclients: &mut Vec<NtClient>, ackclients: &mut Vec<NtClient>) {
     let mut pos = 0;
     for _ in 0..newclients.len() {
-        let mut cli = &mut newclients[pos];
+        let cli = &mut newclients[pos];
         let mut buf = [0u8; 4096];
         let get_mounts = b"GET / ";
         let get_corr = format!("GET /{}", cfg::MOUNT);

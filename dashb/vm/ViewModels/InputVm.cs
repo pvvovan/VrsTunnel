@@ -1,15 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace dashb.ViewModels
 {
-    public partial class InputVm : ViewModelBase
+    public partial class InputVm : ObservableObject
     {
         public IWnd? Wnd;
 

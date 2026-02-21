@@ -2,10 +2,6 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System;
 
 namespace dashb.ViewModels;
 
@@ -19,7 +15,7 @@ public interface IWnd
     void Close();
 }
 
-public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
+public partial class MainWindowVm : ObservableObject
 {
     private readonly Models.IConfig _config;
     public async Task StoreConfig()
@@ -207,14 +203,10 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
     private NtripServerVm? _selectedServer;
     public NtripServerVm SelectedServer
     {
-        get
-        {
-            return _selectedServer!;
-        }
+        get => _selectedServer!;
         set
         {
-            _selectedServer = value;
-            PropertyChanged!(this, new PropertyChangedEventArgs(nameof(SelectedServer)));
+            SetProperty(ref _selectedServer, value);
             AssignedClients = _selectedServer?.Clients ?? [];
         }
     }
@@ -222,15 +214,8 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
     private ObservableCollection<NtripClientVm> _assignedClients = [];
     public ObservableCollection<NtripClientVm> AssignedClients
     {
-        get
-        {
-            return _assignedClients;
-        }
-        set
-        {
-            _assignedClients = value;
-            PropertyChanged!(this, new PropertyChangedEventArgs(nameof(AssignedClients)));
-        }
+        get => _assignedClients;
+        set => SetProperty(ref _assignedClients, value);
     }
 
     private void AssignClient(object? param)
@@ -310,6 +295,4 @@ public partial class MainWindowVm : ViewModelBase, INotifyPropertyChanged
         _inputVm!.User!.PropertyChanged -= _inputVm.User_PropertyChanged;
         _inputVm?.Close();
     }
-
-    public new event PropertyChangedEventHandler? PropertyChanged = delegate { };
 }

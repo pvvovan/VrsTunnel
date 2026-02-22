@@ -9,6 +9,8 @@ if [ -d ${RESULTS_DIR} ]; then
     rm -r ${RESULTS_DIR}
 fi
 
+roslynator analyze ../vm/vm.csproj ../ui/ui.csproj ./test.csproj --severity-level warning
+
 dotnet test --logger html --collect:"XPlat Code Coverage"
 
 COVDATA=$(find ${RESULTS_DIR} -name "*.cobertura.xml")

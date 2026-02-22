@@ -6,5 +6,4 @@ public class JsonDal
 {
     public List<NtripClient> Clients { get; set; } = [];
     public List<NtripServer> Servers { get; set; } = [];
-
 }

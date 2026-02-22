@@ -3,13 +3,17 @@
 SCRIPT_DIR=$(dirname "$(readlink -f $0)")
 cd ${SCRIPT_DIR}
 
-find ${SCRIPT_DIR}/TestResults/ -name "*.cobertura.xml" | xargs -n1 rm
+RESULTS_DIR=${SCRIPT_DIR}/TestResults
+
+if [ -d ${RESULTS_DIR} ]; then
+    rm -r ${RESULTS_DIR}
+fi
 
 dotnet test --logger html --collect:"XPlat Code Coverage"
 
-COVDATA=$(find ${SCRIPT_DIR}/TestResults/ -name "*.cobertura.xml")
+COVDATA=$(find ${RESULTS_DIR} -name "*.cobertura.xml")
 
 reportgenerator \
 -reports:"${COVDATA}" \
--targetdir:"TestResults/coveragereport" \
+-targetdir:"${RESULTS_DIR}/coveragereport" \
 -reporttypes: Html

@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.Input;
-using dashb.Models;
-using dashb.ViewModels;
+using vm.Models;
+using vm.ViewModels;
 
-namespace TestVm;
+namespace test.TestVm;
 
 public class UnitTestVm
 {
@@ -45,7 +45,7 @@ public class UnitTestVm
     public async Task Test_MainWindowVm()
     {
         DialogStub dialogStub = new();
-        MainWindowVm mainVm = new(dialogStub, new dashb.DAL.JsonConfig());
+        MainWindowVm mainVm = new(dialogStub, new vm.DAL.JsonConfig());
         dialogStub.InputName = "Client0";
         mainVm.AddClientCmd.Execute(null);
         await Task.Delay(100);
@@ -87,13 +87,13 @@ public class UnitTestVm
 
         await mainVm.StoreConfig();
         await Task.Delay(100);
-        mainVm = new(dialogStub, new dashb.DAL.JsonConfig());
+        mainVm = new(dialogStub, new vm.DAL.JsonConfig());
         await Task.Delay(100);
         await mainVm.StoreConfig();
         await Task.Delay(100);
 
         dialogStub = new();
-        mainVm = new(dialogStub, new dashb.DAL.JsonConfig());
+        mainVm = new(dialogStub, new vm.DAL.JsonConfig());
         dialogStub.InputName = "Client0";
         mainVm.AddClientCmd.Execute(null);
         await Task.Delay(100);
@@ -108,27 +108,5 @@ public class UnitTestVm
         Assert.Empty(mainVm.Servers);
         await mainVm.StoreConfig();
         await Task.Delay(100);
-    }
-}
-
-internal class DialogStub : IDialog
-{
-    public string InputName = "inputName";
-    public string InputPassword = "inputPassword";
-
-    public void Show(InputVm inputVm)
-    {
-        inputVm.User!.Name = this.InputName;
-        inputVm.User!.Password = InputPassword;
-        inputVm.OkCmd?.Execute(null);
-    }
-}
-
-internal class WndMock : IWnd
-{
-    public bool CloseCalled = false;
-    public void Close()
-    {
-        CloseCalled = true;
     }
 }

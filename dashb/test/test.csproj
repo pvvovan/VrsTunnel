@@ -9,8 +9,6 @@
 
   <ItemGroup>
     <Compile Remove="school_calc\**" />
-    <EmbeddedResource Remove="school_calc\**" />
-    <None Remove="school_calc\**" />
   </ItemGroup>
 
   <ItemGroup>

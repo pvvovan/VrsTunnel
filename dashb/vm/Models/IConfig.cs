@@ -1,4 +1,4 @@
-namespace dashb.Models;
+namespace vm.Models;
 
 public interface IConfig
 {

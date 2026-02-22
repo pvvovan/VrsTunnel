@@ -1,19 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.Input;
-using System.ComponentModel;
+using System.Collections.ObjectModel;
 
-namespace dashb.ViewModels;
-
-public interface IDialog
-{
-    void Show(InputVm inputVm);
-}
-
-public interface IWnd
-{
-    void Close();
-}
+namespace vm.ViewModels;
 
 public partial class MainWindowVm : ObservableObject
 {

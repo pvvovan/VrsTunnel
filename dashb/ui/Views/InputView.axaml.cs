@@ -1,7 +1,7 @@
 using Avalonia.Controls;
-using dashb.ViewModels;
+using vm.ViewModels;
 
-namespace dashb.Views;
+namespace ui.Views;
 
 public partial class InputView : Window, IWnd
 {

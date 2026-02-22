@@ -1,14 +1,14 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
-using dashb.ViewModels;
-using dashb.Views;
+using vm.DAL;
+using vm.ViewModels;
+using ui.Views;
 using System.Threading.Tasks;
 
-namespace dashb;
+namespace ui;
 
 public partial class App : Application
 {
@@ -25,7 +25,7 @@ public partial class App : Application
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
             desktop.MainWindow = new MainWindow();
-            var mainVm = new MainWindowVm((IDialog)desktop.MainWindow, new DAL.JsonConfig());
+            var mainVm = new MainWindowVm((IDialog)desktop.MainWindow, new JsonConfig());
             desktop.MainWindow.DataContext = mainVm;
             Task storeTask = new(() => mainVm.StoreConfig().Wait());
             desktop.MainWindow.Closing += (_, _) =>

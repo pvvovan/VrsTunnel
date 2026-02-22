@@ -1,36 +1,35 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-namespace dashb.ViewModels
+namespace vm.ViewModels;
+
+public partial class NtripClientVm : UserVm
 {
-    public partial class NtripClientVm : UserVm
+    public NtripClientVm(
+        RelayCommand<NtripClientVm> removeCmd,
+        RelayCommand<NtripClientVm> assignCmd,
+        RelayCommand<NtripClientVm> unassignCmd,
+        Models.NtripClient? model)
     {
-        public NtripClientVm(
-            RelayCommand<NtripClientVm> removeCmd,
-            RelayCommand<NtripClientVm> assignCmd,
-            RelayCommand<NtripClientVm> unassignCmd,
-            Models.NtripClient? model)
+        _removeCmd = removeCmd;
+        _assignCmd = assignCmd;
+        _unassignCmd = unassignCmd;
+        Model = model;
+        if (Model is not null)
         {
-            _removeCmd = removeCmd;
-            _assignCmd = assignCmd;
-            _unassignCmd = unassignCmd;
-            Model = model;
-            if (Model is not null)
-            {
-                Name = Model.Name;
-                Password = Model.Password;
-            }
+            Name = Model.Name;
+            Password = Model.Password;
         }
-
-        public readonly Models.NtripClient? Model;
-
-        [ObservableProperty]
-        private RelayCommand<NtripClientVm> _removeCmd;
-
-        [ObservableProperty]
-        private RelayCommand<NtripClientVm> _assignCmd;
-
-        [ObservableProperty]
-        private RelayCommand<NtripClientVm> _unassignCmd;
     }
+
+    public readonly Models.NtripClient? Model;
+
+    [ObservableProperty]
+    private RelayCommand<NtripClientVm> _removeCmd;
+
+    [ObservableProperty]
+    private RelayCommand<NtripClientVm> _assignCmd;
+
+    [ObservableProperty]
+    private RelayCommand<NtripClientVm> _unassignCmd;
 }

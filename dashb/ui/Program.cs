@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using System;
 
-namespace dashb;
+namespace ui;
 
 sealed class Program
 {

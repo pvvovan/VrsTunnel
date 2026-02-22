@@ -1,14 +1,7 @@
-using dashb.Models;
+using vm.Models;
 using System.Text.Json;
 
-namespace dashb.DAL;
-
-public class JsonDal
-{
-    public List<NtripClient> Clients { get; set; } = [];
-    public List<NtripServer> Servers { get; set; } = [];
-
-}
+namespace vm.DAL;
 
 public class JsonConfig : IConfig
 {

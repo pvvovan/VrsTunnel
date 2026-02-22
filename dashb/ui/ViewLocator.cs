@@ -3,7 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace dashb;
+namespace ui;
 
 public class ViewLocator : IDataTemplate
 {

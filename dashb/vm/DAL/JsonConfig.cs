@@ -10,10 +10,14 @@ public class JsonConfig : IConfig
         _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NtripConfig.json");
     }
 
-    private readonly string _filename;
+    private string _filename;
 
-    public async Task<(IQueryable<NtripClient> clients, IQueryable<NtripServer> servers)> LoadAsync()
+    public async Task<(IQueryable<NtripClient> clients, IQueryable<NtripServer> servers)> LoadAsync(string file = "")
     {
+        if (!string.IsNullOrEmpty(file))
+        {
+            _filename = file;
+        }
         if (!File.Exists(_filename))
         {
             await StoreAsync(new List<NtripClient>().AsQueryable(),
@@ -24,8 +28,12 @@ public class JsonConfig : IConfig
         return (cfg!.Clients.AsQueryable(), cfg!.Servers.AsQueryable());
     }
 
-    public async Task StoreAsync(IQueryable<NtripClient> clients, IQueryable<NtripServer> servers)
+    public async Task StoreAsync(IQueryable<NtripClient> clients, IQueryable<NtripServer> servers, string file = "")
     {
+        if (!string.IsNullOrEmpty(file))
+        {
+            _filename = file;
+        }
         JsonDal cfg = new()
         {
             Clients = [.. clients],

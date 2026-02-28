@@ -7,6 +7,8 @@ namespace vm.ViewModels;
 public partial class MainWindowVm : ObservableObject
 {
     private readonly Models.IConfig _config;
+    readonly Action<Task<(IQueryable<Models.NtripClient> clients, IQueryable<Models.NtripServer> servers)>> _loadAction;
+
     public async Task StoreConfig(string file = "")
     {
         var (oldClients, oldServers) = await _config.LoadAsync(file);
@@ -75,7 +77,7 @@ public partial class MainWindowVm : ObservableObject
         Clients = [];
         Servers = [];
 
-        _config.LoadAsync().ContinueWith(cfg =>
+        _loadAction = cfg =>
         {
             var (cfgClients, cfgServers) = cfg.Result;
 
@@ -105,7 +107,9 @@ public partial class MainWindowVm : ObservableObject
                 }
                 Servers.Add(svVm);
             }
-        });
+        };
+
+        _config.LoadAsync().ContinueWith(_loadAction);
     }
 
 
@@ -302,7 +306,6 @@ public partial class MainWindowVm : ObservableObject
     private async Task Open()
     {
         string file = await _dialog.Open();
-        // await StoreConfig(file);
-        file.ToString();
+        await _config.LoadAsync(file).ContinueWith(_loadAction);
     }
 }

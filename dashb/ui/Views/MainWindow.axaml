@@ -22,7 +22,7 @@
                 <Menu Grid.Column="0">
                     <MenuItem Header="File">
                         <MenuItem Header="Open" />
-                        <MenuItem Header="Save" />
+                        <MenuItem Header="Save" Command="{Binding SaveCmd}" />
                     </MenuItem>
                 </Menu>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">

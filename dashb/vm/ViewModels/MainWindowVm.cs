@@ -7,9 +7,9 @@ namespace vm.ViewModels;
 public partial class MainWindowVm : ObservableObject
 {
     private readonly Models.IConfig _config;
-    public async Task StoreConfig()
+    public async Task StoreConfig(string file = "")
     {
-        var (oldClients, oldServers) = await _config.LoadAsync();
+        var (oldClients, oldServers) = await _config.LoadAsync(file);
         var newClients = new Dictionary<NtripClientVm, Guid>();
 
         List<Models.NtripClient> cls = [];
@@ -68,6 +68,7 @@ public partial class MainWindowVm : ObservableObject
         AddClientCmd = new(AddClient);
         _editClientCmd = new(EditClient);
         _editServerCmd = new(EditServer);
+        _SaveCmd = new(Save);
         _dialog = dialog;
         _config = config;
         Clients = [];
@@ -283,5 +284,23 @@ public partial class MainWindowVm : ObservableObject
         _serverToEdit!.Password = _editedServer!.Password;
         _inputVm!.User!.PropertyChanged -= _inputVm.User_PropertyChanged;
         _inputVm?.Close();
+    }
+
+    [ObservableProperty]
+    private AsyncRelayCommand _SaveCmd;
+
+    private bool saveInProgress = false; 
+    private async Task Save()
+    {
+        if (saveInProgress)
+        {
+            return;
+        }
+        saveInProgress = true;
+
+        string file = await _dialog.Save();
+        await StoreConfig(file);
+
+        saveInProgress = false;
     }
 }

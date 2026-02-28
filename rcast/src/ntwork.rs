@@ -1,6 +1,6 @@
 use crate::{cfg, ntclient::NtClient, ntserver::*, wgs84};
 use std::{
-    io::{prelude::*, ErrorKind},
+    io::{ErrorKind, prelude::*},
     net::TcpStream,
     sync::mpsc::Receiver,
     thread,
@@ -285,11 +285,17 @@ fn accept_newclients(newclients: &mut Vec<NtClient>, ackclients: &mut Vec<NtClie
 }
 
 fn send_mounts(tcpstream: &TcpStream) {
-    let mount_point = format!("STR;{};{};CMR+;0(1),5(1);2;GPS+GLONASS;Multi Base;ua;55.55;33.33;0;0;Super GNSS 1_1;;B;N;9600;;\r\nENDSOURCETABLE\r\n", cfg::MOUNT, cfg::CLIENT_PORT);
-    let response = format!("SOURCETABLE 200 OK\r\nNtrip-Version: Ntrip/1.0\r\nServer: NTRIP Caster 1.0\r\nDate: {}\r\nContent-Type: gnss/sourcetable\r\nContent-Length: {}\r\n\r\n{}",
+    let mount_point = format!(
+        "STR;{};{};CMR+;0(1),5(1);2;GPS+GLONASS;Multi Base;ua;55.55;33.33;0;0;Super GNSS 1_1;;B;N;9600;;\r\nENDSOURCETABLE\r\n",
+        cfg::MOUNT,
+        cfg::CLIENT_PORT
+    );
+    let response = format!(
+        "SOURCETABLE 200 OK\r\nNtrip-Version: Ntrip/1.0\r\nServer: NTRIP Caster 1.0\r\nDate: {}\r\nContent-Type: gnss/sourcetable\r\nContent-Length: {}\r\n\r\n{}",
         datetimenow(),
         mount_point.len(),
-        mount_point);
+        mount_point
+    );
     if let Ok(mut tcpstream) = tcpstream.try_clone() {
         tcpstream.write_all(response.as_bytes()).unwrap_or_default();
         tcpstream
@@ -299,8 +305,10 @@ fn send_mounts(tcpstream: &TcpStream) {
 }
 
 fn send_icyok(tcpstream: &TcpStream) -> Result<(), std::io::Error> {
-    let response = format!("ICY 200 OK\r\nNtrip-Version: Ntrip/1.0\r\nServer: NTRIP Caster 1.0\r\nDate: {}\r\nContent-Type: gnss/data\r\n",
-        datetimenow());
+    let response = format!(
+        "ICY 200 OK\r\nNtrip-Version: Ntrip/1.0\r\nServer: NTRIP Caster 1.0\r\nDate: {}\r\nContent-Type: gnss/data\r\n",
+        datetimenow()
+    );
     if let Ok(mut tcpstream) = tcpstream.try_clone() {
         return tcpstream.write_all(response.as_bytes());
     }
@@ -308,8 +316,10 @@ fn send_icyok(tcpstream: &TcpStream) -> Result<(), std::io::Error> {
 }
 
 fn post_icyok(tcpstream: &TcpStream) -> Result<(), std::io::Error> {
-    let response = format!("HTTP/1.1 200 OK\r\nICY 200 OK\r\nNtrip-Version: Ntrip/1.0\r\nServer: NTRIP Caster 1.0\r\nDate: {}\r\nContent-Type: gnss/data\r\n\r\n",
-        datetimenow());
+    let response = format!(
+        "HTTP/1.1 200 OK\r\nICY 200 OK\r\nNtrip-Version: Ntrip/1.0\r\nServer: NTRIP Caster 1.0\r\nDate: {}\r\nContent-Type: gnss/data\r\n\r\n",
+        datetimenow()
+    );
     if let Ok(mut tcpstream) = tcpstream.try_clone() {
         return tcpstream.write_all(response.as_bytes());
     }

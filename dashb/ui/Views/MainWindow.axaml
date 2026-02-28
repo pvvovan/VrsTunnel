@@ -21,7 +21,7 @@
             <Grid Grid.Row="0" ColumnDefinitions="Auto,*">
                 <Menu Grid.Column="0">
                     <MenuItem Header="File">
-                        <MenuItem Header="Open" />
+                        <MenuItem Header="Open" Command="{Binding OpenCmd}" />
                         <MenuItem Header="Save" Command="{Binding SaveCmd}" />
                     </MenuItem>
                 </Menu>

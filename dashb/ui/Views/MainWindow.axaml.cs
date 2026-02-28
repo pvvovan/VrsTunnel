@@ -29,8 +29,27 @@ public partial class MainWindow : Window, IDialog
         var file = await this.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             Title = "Save Json File",
-            FileTypeChoices = [ new FilePickerFileType("json") { Patterns = [ "*.json" ] } ]
+            FileTypeChoices = [ new FilePickerFileType("json") { Patterns = [ "*.json" ] } ],
         });
         return file?.Path.AbsolutePath ?? "";
+    }
+
+    public async Task<string> Open()
+    {
+        var file = await this.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            Title = "Open Json File",
+            FileTypeFilter = [ new FilePickerFileType("json") { Patterns = [ "*.json" ] } ],
+            AllowMultiple = false,
+        });
+
+        if (file is not null)
+        {
+            if (file.Count == 1)
+            {
+                return file[0].Path.AbsolutePath;
+            }
+        }
+        return "";
     }
 }

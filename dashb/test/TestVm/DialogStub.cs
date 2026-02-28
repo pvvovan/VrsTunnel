@@ -12,6 +12,11 @@ internal class DialogStub : IDialog
         throw new NotImplementedException();
     }
 
+    public Task<string> Open()
+    {
+        throw new NotImplementedException();
+    }
+
     public void Show(InputVm inputVm)
     {
         inputVm.User!.Name = this.InputName;

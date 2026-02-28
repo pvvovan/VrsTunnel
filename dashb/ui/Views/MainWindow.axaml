@@ -17,13 +17,20 @@
 
     <Grid RowDefinitions="*,Auto,*" ColumnDefinitions="*,Auto,*">
 
-        <Grid RowDefinitions="Auto,*">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Ntrip servers" FontWeight="Bold" Padding="10 5 10 0"></TextBlock>
-                <Button Command="{Binding AddServerCmd}">Add new server</Button>
-            </StackPanel>
-            <ListBox Grid.Row="1" ItemsSource="{Binding Servers}"
-                     SelectedValue="{Binding SelectedServer, Mode=TwoWay}">
+        <Grid Grid.Row="0" Grid.Column="0" RowDefinitions="Auto,*">
+            <Grid Grid.Row="0" ColumnDefinitions="Auto,*">
+                <Menu Grid.Column="0">
+                    <MenuItem Header="File">
+                        <MenuItem Header="Open" />
+                        <MenuItem Header="Save" />
+                    </MenuItem>
+                </Menu>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="Ntrip servers" FontWeight="Bold" Padding="10 5 10 0"></TextBlock>
+                    <Button Command="{Binding AddServerCmd}">Add new server</Button>
+                </StackPanel>
+            </Grid>
+            <ListBox Grid.Row="1" ItemsSource="{Binding Servers}" SelectedValue="{Binding SelectedServer, Mode=TwoWay}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -39,10 +46,10 @@
             </ListBox>
         </Grid>
 
-        <GridSplitter Grid.Row="1" Background="Gray"></GridSplitter>
+        <GridSplitter Grid.Row="1" Grid.Column="0" Background="Gray"></GridSplitter>
 
-        <Grid Grid.Row="2" RowDefinitions="Auto,*">
-            <TextBlock Text="Assigned Ntrip clients" FontWeight="Bold" Padding="10 5 0 0" />
+        <Grid Grid.Row="2" Grid.Column="0" RowDefinitions="Auto,*">
+            <TextBlock Text="Assigned Ntrip clients" HorizontalAlignment="Center" FontWeight="Bold" Padding="10 5 0 0"/>
             <ListBox Grid.Row="1" ItemsSource="{Binding AssignedClients}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -57,10 +64,10 @@
             </ListBox>
         </Grid>
 
-        <GridSplitter Grid.Column="1" Grid.RowSpan="3" Background="Gray"></GridSplitter>
+        <GridSplitter Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Background="Gray"></GridSplitter>
 
-        <Grid Grid.Column="2" Grid.RowSpan="3" RowDefinitions="Auto,*">
-            <StackPanel Orientation="Horizontal">
+        <Grid Grid.Row="0" Grid.Column="2" Grid.RowSpan="3" RowDefinitions="Auto,*">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <TextBlock Text="Ntrip clients" FontWeight="Bold" Padding="10 5 10 0"></TextBlock>
                 <Button Command="{Binding AddClientCmd}">Add new client</Button>
             </StackPanel>
@@ -81,5 +88,7 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </Grid>
+
     </Grid>
+
 </Window>

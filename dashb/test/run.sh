@@ -9,6 +9,10 @@ if [ -d ${RESULTS_DIR} ]; then
     rm -r ${RESULTS_DIR}
 fi
 
+dotnet build ../vm/vm.csproj
+dotnet build ../ui/ui.csproj
+dotnet build ./test.csproj
+
 roslynator analyze ../vm/vm.csproj ../ui/ui.csproj ./test.csproj --severity-level warning
 
 dotnet test --logger html --collect:"XPlat Code Coverage"

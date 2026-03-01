@@ -18,7 +18,7 @@ public partial class NtripClientVm : UserVm
         if (Model is not null)
         {
             Name = Model.Name;
-            Password = Model.Password;
+            PasswordHash = Model.PasswordHash;
         }
     }
 

@@ -1,3 +1,3 @@
 namespace vm.Models;
 
-public record class NtripServer(string Name, string Password, Guid Id, List<Guid>? Clients);
+public record class NtripServer(string Name, string PasswordHash, Guid Id, List<Guid>? Clients);

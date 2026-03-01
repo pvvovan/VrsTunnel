@@ -30,7 +30,7 @@ public partial class MainWindowVm : ObservableObject
             {
                 clId = oldCl.Id;
             }
-            cls.Add(new Models.NtripClient(cl.Name, cl.Password, clId));
+            cls.Add(new Models.NtripClient(cl.Name, cl.PasswordHash, clId));
         }
 
         List<Models.NtripServer> srs = [];
@@ -52,7 +52,7 @@ public partial class MainWindowVm : ObservableObject
                 }
             }
             srs.Add(new Models.NtripServer(sv.Name,
-                                           sv.Password,
+                                           sv.PasswordHash,
                                            oldSv is not null ? oldSv.Id : Guid.NewGuid(),
                                            clIds));
         }
@@ -241,7 +241,7 @@ public partial class MainWindowVm : ObservableObject
         _editedClient = new(new(RemoveClient), new(AssignClient), new(UnassignClient), null)
         {
             Name = _clientToEdit.Name,
-            Password = _clientToEdit.Password
+            PasswordHash = _clientToEdit.PasswordHash
         };
         _inputVm = new InputVm()
         {
@@ -256,7 +256,7 @@ public partial class MainWindowVm : ObservableObject
     private void EditClientFromInput()
     {
         _clientToEdit!.Name = _editedClient!.Name;
-        _clientToEdit!.Password = _editedClient!.Password;
+        _clientToEdit!.PasswordHash = _editedClient!.PasswordHash;
         _inputVm!.User!.PropertyChanged -= _inputVm.User_PropertyChanged;
         _inputVm?.Close();
     }
@@ -271,7 +271,7 @@ public partial class MainWindowVm : ObservableObject
         _editedServer = new(new(RemoveServer), null)
         {
             Name = _serverToEdit.Name,
-            Password = _serverToEdit.Password
+            PasswordHash = _serverToEdit.PasswordHash
         };
         _inputVm = new InputVm()
         {
@@ -286,7 +286,7 @@ public partial class MainWindowVm : ObservableObject
     private void EditServerFromInput()
     {
         _serverToEdit!.Name = _editedServer!.Name;
-        _serverToEdit!.Password = _editedServer!.Password;
+        _serverToEdit!.PasswordHash = _editedServer!.PasswordHash;
         _inputVm!.User!.PropertyChanged -= _inputVm.User_PropertyChanged;
         _inputVm?.Close();
     }

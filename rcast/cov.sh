@@ -4,4 +4,4 @@ SCRIPT_DIR=$(dirname "$(readlink -f $0)")
 cd ${SCRIPT_DIR}
 
 cargo clean
-cargo llvm-cov --open
+cargo llvm-cov --open --no-cfg-coverage

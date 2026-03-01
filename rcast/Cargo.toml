@@ -6,5 +6,6 @@ edition = "2024"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-time = "0.3.47"
 approx = "0.5.1"
+json = "0.12.4"
+time = "0.3.47"

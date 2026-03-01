@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug tests",
+            "cargo": {
+                "args": [
+                    "test",
+                ],
+            },
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

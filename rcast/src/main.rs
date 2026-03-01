@@ -34,4 +34,11 @@ fn main() {
             break;
         }
     }
+    let servers = cfg::load();
+    let _ = (
+        &servers[0].name,
+        &servers[0].hash,
+        &servers[0].clients[0].name,
+        &servers[0].clients[0].hash,
+    );
 }

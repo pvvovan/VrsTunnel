@@ -26,8 +26,8 @@ impl Location {
 const WGS84_A: f64 = 6378137.0; // earth semimajor axis in meters
 const WGS84_F: f64 = 1.0 / 298.257223563; // reciprocal flattening
 const WGS84_E_S: f64 = (2.0 * WGS84_F) - (WGS84_F * WGS84_F); // eccentricity squared
-/// const WGS84_B: f64 = WGS84_A * (1.0 - WGS84_F); // semi-minor axis
-/// const WGS84_E_S2: f64 = WGS84_F * (2.0 - WGS84_F) / ((1.0 - WGS84_F) * (1.0 - WGS84_F)); // second eccentricity squared
+const _WGS84_B: f64 = WGS84_A * (1.0 - WGS84_F); // semi-minor axis
+const _WGS84_E_S2: f64 = WGS84_F * (2.0 - WGS84_F) / ((1.0 - WGS84_F) * (1.0 - WGS84_F)); // second eccentricity squared
 
 #[cfg(test)]
 mod tests {

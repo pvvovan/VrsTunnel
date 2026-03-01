@@ -1,0 +1,57 @@
+{
+  "Clients": [
+    {
+      "Name": "Client 1",
+      "Password": "ere",
+      "Id": "54f88f3a-7868-4732-a663-4ed78d1f8a23"
+    },
+    {
+      "Name": "Client 2",
+      "Password": "32",
+      "Id": "93dcbab7-eb19-4929-a7ad-002eba0add3f"
+    },
+    {
+      "Name": "Client 3",
+      "Password": "sds",
+      "Id": "b01f7d73-9b0d-420c-b78f-6294cbfe40e9"
+    },
+    {
+      "Name": "Client 4",
+      "Password": "4",
+      "Id": "99703e85-a2b3-414d-a00c-566ad51b1904"
+    },
+    {
+      "Name": "Client 5",
+      "Password": "",
+      "Id": "78a915ef-7a29-4dd4-9635-621f41a7cb60"
+    }
+  ],
+  "Servers": [
+    {
+      "Name": "Server 1",
+      "Password": "pw1",
+      "Id": "3001b69e-b1c3-458a-b9b7-8e219b845ba5",
+      "Clients": [
+        "54f88f3a-7868-4732-a663-4ed78d1f8a23",
+        "b01f7d73-9b0d-420c-b78f-6294cbfe40e9"
+      ]
+    },
+    {
+      "Name": "Server 2",
+      "Password": "w1",
+      "Id": "31a69d1c-a281-475e-8740-f023d6c3a0a3",
+      "Clients": [
+        "b01f7d73-9b0d-420c-b78f-6294cbfe40e9",
+        "93dcbab7-eb19-4929-a7ad-002eba0add3f",
+        "78a915ef-7a29-4dd4-9635-621f41a7cb60",
+        "99703e85-a2b3-414d-a00c-566ad51b1904"
+      ]
+    },
+    {
+      "Name": "Server 3",
+      "Password": "gre",
+      "Id": "51e72232-b54c-454b-a5f6-81dd8c50f6f3",
+      "Clients": []
+    }
+  ]
+}

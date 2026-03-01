@@ -9,8 +9,7 @@ pub struct ServerCfg {
     pub clients: HashSet<String>,
 }
 
-pub fn load() -> HashMap<String, ServerCfg> {
-    let json_str = std::fs::read_to_string("../dashb/test/DemoCfg.json").unwrap();
+pub fn parse(json_str: &str) -> HashMap<String, ServerCfg> {
     let dto_servers = parse_servers(&json_str);
     let dto_clients = parse_clients(&json_str);
     let mut servers = HashMap::with_capacity(dto_servers.len());
@@ -85,7 +84,7 @@ mod tests {
 
     #[test]
     fn load_cfg() {
-        let servers = load();
+        let servers = parse(&std::fs::read_to_string("../dashb/test/DemoCfg.json").unwrap());
         assert!(servers["h2"].clients.contains("h1"));
     }
 

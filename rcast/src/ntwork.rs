@@ -1,16 +1,25 @@
-use crate::{cfg, ntclient::NtClient, ntserver::*, wgs84};
+use crate::{cfg, cfg::*, ntclient::NtClient, ntserver::*, wgs84};
 use std::{
+    collections::HashMap,
     io::{ErrorKind, prelude::*},
     net::TcpStream,
     sync::mpsc::Receiver,
     thread,
 };
 
-pub fn launch(serv_recv: Receiver<NewServer>, clnt_recv: Receiver<NtClient>) {
-    thread::spawn(|| do_work(serv_recv, clnt_recv));
+pub fn launch(
+    serv_recv: Receiver<NewServer>,
+    clnt_recv: Receiver<NtClient>,
+    cfg: HashMap<String, ServerCfg>,
+) {
+    thread::spawn(|| do_work(serv_recv, clnt_recv, cfg));
 }
 
-fn do_work(serv_recv: Receiver<NewServer>, clnt_recv: Receiver<NtClient>) {
+fn do_work(
+    serv_recv: Receiver<NewServer>,
+    clnt_recv: Receiver<NtClient>,
+    cfg: HashMap<String, ServerCfg>,
+) {
     let mut servers: Vec<AckServer> = Vec::new();
     let mut newservers: Vec<NewServer> = Vec::new();
     let mut newclients: Vec<NtClient> = Vec::new();
@@ -64,13 +73,17 @@ fn do_work(serv_recv: Receiver<NewServer>, clnt_recv: Receiver<NtClient>) {
         }
 
         accept_newclients(&mut newclients, &mut ackclients);
-        subscribe_clients(&mut ackclients, &mut servers);
+        subscribe_clients(&mut ackclients, &mut servers, &cfg);
 
         thread::sleep(std::time::Duration::from_millis(10));
     }
 }
 
-fn subscribe_clients(ackclients: &mut Vec<NtClient>, servers: &mut Vec<AckServer>) {
+fn subscribe_clients(
+    ackclients: &mut Vec<NtClient>,
+    servers: &mut Vec<AckServer>,
+    cfg: &HashMap<String, ServerCfg>,
+) {
     if servers.len() == 0 {
         return;
     }

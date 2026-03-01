@@ -81,6 +81,7 @@ public partial class MainWindowVm : ObservableObject
         {
             var (cfgClients, cfgServers) = cfg.Result;
 
+            Clients.Clear();
             foreach (var cl in cfgClients)
             {
                 NtripClientVm clVm = new(new(RemoveClient), new(AssignClient), new(UnassignClient), cl)
@@ -90,6 +91,7 @@ public partial class MainWindowVm : ObservableObject
                 Clients.Add(clVm);
             }
 
+            Servers.Clear();
             foreach (var sv in cfgServers)
             {
                 NtripServerVm svVm = new(new(RemoveServer), sv)

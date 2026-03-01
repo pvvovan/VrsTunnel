@@ -11,7 +11,9 @@
       "Name": "s1",
       "PasswordHash": "h2",
       "Id": "19f9f88f-af5d-46c6-8fb5-cfa2a91824c9",
-      "Clients": []
+      "Clients": [
+        "d0792ba0-96cd-4c27-adcd-eacb29760402"
+      ]
     }
   ]
 }

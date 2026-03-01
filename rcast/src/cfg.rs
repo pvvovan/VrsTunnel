@@ -1,44 +1,82 @@
+use std::collections::*;
+
 pub const CLIENT_PORT: u16 = 8021;
 pub const SERVER_PORT: u16 = 8023;
 pub const BIND_ADDR: &str = "0.0.0.0";
 pub const MOUNT: &str = "DynRef";
 
-pub struct ClientDto {
-    pub name: String,
-    pub hash: String,
+pub struct ServerCfg {
+    pub clients: HashSet<String>,
 }
 
-pub struct ServerDto {
-    pub name: String,
-    pub hash: String,
-    pub clients: Vec<ClientDto>,
-}
-
-pub fn load() -> Vec<ServerDto> {
+pub fn load() -> HashMap<String, ServerCfg> {
     let json_str = std::fs::read_to_string("../dashb/test/DemoCfg.json").unwrap();
-    let obj = json::parse(&json_str).unwrap();
+    let dto_servers = parse_servers(&json_str);
+    let dto_clients = parse_clients(&json_str);
+    let mut servers = HashMap::with_capacity(dto_servers.len());
+    for dto_server in &dto_servers {
+        let mut clients = HashSet::with_capacity(dto_server.client_ids.len());
+        for cliend_id in &dto_server.client_ids {
+            clients.insert(
+                dto_clients
+                    .iter()
+                    .find(|c| &c.id == cliend_id)
+                    .unwrap()
+                    .hash
+                    .clone(),
+            );
+        }
+        servers.insert(dto_server.hash.clone(), ServerCfg { clients });
+    }
+    servers
+}
 
-    let mut dto_servers = Vec::new();
-    let json_servers = &obj["Servers"];
-    for i in 0..json_servers.len() {
-        dto_servers.push(ServerDto {
-            name: json_servers[i]["Name"].to_string(),
-            hash: json_servers[i]["PasswordHash"].to_string(),
-            clients: Vec::new(),
+struct ClientDto {
+    _name: String,
+    hash: String,
+    id: String,
+}
+
+struct ServerDto {
+    _name: String,
+    hash: String,
+    _id: String,
+    client_ids: Vec<String>,
+}
+
+fn parse_clients(json_str: &str) -> Vec<ClientDto> {
+    let json_obj = json::parse(&json_str).unwrap();
+    let json_clients = &json_obj["Clients"];
+    let mut clients = Vec::new();
+    for i in 0..json_clients.len() {
+        clients.push(ClientDto {
+            _name: json_clients[i]["Name"].to_string(),
+            hash: json_clients[i]["PasswordHash"].to_string(),
+            id: json_clients[i]["Id"].to_string(),
         });
     }
+    clients
+}
 
-    let json_clients = &obj["Clients"];
+fn parse_servers(json_str: &str) -> Vec<ServerDto> {
+    let json_obj = json::parse(&json_str).unwrap();
+    let json_servers = &json_obj["Servers"];
+    let mut servers = Vec::with_capacity(json_servers.len());
     for i in 0..json_servers.len() {
-        let dto_client = ClientDto {
-            name: json_clients[i]["Name"].to_string(),
-            hash: json_clients[i]["PasswordHash"].to_string(),
-        };
+        let client_count = json_servers[i]["Clients"].len();
+        let mut client_ids = Vec::with_capacity(client_count);
+        for _ in 0..client_count {
+            client_ids.push(json_servers[i]["Clients"][i].to_string());
+        }
 
-        dto_servers[0].clients.push(dto_client);
+        servers.push(ServerDto {
+            _name: json_servers[i]["Name"].to_string(),
+            hash: json_servers[i]["PasswordHash"].to_string(),
+            _id: json_servers[i]["Id"].to_string(),
+            client_ids,
+        });
     }
-
-    dto_servers
+    servers
 }
 
 #[cfg(test)]
@@ -46,13 +84,27 @@ mod tests {
     use super::*;
 
     #[test]
-    fn json_load() {
+    fn load_cfg() {
         let servers = load();
-        assert!(servers.len() == 1);
-        assert!(servers[0].name == "s1");
-        assert!(servers[0].hash == "h2");
-        assert!(servers[0].clients.len() == 1);
-        assert!(servers[0].clients[0].name == "c1");
-        assert!(servers[0].clients[0].hash == "h1");
+        assert!(servers["h2"].clients.contains("h1"));
+    }
+
+    #[test]
+    fn parse_client_one() {
+        let json_str = std::fs::read_to_string("../dashb/test/DemoCfg.json").unwrap();
+        let client = &parse_clients(&json_str)[0];
+        assert!(client._name == "c1");
+        assert!(client.hash == "h1");
+        assert!(client.id == "d0792ba0-96cd-4c27-adcd-eacb29760402");
+    }
+
+    #[test]
+    fn parse_server_one() {
+        let json_str = std::fs::read_to_string("../dashb/test/DemoCfg.json").unwrap();
+        let server = &parse_servers(&json_str)[0];
+        assert!(server._name == "s1");
+        assert!(server.hash == "h2");
+        assert!(server._id == "19f9f88f-af5d-46c6-8fb5-cfa2a91824c9");
+        assert!(server.client_ids[0] == "d0792ba0-96cd-4c27-adcd-eacb29760402");
     }
 }

@@ -85,7 +85,7 @@ mod tests {
     #[test]
     fn load_cfg() {
         let servers = parse(&std::fs::read_to_string("../dashb/test/DemoCfg.json").unwrap());
-        assert!(servers["h2"].clients.contains("h1"));
+        assert!(servers["czE6czE="].clients.contains("YzE6YzE="));
     }
 
     #[test]
@@ -93,7 +93,7 @@ mod tests {
         let json_str = std::fs::read_to_string("../dashb/test/DemoCfg.json").unwrap();
         let client = &parse_clients(&json_str)[0];
         assert!(client._name == "c1");
-        assert!(client.hash == "h1");
+        assert!(client.hash == "YzE6YzE=");
         assert!(client.id == "d0792ba0-96cd-4c27-adcd-eacb29760402");
     }
 
@@ -102,7 +102,7 @@ mod tests {
         let json_str = std::fs::read_to_string("../dashb/test/DemoCfg.json").unwrap();
         let server = &parse_servers(&json_str)[0];
         assert!(server._name == "s1");
-        assert!(server.hash == "h2");
+        assert!(server.hash == "czE6czE=");
         assert!(server._id == "19f9f88f-af5d-46c6-8fb5-cfa2a91824c9");
         assert!(server.client_ids[0] == "d0792ba0-96cd-4c27-adcd-eacb29760402");
     }

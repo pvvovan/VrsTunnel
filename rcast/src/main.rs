@@ -14,12 +14,13 @@ fn main() {
         println!("Path to config missing!");
         return;
     }
-    if !std::fs::exists(&args[1]).expect(&format!("Failed to check {}!", &args[1])) {
-        println!("File {} doesn't exist!", &args[1]);
+    let cfg_path = &args[1];
+    if !std::fs::exists(cfg_path).expect(&format!("Failed to check {}!", cfg_path)) {
+        println!("File {} doesn't exist!", cfg_path);
         return;
     }
     let json_str =
-        std::fs::read_to_string(&args[1]).expect(&format!("Failed to read {}!", &args[0]));
+        std::fs::read_to_string(cfg_path).expect(&format!("Failed to read {}!", cfg_path));
 
     println!("NTRIP multi caster started running:");
     println!(

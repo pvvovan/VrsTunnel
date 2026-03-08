@@ -6,7 +6,15 @@ public class ExclusiveJsonConfig : IDisposable
 
     public ExclusiveJsonConfig()
     {
-        _mut.WaitOne();
+        for ( ; ; )
+        {
+            try
+            {
+                _mut.WaitOne();
+                break;
+            }
+            catch (AbandonedMutexException) { }
+        }
     }
 
     public void Dispose()

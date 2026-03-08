@@ -4,7 +4,9 @@ using vm.ViewModels;
 
 namespace test.TestVm;
 
-public class UnitTestVm
+#pragma warning disable CS9113 // Parameter exclusiveJsonConfig is unread.
+public class UnitTestVm(ExclusiveJsonConfig exclusiveJsonConfig) : IClassFixture<ExclusiveJsonConfig>
+#pragma warning restore CS9113 // Parameter exclusiveJsonConfig is unread.
 {
     [Fact]
     public void Test_NtripServerVm()
@@ -46,6 +48,10 @@ public class UnitTestVm
     {
         DialogStub dialogStub = new();
         MainWindowVm mainVm = new(dialogStub, new vm.DAL.JsonConfig());
+        await Task.Delay(500);
+        mainVm.Servers.Clear();
+        mainVm.Clients.Clear();
+
         dialogStub.InputName = "Client0";
         mainVm.AddClientCmd.Execute(null);
         await Task.Delay(100);
@@ -66,10 +72,11 @@ public class UnitTestVm
         Assert.Equal("Client1", mainVm.Clients[1].Name);
 
         mainVm.SelectedServer = mainVm.Servers[0];
-        mainVm.Clients[1].AssignCmd.Execute(mainVm.Clients[1]);
+        mainVm.Clients[0].AssignCmd.Execute(mainVm.Clients[0]);
         Assert.Single(mainVm.AssignedClients);
-        mainVm.Clients[1].UnassignCmd.Execute(mainVm.Clients[1]);
+        mainVm.Clients[0].UnassignCmd.Execute(mainVm.Clients[0]);
         Assert.Empty(mainVm.AssignedClients);
+
         mainVm.Clients[1].AssignCmd.Execute(mainVm.Clients[1]);
         Assert.Single(mainVm.AssignedClients);
         mainVm.Clients[1].RemoveCmd.Execute(mainVm.Clients[1]);
@@ -94,12 +101,13 @@ public class UnitTestVm
 
         dialogStub = new();
         mainVm = new(dialogStub, new vm.DAL.JsonConfig());
+        await Task.Delay(500);
         dialogStub.InputName = "Client0";
         mainVm.AddClientCmd.Execute(null);
         await Task.Delay(100);
-        Assert.Equal("Client0", mainVm.Clients[0].Name);
+        Assert.Equal("Client0", mainVm.Clients[1].Name);
         Assert.Equal("Server2", mainVm.Servers[0].Name);
-        Assert.Equal("Client2", mainVm.Clients[1].Name);
+        Assert.Equal("Client2", mainVm.Clients[0].Name);
 
         mainVm.Clients[0].RemoveCmd.Execute(mainVm.Clients[0]);
         mainVm.Clients[0].RemoveCmd.Execute(mainVm.Clients[0]);

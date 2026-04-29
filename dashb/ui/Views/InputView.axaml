@@ -4,13 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Width="300" Height="130"
+        Width="300"
+        Height="130"
         x:Class="ui.Views.InputView"
         x:DataType="vm:InputVm"
         Icon="/Assets/avalonia-logo.ico"
         Title="input">
 
-    <Border BorderThickness="10" CornerRadius="10">
+    <Border BorderThickness="10"
+            CornerRadius="10">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -22,15 +24,28 @@
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Column="0" Text="Name" Padding="7" />
-            <TextBox Grid.Column="1" Text="{Binding Path=User.Name, Mode=TwoWay}" />
+            <TextBlock Text="Name"
+                       Grid.Column="0"
+                       Padding="7" />
+            <TextBox Text="{Binding Path=User.Name, Mode=TwoWay}"
+                     Grid.Column="1" />
 
-            <TextBlock Grid.Column="0" Grid.Row="1" Text="Password" Padding="7" />
-            <TextBox Grid.Column="1" Grid.Row="1" PasswordChar="*" Watermark="Enter password"
+            <TextBlock Text="Password"
+                       Grid.Column="0"
+                       Grid.Row="1"
+                       Padding="7" />
+            <TextBox PlaceholderText="Enter password"
+                     PasswordChar="*"
+                     Grid.Column="1"
+                     Grid.Row="1"
                      Text="{Binding Path=User.Password, Mode=TwoWay}" />
 
-            <Button Grid.Row="2" Grid.ColumnSpan="2" Content="OK" Command="{Binding OkCmd}"
-                    VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+            <Button Content="OK"
+                    Command="{Binding OkCmd}"
+                    Grid.Row="2"
+                    Grid.ColumnSpan="2"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Center" />
         </Grid>
     </Border>
 </Window>

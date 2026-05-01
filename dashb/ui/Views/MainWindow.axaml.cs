@@ -52,27 +52,42 @@ public partial class MainWindow : Window, IDialog
         return "";
     }
 
+    private static readonly DataFormat<NtripClientVm> dragFormat =
+        DataFormat.CreateInProcessFormat<NtripClientVm>("myid");
+
     private async void Clients_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         DataTransfer dragData = new();
         DataTransferItem dragItem = new();
-        dragItem.Set(DataFormat.CreateInProcessFormat<NtripClientVm>("myid"),
-                     (sender as Control)?.DataContext as NtripClientVm);
+        dragItem.Set(dragFormat, (sender as Control)?.DataContext as NtripClientVm);
         dragData.Add(dragItem);
         await DragDrop.DoDragDropAsync(e, dragData, DragDropEffects.Copy | DragDropEffects.Move);
     }
 
     private void Servers_OnDragOver(object? sender, DragEventArgs e)
     {
-        e.DragEffects = DragDropEffects.Copy;
+        e.DragEffects = DragDropEffects.None;
+        var client = e.DataTransfer.TryGetValue(dragFormat);
+        if (client is not null)
+        {
+            var server = ((sender as Control)!.DataContext as NtripServerVm)!;
+            if (!server.Clients.Contains(client))
+            {
+                e.DragEffects = DragDropEffects.Copy;
+            }
+        }
     }
 
     private async void Servers_OnDrop(object? sender, DragEventArgs e)
     {
-        var client = e.DataTransfer.TryGetValue(DataFormat.CreateInProcessFormat<NtripClientVm>("myid"));
+        var client = e.DataTransfer.TryGetValue(dragFormat);
         if (client is not null)
         {
-            ((sender as Control)!.DataContext as NtripServerVm)!.Clients.Add(client);
+            var server = ((sender as Control)!.DataContext as NtripServerVm)!;
+            if (!server.Clients.Contains(client))
+            {
+                server.Clients.Add(client);
+            }
         }
     }
 }

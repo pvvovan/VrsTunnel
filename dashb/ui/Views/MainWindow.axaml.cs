@@ -1,7 +1,6 @@
-using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.Interactivity;
+using Avalonia.Input;
 using Avalonia.Platform.Storage;
 using vm.ViewModels;
 
@@ -51,5 +50,9 @@ public partial class MainWindow : Window, IDialog
             }
         }
         return "";
+    }
+
+    private async void Clients_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
     }
 }

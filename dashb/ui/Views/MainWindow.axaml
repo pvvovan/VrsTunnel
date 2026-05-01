@@ -71,18 +71,34 @@
                 <TextBlock Text="Ntrip clients" FontWeight="Bold" Padding="10 5 10 0"></TextBlock>
                 <Button Command="{Binding AddClientCmd}">Add new client</Button>
             </StackPanel>
-            <ListBox Grid.Row="1" ItemsSource="{Binding Clients}">
+            <ListBox ItemsSource="{Binding Clients}"
+                     Grid.Row="1">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock FontSize="16" Padding="0 0 8 0" VerticalAlignment="Center"
-                                       Text="{Binding Name}"></TextBlock>
-                            <Button Command="{Binding AssignCmd}" CommandParameter="{Binding}"
-                                    FontSize="20" Classes="h1">&#x1F517;</Button>
-                            <Button Command="{Binding EditCmd}" CommandParameter="{Binding}"
-                                    FontSize="20" Classes="h1">&#x1F589;</Button>
-                            <Button Command="{Binding RemoveCmd}" CommandParameter="{Binding}"
-                                    FontSize="20" Classes="h1">&#9003;</Button>
+                        <StackPanel Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    DragDrop.AllowDrop="True"
+                                    PointerPressed="Clients_OnPointerPressed"
+                                    Background="Transparent">
+                            <TextBlock Text="{Binding Name}"
+                                       FontSize="16"
+                                       Padding="0 0 8 0"
+                                       VerticalAlignment="Center" />
+                            <Button Command="{Binding AssignCmd}"
+                                    CommandParameter="{Binding}"
+                                    FontSize="20"
+                                    Classes="h1"
+                                    Content="&#x1F517;" />
+                            <Button Command="{Binding EditCmd}"
+                                    CommandParameter="{Binding}"
+                                    FontSize="20"
+                                    Classes="h1"
+                                    Content="&#x1F589;" />
+                            <Button Command="{Binding RemoveCmd}"
+                                    CommandParameter="{Binding}"
+                                    FontSize="20"
+                                    Classes="h1"
+                                    Content="&#9003;" />
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

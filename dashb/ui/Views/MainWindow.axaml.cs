@@ -54,5 +54,25 @@ public partial class MainWindow : Window, IDialog
 
     private async void Clients_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
+        DataTransfer dragData = new();
+        DataTransferItem dragItem = new();
+        dragItem.Set(DataFormat.CreateInProcessFormat<NtripClientVm>("myid"),
+                     (sender as Control)?.DataContext as NtripClientVm);
+        dragData.Add(dragItem);
+        await DragDrop.DoDragDropAsync(e, dragData, DragDropEffects.Copy | DragDropEffects.Move);
+    }
+
+    private void Servers_OnDragOver(object? sender, DragEventArgs e)
+    {
+        e.DragEffects = DragDropEffects.Copy;
+    }
+
+    private async void Servers_OnDrop(object? sender, DragEventArgs e)
+    {
+        var client = e.DataTransfer.TryGetValue(DataFormat.CreateInProcessFormat<NtripClientVm>("myid"));
+        if (client is not null)
+        {
+            ((sender as Control)!.DataContext as NtripServerVm)!.Clients.Add(client);
+        }
     }
 }

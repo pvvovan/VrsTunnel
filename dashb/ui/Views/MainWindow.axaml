@@ -15,38 +15,65 @@
         </Style>
     </Window.Styles>
 
-    <Grid RowDefinitions="*,Auto,*" ColumnDefinitions="*,Auto,*">
+    <Grid RowDefinitions="*,Auto,*"
+          ColumnDefinitions="*,Auto,*">
 
-        <Grid Grid.Row="0" Grid.Column="0" RowDefinitions="Auto,*">
-            <Grid Grid.Row="0" ColumnDefinitions="Auto,*">
+        <Grid Grid.Row="0"
+              Grid.Column="0"
+              RowDefinitions="Auto,*">
+            <Grid Grid.Row="0"
+                  ColumnDefinitions="Auto,*">
                 <Menu Grid.Column="0">
                     <MenuItem Header="File">
                         <MenuItem Header="Open" Command="{Binding OpenCmd}" />
                         <MenuItem Header="Save" Command="{Binding SaveCmd}" />
                     </MenuItem>
                 </Menu>
-                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="Ntrip servers" FontWeight="Bold" Padding="10 5 10 0"></TextBlock>
-                    <Button Command="{Binding AddServerCmd}">Add new server</Button>
+                <StackPanel Grid.Column="1"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+                    <TextBlock Text="Ntrip servers"
+                               FontWeight="Bold"
+                               Padding="10 5 10 0" />
+                    <Button Command="{Binding AddServerCmd}"
+                            Content="Add new server" />
                 </StackPanel>
             </Grid>
-            <ListBox Grid.Row="1" ItemsSource="{Binding Servers}" SelectedValue="{Binding SelectedServer, Mode=TwoWay}">
+            <ListBox Grid.Row="1"
+                     ItemsSource="{Binding Servers}"
+                     SelectedValue="{Binding Path=SelectedServer,
+                                             Mode=TwoWay}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="{Binding Name}" FontSize="16" Padding="0 0 8 0"
+                        <StackPanel Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    DragDrop.AllowDrop="True"
+                                    DragDrop.DragOver="Servers_OnDragOver"
+                                    DragDrop.Drop="Servers_OnDrop"
+                                    Background="Transparent">
+                            <TextBlock Text="{Binding Name}"
+                                       FontSize="16"
+                                       Padding="0 0 8 0"
                                        VerticalAlignment="Center" />
-                            <Button Command="{Binding EditCmd}" CommandParameter="{Binding}"
-                                    FontSize="20" Classes="h1">&#x1F589;</Button>
-                            <Button FontSize="20" Command="{Binding RemoveCmd}"
-                                    CommandParameter="{Binding}" Classes="h1">&#9003;</Button>
+                            <Button Command="{Binding EditCmd}"
+                                    CommandParameter="{Binding}"
+                                    FontSize="20"
+                                    Classes="h1"
+                                    Content="&#x1F589;" />
+                            <Button Command="{Binding RemoveCmd}"
+                                    FontSize="20"
+                                    CommandParameter="{Binding}"
+                                    Classes="h1"
+                                    Content="&#9003;" />
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </Grid>
 
-        <GridSplitter Grid.Row="1" Grid.Column="0" Background="Gray"></GridSplitter>
+        <GridSplitter Grid.Row="1"
+                      Grid.Column="0"
+                      Background="Gray" />
 
         <Grid Grid.Row="2" Grid.Column="0" RowDefinitions="Auto,*">
             <TextBlock Text="Assigned Ntrip clients" HorizontalAlignment="Center" FontWeight="Bold" Padding="10 5 0 0"/>
@@ -77,7 +104,6 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal"
                                     VerticalAlignment="Center"
-                                    DragDrop.AllowDrop="True"
                                     PointerPressed="Clients_OnPointerPressed"
                                     Background="Transparent">
                             <TextBlock Text="{Binding Name}"

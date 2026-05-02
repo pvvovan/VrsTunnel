@@ -7,11 +7,9 @@ public partial class NtripClientVm : UserVm
 {
     public NtripClientVm(
         RelayCommand<NtripClientVm> removeCmd,
-        RelayCommand<NtripClientVm> assignCmd,
         Models.NtripClient? model)
     {
         RemoveCmd = removeCmd;
-        AssignCmd = assignCmd;
         Model = model;
         if (Model is not null)
         {
@@ -25,8 +23,15 @@ public partial class NtripClientVm : UserVm
     [ObservableProperty]
     public partial RelayCommand<NtripClientVm> RemoveCmd { get; set; }
 
-    [ObservableProperty]
-    public partial RelayCommand<NtripClientVm> AssignCmd { get; set; }
+
+    [RelayCommand]
+    private void Assign(NtripServerVm? server)
+    {
+        if (server is not null && !server.Clients.Contains(this))
+        {
+            server.Clients.Add(this);
+        }
+    }
 
     [RelayCommand]
     private void Unassign(NtripServerVm? server)

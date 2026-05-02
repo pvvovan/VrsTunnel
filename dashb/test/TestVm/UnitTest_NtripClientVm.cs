@@ -22,7 +22,7 @@ public class UnitTestVm(ExclusiveJsonConfig exclusiveJsonConfig) : IClassFixture
     {
         NtripClient client = new("Client 1", "Pw1", Guid.NewGuid());
         RelayCommand<NtripClientVm> stubCmd = new(p => { });
-        NtripClientVm clientVm = new(stubCmd, stubCmd, client);
+        NtripClientVm clientVm = new(stubCmd, client);
         Assert.Equal(clientVm.Name, client.Name);
     }
 
@@ -72,12 +72,12 @@ public class UnitTestVm(ExclusiveJsonConfig exclusiveJsonConfig) : IClassFixture
         Assert.Equal("Client1", mainVm.Clients[1].Name);
 
         mainVm.SelectedServer = mainVm.Servers[0];
-        mainVm.Clients[0].AssignCmd.Execute(mainVm.Clients[0]);
+        mainVm.Clients[0].AssignCommand.Execute(mainVm.SelectedServer);
         Assert.Single(mainVm.AssignedClients);
         mainVm.Clients[0].UnassignCommand.Execute(mainVm.SelectedServer);
         Assert.Empty(mainVm.AssignedClients);
 
-        mainVm.Clients[1].AssignCmd.Execute(mainVm.Clients[1]);
+        mainVm.Clients[1].AssignCommand.Execute(mainVm.SelectedServer);
         Assert.Single(mainVm.AssignedClients);
         mainVm.Clients[1].RemoveCmd.Execute(mainVm.Clients[1]);
         Assert.Empty(mainVm.AssignedClients);
@@ -89,7 +89,7 @@ public class UnitTestVm(ExclusiveJsonConfig exclusiveJsonConfig) : IClassFixture
         dialogStub.InputName = "Client2";
         mainVm.Clients[0].EditCmd?.Execute(mainVm.Clients[0]);
         Assert.Equal("Client2", mainVm.Clients[0].Name);
-        mainVm.Clients[0].AssignCmd.Execute(mainVm.Clients[0]);
+        mainVm.Clients[0].AssignCommand.Execute(mainVm.SelectedServer);
         Assert.Equal("Client2", mainVm.AssignedClients[0].Name);
 
         await mainVm.StoreConfig();

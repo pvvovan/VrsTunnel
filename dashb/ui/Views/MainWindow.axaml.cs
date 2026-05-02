@@ -89,7 +89,7 @@ public partial class MainWindow : Window, IDialog
     private void Servers_OnDragOver(object? sender, DragEventArgs e)
     {
         e.DragEffects = DragDropEffects.None;
-        var client = e.DataTransfer.TryGetValue(dragFormat);
+        NtripClientVm? client = e.DataTransfer.TryGetValue(dragFormat);
         if (client is not null)
         {
             var server = ((sender as Control)!.DataContext as NtripServerVm)!;
@@ -102,14 +102,7 @@ public partial class MainWindow : Window, IDialog
 
     private void Servers_OnDrop(object? sender, DragEventArgs e)
     {
-        var client = e.DataTransfer.TryGetValue(dragFormat);
-        if (client is not null)
-        {
-            var server = ((sender as Control)!.DataContext as NtripServerVm)!;
-            if (!server.Clients.Contains(client))
-            {
-                server.Clients.Add(client);
-            }
-        }
+        NtripClientVm? client = e.DataTransfer.TryGetValue(dragFormat);
+        client?.AssignCommand.Execute((sender as Control)!.DataContext as NtripServerVm);
     }
 }

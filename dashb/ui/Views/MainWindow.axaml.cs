@@ -60,7 +60,7 @@ public partial class MainWindow : Window, IDialog
     private bool dragStared;
     private PointerPressedEventArgs? dragArgs;
 
-    private async void Clients_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    private void Clients_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         dragPos = e.GetCurrentPoint(sender as Control).Position;
         dragArgs = e;
@@ -100,7 +100,7 @@ public partial class MainWindow : Window, IDialog
         }
     }
 
-    private async void Servers_OnDrop(object? sender, DragEventArgs e)
+    private void Servers_OnDrop(object? sender, DragEventArgs e)
     {
         var client = e.DataTransfer.TryGetValue(dragFormat);
         if (client is not null)

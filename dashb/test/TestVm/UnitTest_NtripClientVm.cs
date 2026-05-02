@@ -22,7 +22,7 @@ public class UnitTestVm(ExclusiveJsonConfig exclusiveJsonConfig) : IClassFixture
     {
         NtripClient client = new("Client 1", "Pw1", Guid.NewGuid());
         RelayCommand<NtripClientVm> stubCmd = new(p => { });
-        NtripClientVm clientVm = new(stubCmd, stubCmd, stubCmd, client);
+        NtripClientVm clientVm = new(stubCmd, stubCmd, client);
         Assert.Equal(clientVm.Name, client.Name);
     }
 
@@ -74,7 +74,7 @@ public class UnitTestVm(ExclusiveJsonConfig exclusiveJsonConfig) : IClassFixture
         mainVm.SelectedServer = mainVm.Servers[0];
         mainVm.Clients[0].AssignCmd.Execute(mainVm.Clients[0]);
         Assert.Single(mainVm.AssignedClients);
-        mainVm.Clients[0].UnassignCmd.Execute(mainVm.Clients[0]);
+        mainVm.Clients[0].UnassignCommand.Execute(mainVm.SelectedServer);
         Assert.Empty(mainVm.AssignedClients);
 
         mainVm.Clients[1].AssignCmd.Execute(mainVm.Clients[1]);

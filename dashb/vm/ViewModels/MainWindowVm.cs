@@ -80,7 +80,7 @@ public partial class MainWindowVm : ObservableObject
             Clients.Clear();
             foreach (var cl in cfgClients)
             {
-                NtripClientVm clVm = new(new(RemoveClient), new(AssignClient), new(UnassignClient), cl)
+                NtripClientVm clVm = new(new(RemoveClient), new(AssignClient), cl)
                 {
                     EditCmd = _editClientCmd
                 };
@@ -172,7 +172,7 @@ public partial class MainWindowVm : ObservableObject
     [RelayCommand]
     private void AddClient()
     {
-        _clientToAdd = new(new(RemoveClient), new(AssignClient), new(UnassignClient), null);
+        _clientToAdd = new(new(RemoveClient), new(AssignClient), null);
         _inputVm = new InputVm()
         {
             User = _clientToAdd
@@ -220,21 +220,13 @@ public partial class MainWindowVm : ObservableObject
         }
     }
 
-    private void UnassignClient(object? param)
-    {
-        if (param is not null && param is NtripClientVm client)
-        {
-            SelectedServer?.Clients.Remove(client);
-        }
-    }
-
     private NtripClientVm? _clientToEdit;
     private NtripClientVm? _editedClient;
     private readonly RelayCommand<UserVm> _editClientCmd;
     private void EditClient(object? param)
     {
         _clientToEdit = (NtripClientVm)param!;
-        _editedClient = new(new(RemoveClient), new(AssignClient), new(UnassignClient), null)
+        _editedClient = new(new(RemoveClient), new(AssignClient), null)
         {
             Name = _clientToEdit.Name,
             PasswordHash = _clientToEdit.PasswordHash

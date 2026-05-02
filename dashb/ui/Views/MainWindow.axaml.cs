@@ -57,14 +57,14 @@ public partial class MainWindow : Window, IDialog
         DataFormat.CreateInProcessFormat<NtripClientVm>("myid");
 
     private Avalonia.Point dragPos;
-    private bool dragStared;
+    private bool aboutToDrag = false;
     private PointerPressedEventArgs? dragArgs;
 
     private void Clients_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         dragPos = e.GetCurrentPoint(sender as Control).Position;
         dragArgs = e;
-        dragStared = false;
+        aboutToDrag = true;
     }
 
     private async void Clients_OnPointerMoved(object? sender, PointerEventArgs e)
@@ -73,9 +73,9 @@ public partial class MainWindow : Window, IDialog
         {
             if (Math.Abs(dragPos.X - e.GetCurrentPoint(sender as Control).Position.X) > 10)
             {
-                if (!dragStared)
+                if (aboutToDrag)
                 {
-                    dragStared = true;
+                    aboutToDrag = false;
                     DataTransfer dragData = new();
                     DataTransferItem dragItem = new();
                     dragItem.Set(dragFormat, (sender as Control)?.DataContext as NtripClientVm);

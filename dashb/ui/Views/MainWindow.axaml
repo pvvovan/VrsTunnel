@@ -41,7 +41,7 @@
             </Grid>
             <ListBox Grid.Row="1"
                      ItemsSource="{Binding Servers}"
-                     x:Name="Servers"
+                     x:Name="ServerList"
                      SelectedValue="{Binding Path=SelectedServer,
                                              Mode=TwoWay}">
                 <ListBox.ItemTemplate>
@@ -94,7 +94,7 @@
                                        Padding="0 0 8 0"
                                        VerticalAlignment="Center" />
                             <Button Command="{Binding UnassignCommand}"
-                                    CommandParameter="{Binding ElementName=Servers,
+                                    CommandParameter="{Binding ElementName=ServerList,
                                                                Path=SelectedValue}"
                                     FontSize="20"
                                     Classes="h1"
@@ -136,7 +136,7 @@
                                        Padding="0 0 8 0"
                                        VerticalAlignment="Center" />
                             <Button Command="{Binding AssignCommand}"
-                                    CommandParameter="{Binding ElementName=Servers,
+                                    CommandParameter="{Binding ElementName=ServerList,
                                                                Path=SelectedValue}"
                                     FontSize="20"
                                     Classes="h1"

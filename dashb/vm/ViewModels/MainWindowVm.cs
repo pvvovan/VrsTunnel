@@ -115,7 +115,7 @@ public partial class MainWindowVm : ObservableObject
 
 
     [ObservableProperty]
-    private ObservableCollection<NtripServerVm> _servers = [];
+    public partial ObservableCollection<NtripServerVm> Servers { get; set; }
 
     private void RemoveServer(object? param)
     {
@@ -150,7 +150,7 @@ public partial class MainWindowVm : ObservableObject
 
 
     [ObservableProperty]
-    private ObservableCollection<NtripClientVm> _clients = [];
+    public partial ObservableCollection<NtripClientVm> Clients { get; set; }
 
     private void RemoveClient(object? param)
     {

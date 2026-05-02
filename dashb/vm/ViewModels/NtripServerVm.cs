@@ -10,7 +10,8 @@ public partial class NtripServerVm : UserVm
         RelayCommand<NtripServerVm> removeCmd,
         Models.NtripServer? model)
     {
-        _removeCmd = removeCmd;
+        Clients = [];
+        RemoveCmd = removeCmd;
         Model = model;
         if (Model is not null)
         {
@@ -22,8 +23,8 @@ public partial class NtripServerVm : UserVm
     public readonly Models.NtripServer? Model;
 
     [ObservableProperty]
-    private ObservableCollection<NtripClientVm> _clients = [];
+    public partial ObservableCollection<NtripClientVm> Clients { get; set; }
 
     [ObservableProperty]
-    private RelayCommand<NtripServerVm> _removeCmd;
+    public partial RelayCommand<NtripServerVm> RemoveCmd { get; set; }
 }

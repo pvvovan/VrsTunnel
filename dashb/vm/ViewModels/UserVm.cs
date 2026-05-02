@@ -42,5 +42,5 @@ public partial class UserVm : ObservableObject
     }
 
     [ObservableProperty]
-    private RelayCommand<UserVm>? _editCmd;
+    public partial RelayCommand<UserVm>? EditCmd { get; set; }
 }

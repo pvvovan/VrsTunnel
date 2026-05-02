@@ -19,10 +19,10 @@ public partial class InputVm : ObservableObject
     }
 
     [ObservableProperty]
-    private UserVm? _user;
+    public partial UserVm? User { get; set; }
 
     [ObservableProperty]
-    private RelayCommand? _OkCmd;
+    public partial RelayCommand? OkCmd { get; set; }
 
     private bool _CanOkExecute = false;
     public bool CanOkExecute()

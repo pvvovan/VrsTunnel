@@ -53,7 +53,7 @@ public class UnitTestVm(ExclusiveJsonConfig exclusiveJsonConfig) : IClassFixture
         mainVm.Clients.Clear();
 
         dialogStub.InputName = "Client0";
-        mainVm.AddClientCmd.Execute(null);
+        mainVm.AddClientCommand.Execute(null);
         await Task.Delay(100);
 
         Assert.Single(mainVm.Clients);
@@ -61,14 +61,14 @@ public class UnitTestVm(ExclusiveJsonConfig exclusiveJsonConfig) : IClassFixture
         mainVm.Clients[0].RemoveCmd.Execute(mainVm.Clients[0]);
 
         dialogStub.InputName = "inputName";
-        mainVm.AddServerCmd.Execute(null);
+        mainVm.AddServerCommand.Execute(null);
         Assert.Equal("inputName", mainVm.Servers[0].Name);
 
-        mainVm.AddClientCmd.Execute(null);
+        mainVm.AddClientCommand.Execute(null);
         Assert.Equal("inputName", mainVm.Clients[0].Name);
 
         dialogStub.InputName = "Client1";
-        mainVm.AddClientCmd.Execute(null);
+        mainVm.AddClientCommand.Execute(null);
         Assert.Equal("Client1", mainVm.Clients[1].Name);
 
         mainVm.SelectedServer = mainVm.Servers[0];
@@ -103,7 +103,7 @@ public class UnitTestVm(ExclusiveJsonConfig exclusiveJsonConfig) : IClassFixture
         mainVm = new(dialogStub, new vm.DAL.JsonConfig());
         await Task.Delay(500);
         dialogStub.InputName = "Client0";
-        mainVm.AddClientCmd.Execute(null);
+        mainVm.AddClientCommand.Execute(null);
         await Task.Delay(100);
         Assert.Equal("Client0", mainVm.Clients[1].Name);
         Assert.Equal("Server2", mainVm.Servers[0].Name);

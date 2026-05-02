@@ -58,7 +58,7 @@ public partial class MainWindow : Window, IDialog
 
     private Avalonia.Point dragPos;
     private bool dragStared;
-    private PointerPressedEventArgs dragArgs;
+    private PointerPressedEventArgs? dragArgs;
 
     private async void Clients_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
@@ -80,7 +80,7 @@ public partial class MainWindow : Window, IDialog
                     DataTransferItem dragItem = new();
                     dragItem.Set(dragFormat, (sender as Control)?.DataContext as NtripClientVm);
                     dragData.Add(dragItem);
-                    await DragDrop.DoDragDropAsync(dragArgs, dragData, DragDropEffects.Copy | DragDropEffects.Move);
+                    await DragDrop.DoDragDropAsync(dragArgs!, dragData, DragDropEffects.Copy | DragDropEffects.Move);
                 }
             }
         }

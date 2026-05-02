@@ -115,6 +115,7 @@
                         <StackPanel Orientation="Horizontal"
                                     VerticalAlignment="Center"
                                     PointerPressed="Clients_OnPointerPressed"
+                                    PointerMoved="Clients_OnPointerMoved"
                                     Background="Transparent">
                             <TextBlock Text="{Binding Name}"
                                        FontSize="16"

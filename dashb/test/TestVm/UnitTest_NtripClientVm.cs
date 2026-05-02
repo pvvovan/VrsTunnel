@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using vm.Models;
 using vm.ViewModels;
@@ -14,7 +15,7 @@ public class UnitTestVm(ExclusiveJsonConfig exclusiveJsonConfig) : IClassFixture
     {
         NtripServer server = new("Server 1", "Pw1", Guid.NewGuid(), null);
         RelayCommand<NtripServerVm> stubCmd = new(p => { });
-        NtripServerVm serverVm = new(stubCmd, server);
+        NtripServerVm serverVm = new(server);
         Assert.Equal(serverVm.Name, server.Name);
     }
 
@@ -23,7 +24,7 @@ public class UnitTestVm(ExclusiveJsonConfig exclusiveJsonConfig) : IClassFixture
     {
         NtripClient client = new("Client 1", "Pw1", Guid.NewGuid());
         RelayCommand<NtripClientVm> stubCmd = new(p => { });
-        NtripClientVm clientVm = new(stubCmd, client);
+        NtripClientVm clientVm = new(client);
         Assert.Equal(clientVm.Name, client.Name);
     }
 
@@ -59,7 +60,7 @@ public class UnitTestVm(ExclusiveJsonConfig exclusiveJsonConfig) : IClassFixture
 
         Assert.Single(mainVm.Clients);
         Assert.Equal("Client0", mainVm.Clients[0].Name);
-        mainVm.Clients[0].RemoveCmd.Execute(mainVm.Clients[0]);
+        mainVm.Clients[0].RemoveCommand.Execute(new ReadOnlyCollection<object>([mainVm.Servers, mainVm.Clients]));
 
         dialogStub.InputName = "inputName";
         mainVm.AddServerCommand.Execute(null);
@@ -80,7 +81,7 @@ public class UnitTestVm(ExclusiveJsonConfig exclusiveJsonConfig) : IClassFixture
 
         mainVm.Clients[1].AssignCommand.Execute(mainVm.SelectedServer);
         Assert.Single(mainVm.AssignedClients);
-        mainVm.Clients[1].RemoveCmd.Execute(mainVm.Clients[1]);
+        mainVm.Clients[1].RemoveCommand.Execute(new ReadOnlyCollection<object>([mainVm.Servers, mainVm.Clients]));
         Assert.Empty(mainVm.AssignedClients);
 
         dialogStub.InputName = "Server2";
@@ -110,9 +111,9 @@ public class UnitTestVm(ExclusiveJsonConfig exclusiveJsonConfig) : IClassFixture
         Assert.Equal("Server2", mainVm.Servers[0].Name);
         Assert.Equal("Client2", mainVm.Clients[0].Name);
 
-        mainVm.Clients[0].RemoveCmd.Execute(mainVm.Clients[0]);
-        mainVm.Clients[0].RemoveCmd.Execute(mainVm.Clients[0]);
-        mainVm.Servers[0].RemoveCmd.Execute(mainVm.Servers[0]);
+        mainVm.Clients[0].RemoveCommand.Execute(new ReadOnlyCollection<object>([mainVm.Servers, mainVm.Clients]));
+        mainVm.Clients[0].RemoveCommand.Execute(new ReadOnlyCollection<object>([mainVm.Servers, mainVm.Clients]));
+        mainVm.Servers[0].RemoveCommand.Execute(mainVm.Servers);
         Assert.Empty(mainVm.Clients);
         Assert.Empty(mainVm.Servers);
         await mainVm.StoreConfig();

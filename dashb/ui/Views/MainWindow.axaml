@@ -147,11 +147,19 @@
                                     FontSize="20"
                                     Classes="h1"
                                     Content="&#x1F589;" />
-                            <Button Command="{Binding RemoveCmd}"
-                                    CommandParameter="{Binding}"
+                            <Button Command="{Binding RemoveCommand}"
                                     FontSize="20"
                                     Classes="h1"
-                                    Content="&#9003;" />
+                                    Content="&#9003;">
+                                <Button.CommandParameter>
+                                    <MultiBinding>
+                                        <Binding Path="((vm:MainWindowVm)DataContext).Servers"
+                                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBox}}" />
+                                        <Binding Path="((vm:MainWindowVm)DataContext).Clients"
+                                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBox}}" />
+                                    </MultiBinding>
+                                </Button.CommandParameter>
+                            </Button>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

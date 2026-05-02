@@ -1,15 +1,12 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace vm.ViewModels;
 
 public partial class NtripClientVm : UserVm
 {
-    public NtripClientVm(
-        RelayCommand<NtripClientVm> removeCmd,
-        Models.NtripClient? model)
+    public NtripClientVm(Models.NtripClient? model)
     {
-        RemoveCmd = removeCmd;
         Model = model;
         if (Model is not null)
         {
@@ -19,10 +16,6 @@ public partial class NtripClientVm : UserVm
     }
 
     public readonly Models.NtripClient? Model;
-
-    [ObservableProperty]
-    public partial RelayCommand<NtripClientVm> RemoveCmd { get; set; }
-
 
     [RelayCommand]
     private void Assign(NtripServerVm? server)
@@ -37,5 +30,20 @@ public partial class NtripClientVm : UserVm
     private void Unassign(NtripServerVm? server)
     {
         server?.Clients.Remove(this);
+    }
+
+    [RelayCommand]
+    private void Remove(ReadOnlyCollection<object> objs)
+    {
+        var servers = (ObservableCollection<NtripServerVm>)objs[0];
+        var clients = (ObservableCollection<NtripClientVm>)objs[1];
+        clients.Remove(this);
+        foreach (var srv in servers)
+        {
+            while (srv.Clients.Contains(this))
+            {
+                srv.Clients.Remove(this);
+            }
+        }
     }
 }

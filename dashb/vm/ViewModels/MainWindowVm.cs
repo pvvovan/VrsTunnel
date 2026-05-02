@@ -80,7 +80,7 @@ public partial class MainWindowVm : ObservableObject
             Clients.Clear();
             foreach (var cl in cfgClients)
             {
-                NtripClientVm clVm = new(new(RemoveClient), cl)
+                NtripClientVm clVm = new(cl)
                 {
                     EditCmd = _editClientCmd
                 };
@@ -144,27 +144,12 @@ public partial class MainWindowVm : ObservableObject
     [ObservableProperty]
     public partial ObservableCollection<NtripClientVm> Clients { get; set; }
 
-    private void RemoveClient(object? param)
-    {
-        if (param is not null && param is NtripClientVm client)
-        {
-            Clients.Remove(client);
-            foreach (var srv in Servers)
-            {
-                while (srv.Clients.Contains(client))
-                {
-                    srv.Clients.Remove(client);
-                }
-            }
-        }
-    }
-
     private NtripClientVm? _clientToAdd;
 
     [RelayCommand]
     private void AddClient()
     {
-        _clientToAdd = new(new(RemoveClient), null);
+        _clientToAdd = new(null);
         _inputVm = new InputVm()
         {
             User = _clientToAdd
@@ -207,7 +192,7 @@ public partial class MainWindowVm : ObservableObject
     private void EditClient(object? param)
     {
         _clientToEdit = (NtripClientVm)param!;
-        _editedClient = new(new(RemoveClient), null)
+        _editedClient = new(null)
         {
             Name = _clientToEdit.Name,
             PasswordHash = _clientToEdit.PasswordHash

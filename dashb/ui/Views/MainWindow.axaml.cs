@@ -53,8 +53,7 @@ public partial class MainWindow : Window, IDialog
         return "";
     }
 
-    private static readonly DataFormat<NtripClientVm> dragFormat =
-        DataFormat.CreateInProcessFormat<NtripClientVm>("myid");
+    private static readonly DataFormat<NtripClientVm> dragFormat = DataFormat.CreateInProcessFormat<NtripClientVm>("i");
 
     private Avalonia.Point dragPos;
     private bool aboutToDrag = false;

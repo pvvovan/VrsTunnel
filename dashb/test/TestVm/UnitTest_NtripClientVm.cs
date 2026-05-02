@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using System.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using vm.Models;
 using vm.ViewModels;
 
@@ -31,7 +32,7 @@ public class UnitTestVm(ExclusiveJsonConfig exclusiveJsonConfig) : IClassFixture
     {
         InputVm inputVm = new();
         inputVm.Close();
-        inputVm.User_PropertyChanged(null, new System.ComponentModel.PropertyChangedEventArgs(""));
+        inputVm.User_PropertyChanged(null, new PropertyChangedEventArgs(""));
         Assert.False(inputVm.CanOkExecute());
 
         var wnd = new WndMock()

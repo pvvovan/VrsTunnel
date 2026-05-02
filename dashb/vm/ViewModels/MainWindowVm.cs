@@ -70,8 +70,6 @@ public partial class MainWindowVm : ObservableObject
         AddClientCmd = new(AddClient);
         _editClientCmd = new(EditClient);
         _editServerCmd = new(EditServer);
-        _SaveCmd = new(Save);
-        _OpenCmd = new(Open);
         _dialog = dialog;
         _config = config;
         Clients = [];
@@ -293,18 +291,14 @@ public partial class MainWindowVm : ObservableObject
         _inputVm?.Close();
     }
 
-    [ObservableProperty]
-    private AsyncRelayCommand _SaveCmd;
-
+    [RelayCommand]
     private async Task Save()
     {
         string file = await _dialog.Save();
         await StoreConfig(file);
     }
 
-    [ObservableProperty]
-    private AsyncRelayCommand _OpenCmd;
-
+    [RelayCommand]
     private async Task Open()
     {
         string file = await _dialog.Open();

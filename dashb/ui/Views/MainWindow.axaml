@@ -25,8 +25,8 @@
                   ColumnDefinitions="Auto,*">
                 <Menu Grid.Column="0">
                     <MenuItem Header="File">
-                        <MenuItem Header="Open" Command="{Binding OpenCmd}" />
-                        <MenuItem Header="Save" Command="{Binding SaveCmd}" />
+                        <MenuItem Header="Open" Command="{Binding OpenCommand}" />
+                        <MenuItem Header="Save" Command="{Binding SaveCommand}" />
                     </MenuItem>
                 </Menu>
                 <StackPanel Grid.Column="1"

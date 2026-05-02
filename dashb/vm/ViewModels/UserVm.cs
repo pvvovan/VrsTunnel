@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace vm.ViewModels;
 
-public partial class UserVm : ObservableObject
+public abstract partial class UserVm : ObservableObject
 {
     private void UpdatePasswordHash()
     {

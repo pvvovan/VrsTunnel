@@ -90,7 +90,7 @@ public partial class MainWindowVm : ObservableObject
             Servers.Clear();
             foreach (var sv in cfgServers)
             {
-                NtripServerVm svVm = new(new(RemoveServer), sv)
+                NtripServerVm svVm = new(sv)
                 {
                     EditCmd = _editServerCmd
                 };
@@ -117,20 +117,12 @@ public partial class MainWindowVm : ObservableObject
     [ObservableProperty]
     public partial ObservableCollection<NtripServerVm> Servers { get; set; }
 
-    private void RemoveServer(object? param)
-    {
-        if (param is not null && param is NtripServerVm server)
-        {
-            Servers.Remove(server);
-        }
-    }
-
     private NtripServerVm? _serverToAdd;
 
     [RelayCommand]
     private void AddServer()
     {
-        _serverToAdd = new(new(RemoveServer), null);
+        _serverToAdd = new(null);
         _inputVm = new InputVm()
         {
             User = _serverToAdd
@@ -245,7 +237,7 @@ public partial class MainWindowVm : ObservableObject
     private void EditServer(object? param)
     {
         _serverToEdit = (NtripServerVm)param!;
-        _editedServer = new(new(RemoveServer), null)
+        _editedServer = new(null)
         {
             Name = _serverToEdit.Name,
             PasswordHash = _serverToEdit.PasswordHash

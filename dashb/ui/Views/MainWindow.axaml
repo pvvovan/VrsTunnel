@@ -61,9 +61,10 @@
                                     FontSize="20"
                                     Classes="h1"
                                     Content="&#x1F589;" />
-                            <Button Command="{Binding RemoveCmd}"
+                            <Button Command="{Binding RemoveCommand}"
                                     FontSize="20"
-                                    CommandParameter="{Binding}"
+                                    CommandParameter="{Binding Path=((vm:MainWindowVm)DataContext).Servers,
+                                                       RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
                                     Classes="h1"
                                     Content="&#9003;" />
                         </StackPanel>

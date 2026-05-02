@@ -6,12 +6,9 @@ namespace vm.ViewModels;
 
 public partial class NtripServerVm : UserVm
 {
-    public NtripServerVm(
-        RelayCommand<NtripServerVm> removeCmd,
-        Models.NtripServer? model)
+    public NtripServerVm(Models.NtripServer? model)
     {
         Clients = [];
-        RemoveCmd = removeCmd;
         Model = model;
         if (Model is not null)
         {
@@ -25,6 +22,9 @@ public partial class NtripServerVm : UserVm
     [ObservableProperty]
     public partial ObservableCollection<NtripClientVm> Clients { get; set; }
 
-    [ObservableProperty]
-    public partial RelayCommand<NtripServerVm> RemoveCmd { get; set; }
+    [RelayCommand]
+    private void Remove(ObservableCollection<NtripServerVm> servers)
+    {
+        servers.Remove(this);
+    }
 }

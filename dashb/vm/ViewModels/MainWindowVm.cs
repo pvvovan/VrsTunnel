@@ -66,8 +66,6 @@ public partial class MainWindowVm : ObservableObject
 
     public MainWindowVm(IDialog dialog, Models.IConfig config)
     {
-        AddServerCmd = new(AddServer);
-        AddClientCmd = new(AddClient);
         _editClientCmd = new(EditClient);
         _editServerCmd = new(EditServer);
         _dialog = dialog;
@@ -127,10 +125,9 @@ public partial class MainWindowVm : ObservableObject
         }
     }
 
-    [ObservableProperty]
-    private RelayCommand _addServerCmd;
-
     private NtripServerVm? _serverToAdd;
+
+    [RelayCommand]
     private void AddServer()
     {
         _serverToAdd = new(new(RemoveServer), null);
@@ -170,10 +167,9 @@ public partial class MainWindowVm : ObservableObject
         }
     }
 
-    [ObservableProperty]
-    private RelayCommand _addClientCmd;
-
     private NtripClientVm? _clientToAdd;
+
+    [RelayCommand]
     private void AddClient()
     {
         _clientToAdd = new(new(RemoveClient), new(AssignClient), new(UnassignClient), null);

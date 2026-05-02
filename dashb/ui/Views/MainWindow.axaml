@@ -35,7 +35,7 @@
                     <TextBlock Text="Ntrip servers"
                                FontWeight="Bold"
                                Padding="10 5 10 0" />
-                    <Button Command="{Binding AddServerCmd}"
+                    <Button Command="{Binding AddServerCommand}"
                             Content="Add new server" />
                 </StackPanel>
             </Grid>
@@ -91,12 +91,22 @@
             </ListBox>
         </Grid>
 
-        <GridSplitter Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Background="Gray"></GridSplitter>
+        <GridSplitter Grid.Row="0"
+                      Grid.Column="1"
+                      Grid.RowSpan="3"
+                      Background="Gray" />
 
-        <Grid Grid.Row="0" Grid.Column="2" Grid.RowSpan="3" RowDefinitions="Auto,*">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBlock Text="Ntrip clients" FontWeight="Bold" Padding="10 5 10 0"></TextBlock>
-                <Button Command="{Binding AddClientCmd}">Add new client</Button>
+        <Grid Grid.Row="0"
+              Grid.Column="2"
+              Grid.RowSpan="3"
+              RowDefinitions="Auto,*">
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+                <TextBlock Text="Ntrip clients"
+                           FontWeight="Bold"
+                           Padding="10 5 10 0" />
+                <Button Command="{Binding AddClientCommand}"
+                        Content="Add new client" />
             </StackPanel>
             <ListBox ItemsSource="{Binding Clients}"
                      Grid.Row="1">

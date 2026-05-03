@@ -8,6 +8,14 @@ public partial class InputVm : ObservableObject
 {
     public IWnd? Wnd;
 
+    public InputVm(UserVm user, RelayCommand<UserVm> editCmd, Action okAction)
+    {
+        User = user;
+        User.EditCmd= editCmd;
+        User.PropertyChanged += User_PropertyChanged;
+        OkCmd = new(okAction, CanOkExecute);
+    }
+
     public void User_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         _CanOkExecute = User is not null && User.Name.Length > 0;
@@ -17,6 +25,7 @@ public partial class InputVm : ObservableObject
     public void Close()
     {
         Wnd?.Close();
+        User?.PropertyChanged -= User_PropertyChanged;
     }
 
     [ObservableProperty]

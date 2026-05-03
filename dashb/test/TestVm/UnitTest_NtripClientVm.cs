@@ -31,7 +31,7 @@ public class UnitTestVm(ExclusiveJsonConfig exclusiveJsonConfig) : IClassFixture
     [Fact]
     public void Test_InputVm()
     {
-        InputVm inputVm = new();
+        InputVm inputVm = new(new NtripServerVm(null), new RelayCommand<UserVm>((_)=>{}), ()=>{});
         inputVm.Close();
         inputVm.User_PropertyChanged(null, new PropertyChangedEventArgs(""));
         Assert.False(inputVm.CanOkExecute());

@@ -6,7 +6,9 @@ namespace vm.ViewModels;
 
 public partial class MainWindowVm : ObservableObject
 {
+    private InputVm? _inputVm;
     private readonly Models.IConfig _config;
+    private readonly IDialog _dialog;
     readonly Action<Task<(IQueryable<Models.NtripClient> clients, IQueryable<Models.NtripServer> servers)>> _loadAction;
 
     public async Task StoreConfig(string file = "")
@@ -60,10 +62,6 @@ public partial class MainWindowVm : ObservableObject
         await _config.StoreAsync(cls.AsQueryable(), srs.AsQueryable());
     }
 
-
-
-    private readonly IDialog _dialog;
-
     public MainWindowVm(IDialog dialog, Models.IConfig config)
     {
         _editClientCmd = new(EditClient);
@@ -110,10 +108,6 @@ public partial class MainWindowVm : ObservableObject
         _config.LoadAsync().ContinueWith(_loadAction);
     }
 
-
-    private InputVm? _inputVm;
-
-
     [ObservableProperty]
     public partial ObservableCollection<NtripServerVm> Servers { get; set; }
 
@@ -123,19 +117,12 @@ public partial class MainWindowVm : ObservableObject
     private void AddServer()
     {
         _serverToAdd = new(null);
-        _inputVm = new InputVm()
-        {
-            User = _serverToAdd
-        };
-        _inputVm.User.EditCmd = _editServerCmd;
-        _inputVm.User.PropertyChanged += _inputVm.User_PropertyChanged;
-        _inputVm.OkCmd = new(AddServerFromInput, _inputVm.CanOkExecute);
+        _inputVm = new InputVm(_serverToAdd, _editServerCmd, AddServerFromInput);
         _dialog.Show(_inputVm);
     }
 
     private void AddServerFromInput()
     {
-        _inputVm!.User!.PropertyChanged -= _inputVm.User_PropertyChanged;
         Servers.Add(_serverToAdd!);
         _inputVm?.Close();
     }
@@ -150,19 +137,12 @@ public partial class MainWindowVm : ObservableObject
     private void AddClient()
     {
         _clientToAdd = new(null);
-        _inputVm = new InputVm()
-        {
-            User = _clientToAdd
-        };
-        _inputVm.User.EditCmd = _editClientCmd;
-        _inputVm.User.PropertyChanged += _inputVm.User_PropertyChanged;
-        _inputVm.OkCmd = new(AddClientFromInput, _inputVm.CanOkExecute);
+        _inputVm = new InputVm(_clientToAdd, _editClientCmd, AddClientFromInput);
         _dialog.Show(_inputVm);
     }
 
     private void AddClientFromInput()
     {
-        _inputVm!.User!.PropertyChanged -= _inputVm.User_PropertyChanged;
         Clients.Add(_clientToAdd!);
         _inputVm?.Close();
     }
@@ -197,13 +177,7 @@ public partial class MainWindowVm : ObservableObject
             Name = _clientToEdit.Name,
             PasswordHash = _clientToEdit.PasswordHash
         };
-        _inputVm = new InputVm()
-        {
-            User = _editedClient
-        };
-        _inputVm.User.EditCmd = _editClientCmd;
-        _inputVm.User.PropertyChanged += _inputVm.User_PropertyChanged;
-        _inputVm.OkCmd = new(EditClientFromInput, _inputVm.CanOkExecute);
+        _inputVm = new InputVm(_editedClient, _editClientCmd, EditClientFromInput);
         _dialog.Show(_inputVm);
     }
 
@@ -211,7 +185,6 @@ public partial class MainWindowVm : ObservableObject
     {
         _clientToEdit!.Name = _editedClient!.Name;
         _clientToEdit!.PasswordHash = _editedClient!.PasswordHash;
-        _inputVm!.User!.PropertyChanged -= _inputVm.User_PropertyChanged;
         _inputVm?.Close();
     }
 
@@ -227,13 +200,7 @@ public partial class MainWindowVm : ObservableObject
             Name = _serverToEdit.Name,
             PasswordHash = _serverToEdit.PasswordHash
         };
-        _inputVm = new InputVm()
-        {
-            User = _editedServer
-        };
-        _inputVm.User.EditCmd = _editServerCmd;
-        _inputVm.User.PropertyChanged += _inputVm.User_PropertyChanged;
-        _inputVm.OkCmd = new(EditServerFromInput, _inputVm.CanOkExecute);
+        _inputVm = new InputVm(_editedServer, _editServerCmd, EditServerFromInput);
         _dialog.Show(_inputVm);
     }
 
@@ -241,7 +208,6 @@ public partial class MainWindowVm : ObservableObject
     {
         _serverToEdit!.Name = _editedServer!.Name;
         _serverToEdit!.PasswordHash = _editedServer!.PasswordHash;
-        _inputVm!.User!.PropertyChanged -= _inputVm.User_PropertyChanged;
         _inputVm?.Close();
     }
 

@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using vm.Models;
 
 namespace vm.ViewModels;
 
@@ -45,35 +46,25 @@ public partial class MainWindowVm : ObservableObject
         _loadAction = cfg =>
         {
             var (cfgClients, cfgServers) = cfg.Result;
-
-            _dispatcher.Invoke(() => Clients.Clear());
-            foreach (var cl in cfgClients)
+            _dispatcher.Invoke(() =>
             {
-                NtripClientVm clVm = new(cl)
-                {
-                    EditCmd = _editClientCmd
-                };
-                _dispatcher.Invoke(() => Clients.Add(clVm));
-            }
+                _dispatcher.Invoke(() =>
+                    Clients = [.. cfgClients.Select(c => new NtripClientVm(c) { EditCmd = _editClientCmd })]);
 
-            _dispatcher.Invoke(() => Servers.Clear());
-            foreach (var sv in cfgServers)
-            {
-                NtripServerVm svVm = new(sv)
+                Servers.Clear();
+                foreach (NtripServer server in cfgServers)
                 {
-                    EditCmd = _editServerCmd
-                };
-                if (sv.Clients is not null)
-                {
-                    foreach (var assignedCl in sv.Clients)
+                    NtripServerVm serverVm = new(server)
                     {
-                        svVm.Clients.Add((from cl in Clients
-                                          where cl.Model is not null && cl.Model.Id == assignedCl
-                                          select cl).First());
+                        EditCmd = _editServerCmd,
+                    };
+                    foreach (Guid clientId in server.Clients)
+                    {
+                        Clients.First(c => c.Model.Id == clientId).AssignCommand.Execute(serverVm);
                     }
+                    Servers.Add(serverVm);
                 }
-                _dispatcher.Invoke(() => Servers.Add(svVm));
-            }
+            });
         };
 
         _config.LoadAsync().ContinueWith(_loadAction);
@@ -125,9 +116,9 @@ public partial class MainWindowVm : ObservableObject
 
 
     private NtripServerVm? _selectedServer;
-    public NtripServerVm SelectedServer
+    public NtripServerVm? SelectedServer
     {
-        get => _selectedServer!;
+        get => _selectedServer;
         set
         {
             SetProperty(ref _selectedServer, value);

@@ -23,8 +23,8 @@ public partial class NtripServerVm : UserVm
     public partial ObservableCollection<NtripClientVm> Clients { get; set; } = [];
 
     [RelayCommand]
-    private void Remove(ObservableCollection<NtripServerVm> servers)
+    private void Remove(ObservableCollection<NtripServerVm>? servers)
     {
-        servers.Remove(this);
+        servers?.Remove(this);
     }
 }

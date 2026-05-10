@@ -57,7 +57,7 @@
                                        Padding="0 0 8 0"
                                        VerticalAlignment="Center" />
                             <Button Command="{Binding EditCmd}"
-                                    CommandParameter="{Binding}"
+                                    CommandParameter="{Binding .}"
                                     FontSize="20"
                                     Classes="h1"
                                     Content="&#x1F589;" />
@@ -125,7 +125,7 @@
                                    Padding="0 0 8 0"
                                    VerticalAlignment="Center" />
                         <Button Command="{Binding EditCmd}"
-                                CommandParameter="{Binding}"
+                                CommandParameter="{Binding .}"
                                 FontSize="20"
                                 Classes="h1"
                                 Content="&#x1F589;" />
@@ -145,8 +145,10 @@
                                     Padding="0 0 8 0"
                                     VerticalAlignment="Center" />
                         <Button Command="{Binding UnassignCommand}"
-                                CommandParameter="{Binding Path=((vm:MainWindowVm)DataContext).SelectedServer,
-                                                   RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}"
+                                CommandParameter="{Binding Path=Parent?.DataContext,
+                                                   RelativeSource={RelativeSource Mode=FindAncestor,
+                                                                                  AncestorType={x:Type TreeViewItem},
+                                                                                  AncestorLevel=1}}"
                                 FontSize="20"
                                 Classes="h1"
                                 Content="&#9003;" />
@@ -187,12 +189,12 @@
                                        VerticalAlignment="Center" />
                             <Button Command="{Binding AssignCommand}"
                                     CommandParameter="{Binding Path=((vm:MainWindowVm)DataContext).SelectedServer,
-                                                       RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}"
+                                                       RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
                                     FontSize="20"
                                     Classes="h1"
                                     Content="&#x1F517;" />
                             <Button Command="{Binding EditCmd}"
-                                    CommandParameter="{Binding}"
+                                    CommandParameter="{Binding .}"
                                     FontSize="20"
                                     Classes="h1"
                                     Content="&#x1F589;" />
@@ -202,9 +204,9 @@
                                     Content="&#9003;">
                                 <Button.CommandParameter>
                                     <MultiBinding>
-                                        <Binding Path="((vm:MainWindowVm)DataContext).Servers"
+                                        <Binding Path="((vm:MainWindowVm)DataContext)?.Servers"
                                                  RelativeSource="{RelativeSource AncestorType={x:Type ListBox}}" />
-                                        <Binding Path="((vm:MainWindowVm)DataContext).Clients"
+                                        <Binding Path="((vm:MainWindowVm)DataContext)?.Clients"
                                                  RelativeSource="{RelativeSource AncestorType={x:Type ListBox}}" />
                                     </MultiBinding>
                                 </Button.CommandParameter>

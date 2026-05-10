@@ -1,28 +1,35 @@
-﻿using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
+using vm.Models;
 
 namespace vm.ViewModels;
 
 public partial class NtripClientVm : UserVm
 {
-    public NtripClientVm(Models.NtripClient? model)
+    [SetsRequiredMembers]
+    public NtripClientVm() : base()
     {
-        Model = model;
-        if (Model is not null)
-        {
-            Name = Model.Name;
-            PasswordHash = Model.PasswordHash;
-        }
+        Model = new NtripClient() { Id = Guid.NewGuid() };
     }
 
-    public readonly Models.NtripClient? Model;
+    [SetsRequiredMembers]
+    public NtripClientVm(NtripClient model) : base()
+    {
+        Model = model;
+    }
 
     [RelayCommand]
     private void Assign(NtripServerVm? server)
     {
-        if (server is not null && !server.Clients.Contains(this))
+        if (server is not null && !server.Clients.Any(c => c.Model.Id == this.Model.Id))
         {
-            server.Clients.Add(this);
+            server.Clients.Add(new(new NtripClient()
+            {
+                Name = this.Name,
+                PasswordHash = this.PasswordHash,
+                Id = Model.Id
+            }));
         }
     }
 
@@ -40,9 +47,10 @@ public partial class NtripClientVm : UserVm
         clients.Remove(this);
         foreach (var srv in servers)
         {
-            while (srv.Clients.Contains(this))
+            NtripClientVm? cl = srv.Clients.FirstOrDefault(c => c.Model.Id == this.Model.Id);
+            if (cl is not null)
             {
-                srv.Clients.Remove(this);
+                srv.Clients.Remove(cl);
             }
         }
     }

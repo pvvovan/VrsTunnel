@@ -22,9 +22,9 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow();
-            var mainVm = new MainWindowVm((IDialog)desktop.MainWindow, new JsonConfig());
+            var mainVm = new MainWindowVm((IDialog)desktop.MainWindow, new JsonConfig(), this.Dispatcher);
             desktop.MainWindow.DataContext = mainVm;
-            Task storeTask = new(() => mainVm.StoreConfig().Wait());
+            Task storeTask = new(() => mainVm.StoreConfig(string.Empty).Wait());
             desktop.MainWindow.Closing += (_, _) =>
             {
                 storeTask.Start();

@@ -1,3 +1,6 @@
 namespace vm.Models;
 
-public record class NtripServer(string Name, string PasswordHash, Guid Id, List<Guid>? Clients);
+public class NtripServer : NtripUser
+{
+    public List<Guid> Clients { get; set; } = [];
+}

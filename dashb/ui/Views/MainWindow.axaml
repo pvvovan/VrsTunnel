@@ -35,11 +35,11 @@
                     <TextBlock Text="Ntrip servers"
                                FontWeight="Bold"
                                Padding="10 5 10 0" />
-                    <Button Command="{Binding AddServerCommand}"
-                            Content="Add new server" />
+                    <Button Command="{Binding CreateServerCommand}"
+                            Content="Create server" />
                 </StackPanel>
             </Grid>
-            <ListBox Grid.Row="1"
+            <!--<ListBox Grid.Row="1"
                      ItemsSource="{Binding Servers}"
                      x:Name="ServerList"
                      SelectedValue="{Binding Path=SelectedServer,
@@ -70,14 +70,14 @@
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
-            </ListBox>
+            </ListBox>-->
         </Grid>
 
         <GridSplitter Grid.Row="1"
                       Grid.Column="0"
                       Background="Gray" />
 
-        <Grid Grid.Row="2"
+        <!--<Grid Grid.Row="2"
               Grid.Column="0"
               RowDefinitions="Auto,*">
             <TextBlock Text="Assigned Ntrip clients"
@@ -104,7 +104,56 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-        </Grid>
+        </Grid>-->
+
+        <TreeView ItemsSource="{Binding Servers}"
+                  Grid.Row="2"
+                  Grid.Column="0"
+                  SelectedItem="{Binding Path=SelectedServer,
+                                         Mode=TwoWay}">
+            <TreeView.DataTemplates>
+                <TreeDataTemplate DataType="vm:NtripServerVm"
+                                  ItemsSource="{Binding Clients}">
+                    <StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Center"
+                                DragDrop.AllowDrop="True"
+                                DragDrop.DragOver="Servers_OnDragOver"
+                                DragDrop.Drop="Servers_OnDrop"
+                                Background="Transparent">
+                        <TextBlock Text="{Binding Name}"
+                                   FontSize="16"
+                                   Padding="0 0 8 0"
+                                   VerticalAlignment="Center" />
+                        <Button Command="{Binding EditCmd}"
+                                CommandParameter="{Binding}"
+                                FontSize="20"
+                                Classes="h1"
+                                Content="&#x1F589;" />
+                        <Button Command="{Binding RemoveCommand}"
+                                FontSize="20"
+                                CommandParameter="{Binding Path=((vm:MainWindowVm)DataContext).Servers,
+                                                   RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}"
+                                Classes="h1"
+                                Content="&#9003;" />
+                    </StackPanel>
+                </TreeDataTemplate>
+                <DataTemplate DataType="vm:NtripClientVm">
+                    <StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Name}"
+                                    FontSize="16"
+                                    Padding="0 0 8 0"
+                                    VerticalAlignment="Center" />
+                        <Button Command="{Binding UnassignCommand}"
+                                CommandParameter="{Binding Path=((vm:MainWindowVm)DataContext).SelectedServer,
+                                                   RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}"
+                                FontSize="20"
+                                Classes="h1"
+                                Content="&#9003;" />
+                    </StackPanel>
+                </DataTemplate>
+            </TreeView.DataTemplates>
+        </TreeView>
 
         <GridSplitter Grid.Row="0"
                       Grid.Column="1"
@@ -120,8 +169,8 @@
                 <TextBlock Text="Ntrip clients"
                            FontWeight="Bold"
                            Padding="10 5 10 0" />
-                <Button Command="{Binding AddClientCommand}"
-                        Content="Add new client" />
+                <Button Command="{Binding CreateClientCommand}"
+                        Content="Create client" />
             </StackPanel>
             <ListBox ItemsSource="{Binding Clients}"
                      Grid.Row="1">
@@ -137,8 +186,8 @@
                                        Padding="0 0 8 0"
                                        VerticalAlignment="Center" />
                             <Button Command="{Binding AssignCommand}"
-                                    CommandParameter="{Binding ElementName=ServerList,
-                                                               Path=SelectedValue}"
+                                    CommandParameter="{Binding Path=((vm:MainWindowVm)DataContext).SelectedServer,
+                                                       RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}"
                                     FontSize="20"
                                     Classes="h1"
                                     Content="&#x1F517;" />

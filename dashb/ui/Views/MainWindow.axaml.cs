@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -92,7 +93,7 @@ public partial class MainWindow : Window, IDialog
         if (client is not null)
         {
             var server = ((sender as Control)!.DataContext as NtripServerVm)!;
-            if (!server.Clients.Contains(client))
+            if (!server.Clients.AsQueryable().Any(c => c.Model.Id == client.Model.Id))
             {
                 e.DragEffects = DragDropEffects.Copy;
             }

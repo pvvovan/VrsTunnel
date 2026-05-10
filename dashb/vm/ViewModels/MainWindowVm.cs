@@ -6,63 +6,31 @@ namespace vm.ViewModels;
 
 public partial class MainWindowVm : ObservableObject
 {
+    private readonly Dispatcher _dispatcher;
     private InputVm? _inputVm;
     private readonly Models.IConfig _config;
     private readonly IDialog _dialog;
     readonly Action<Task<(IQueryable<Models.NtripClient> clients, IQueryable<Models.NtripServer> servers)>> _loadAction;
 
-    public async Task StoreConfig(string file = "")
+    public async Task StoreConfig(string file)
     {
-        var (oldClients, oldServers) = await _config.LoadAsync(file);
-        var newClients = new Dictionary<NtripClientVm, Guid>();
-
-        List<Models.NtripClient> cls = [];
-        foreach (var cl in Clients)
+        var cls = Clients.Select(c => new Models.NtripClient()
         {
-            var oldCl = (from oc in oldClients
-                         where cl.Model != null && oc.Id == cl.Model.Id
-                         select oc).FirstOrDefault();
-            Guid clId;
-            if (oldCl is null)
-            {
-                clId = Guid.NewGuid();
-                newClients.Add(cl, clId);
-            }
-            else
-            {
-                clId = oldCl.Id;
-            }
-            cls.Add(new Models.NtripClient(cl.Name, cl.PasswordHash, clId));
-        }
-
-        List<Models.NtripServer> srs = [];
-        foreach (var sv in Servers)
+            Name = c.Name,
+            PasswordHash = c.PasswordHash,
+            Id = c.Model.Id
+        });
+        var srs = Servers.Select(s => new Models.NtripServer()
         {
-            var oldSv = (from os in oldServers
-                         where sv.Model != null && os.Id == sv.Model.Id
-                         select os).FirstOrDefault();
-            List<Guid> clIds = [];
-            foreach (var assignCl in sv.Clients)
-            {
-                if (assignCl.Model is not null)
-                {
-                    clIds.Add(assignCl.Model.Id);
-                }
-                else
-                {
-                    clIds.Add(newClients[assignCl]);
-                }
-            }
-            srs.Add(new Models.NtripServer(sv.Name,
-                                           sv.PasswordHash,
-                                           oldSv is not null ? oldSv.Id : Guid.NewGuid(),
-                                           clIds));
-        }
-
-        await _config.StoreAsync(cls.AsQueryable(), srs.AsQueryable());
+            Name = s.Name,
+            PasswordHash = s.PasswordHash,
+            Id = s.Model is null ? Guid.NewGuid() : s.Model.Id,
+            Clients = [..s.Clients.Select(c => c.Model.Id)]
+        });
+        await _config.StoreAsync(cls.AsQueryable(), srs.AsQueryable(), file);
     }
 
-    public MainWindowVm(IDialog dialog, Models.IConfig config)
+    public MainWindowVm(IDialog dialog, Models.IConfig config, Dispatcher dispatcher)
     {
         _editClientCmd = new(EditClient);
         _editServerCmd = new(EditServer);
@@ -70,6 +38,7 @@ public partial class MainWindowVm : ObservableObject
         _config = config;
         Clients = [];
         Servers = [];
+        Servers.CollectionChanged += Servers_CollectionChanged;
 
         _loadAction = cfg =>
         {
@@ -108,15 +77,20 @@ public partial class MainWindowVm : ObservableObject
         _config.LoadAsync().ContinueWith(_loadAction);
     }
 
+    private void Servers_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        e.ToString();
+    }
+
     [ObservableProperty]
     public partial ObservableCollection<NtripServerVm> Servers { get; set; }
 
     private NtripServerVm? _serverToAdd;
 
     [RelayCommand]
-    private void AddServer()
+    private void CreateServer()
     {
-        _serverToAdd = new(null);
+        _serverToAdd = new();
         _inputVm = new InputVm(_serverToAdd, _editServerCmd, AddServerFromInput);
         _dialog.Show(_inputVm);
     }
@@ -134,9 +108,9 @@ public partial class MainWindowVm : ObservableObject
     private NtripClientVm? _clientToAdd;
 
     [RelayCommand]
-    private void AddClient()
+    private void CreateClient()
     {
-        _clientToAdd = new(null);
+        _clientToAdd = new();
         _inputVm = new InputVm(_clientToAdd, _editClientCmd, AddClientFromInput);
         _dialog.Show(_inputVm);
     }
@@ -172,7 +146,7 @@ public partial class MainWindowVm : ObservableObject
     private void EditClient(object? param)
     {
         _clientToEdit = (NtripClientVm)param!;
-        _editedClient = new(null)
+        _editedClient = new()
         {
             Name = _clientToEdit.Name,
             PasswordHash = _clientToEdit.PasswordHash
@@ -195,7 +169,7 @@ public partial class MainWindowVm : ObservableObject
     private void EditServer(object? param)
     {
         _serverToEdit = (NtripServerVm)param!;
-        _editedServer = new(null)
+        _editedServer = new()
         {
             Name = _serverToEdit.Name,
             PasswordHash = _serverToEdit.PasswordHash

@@ -1,36 +1,40 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.ComponentModel;
+using System.Reflection;
 
 namespace vm.ViewModels;
 
 public abstract partial class UserVm : ObservableObject
 {
+    private string _password = string.Empty;
+
     private void UpdatePasswordHash()
     {
-        string data = _name + ":" + _password;
+        string data = Model.Name + ":" + _password;
         byte[] buffer = System.Text.Encoding.ASCII.GetBytes(data);
-        _passwordHash = Convert.ToBase64String(buffer, 0, buffer.Length);
+        Model.PasswordHash = Convert.ToBase64String(buffer, 0, buffer.Length);
     }
 
-    private string _passwordHash = string.Empty;
+    public required Models.NtripUser Model { get; init; }
+
     public string PasswordHash
     {
-        get => _passwordHash;
-        set => _passwordHash = value;
+        get => Model.PasswordHash;
+        set => Model.PasswordHash = value;
     }
 
-    private string _name = string.Empty;
     public string Name
     {
-        get => _name;
+        get => Model.Name;
         set
         {
-            SetProperty(ref _name, value);
+            Model.Name = value;
+            OnPropertyChanged();
             UpdatePasswordHash();
         }
     }
 
-    private string _password = string.Empty;
     public string Password
     {
         get => "";

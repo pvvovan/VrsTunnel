@@ -15,99 +15,31 @@
         </Style>
     </Window.Styles>
 
-    <Grid RowDefinitions="*,Auto,*"
+    <Grid RowDefinitions="Auto,*"
           ColumnDefinitions="*,Auto,*">
 
         <Grid Grid.Row="0"
               Grid.Column="0"
-              RowDefinitions="Auto,*">
-            <Grid Grid.Row="0"
-                  ColumnDefinitions="Auto,*">
-                <Menu Grid.Column="0">
-                    <MenuItem Header="File">
-                        <MenuItem Header="Open" Command="{Binding OpenCommand}" />
-                        <MenuItem Header="Save" Command="{Binding SaveCommand}" />
-                    </MenuItem>
-                </Menu>
-                <StackPanel Grid.Column="1"
-                            Orientation="Horizontal"
-                            HorizontalAlignment="Center">
-                    <TextBlock Text="Ntrip servers"
-                               FontWeight="Bold"
-                               Padding="10 5 10 0" />
-                    <Button Command="{Binding CreateServerCommand}"
-                            Content="Create server" />
-                </StackPanel>
-            </Grid>
-            <!--<ListBox Grid.Row="1"
-                     ItemsSource="{Binding Servers}"
-                     x:Name="ServerList"
-                     SelectedValue="{Binding Path=SelectedServer,
-                                             Mode=TwoWay}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal"
-                                    VerticalAlignment="Center"
-                                    DragDrop.AllowDrop="True"
-                                    DragDrop.DragOver="Servers_OnDragOver"
-                                    DragDrop.Drop="Servers_OnDrop"
-                                    Background="Transparent">
-                            <TextBlock Text="{Binding Name}"
-                                       FontSize="16"
-                                       Padding="0 0 8 0"
-                                       VerticalAlignment="Center" />
-                            <Button Command="{Binding EditCmd}"
-                                    CommandParameter="{Binding .}"
-                                    FontSize="20"
-                                    Classes="h1"
-                                    Content="&#x1F589;" />
-                            <Button Command="{Binding RemoveCommand}"
-                                    FontSize="20"
-                                    CommandParameter="{Binding Path=((vm:MainWindowVm)DataContext).Servers,
-                                                       RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
-                                    Classes="h1"
-                                    Content="&#9003;" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>-->
+              ColumnDefinitions="Auto,*">
+            <Menu Grid.Column="0">
+                <MenuItem Header="File">
+                    <MenuItem Header="Open" Command="{Binding OpenCommand}" />
+                    <MenuItem Header="Save" Command="{Binding SaveCommand}" />
+                </MenuItem>
+            </Menu>
+            <StackPanel Grid.Column="1"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+                <TextBlock Text="Ntrip servers"
+                           FontWeight="Bold"
+                           Padding="10 5 10 0" />
+                <Button Command="{Binding CreateServerCommand}"
+                        Content="Create server" />
+            </StackPanel>
         </Grid>
 
-        <GridSplitter Grid.Row="1"
-                      Grid.Column="0"
-                      Background="Gray" />
-
-        <!--<Grid Grid.Row="2"
-              Grid.Column="0"
-              RowDefinitions="Auto,*">
-            <TextBlock Text="Assigned Ntrip clients"
-                       HorizontalAlignment="Center"
-                       FontWeight="Bold"
-                       Padding="10 5 0 0" />
-            <ListBox ItemsSource="{Binding AssignedClients}"
-                     Grid.Row="1">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal"
-                                    VerticalAlignment="Center">
-                            <TextBlock Text="{Binding Name}"
-                                       FontSize="16"
-                                       Padding="0 0 8 0"
-                                       VerticalAlignment="Center" />
-                            <Button Command="{Binding UnassignCommand}"
-                                    CommandParameter="{Binding ElementName=ServerList,
-                                                               Path=SelectedValue}"
-                                    FontSize="20"
-                                    Classes="h1"
-                                    Content="&#9003;" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </Grid>-->
-
         <TreeView ItemsSource="{Binding Servers}"
-                  Grid.Row="2"
+                  Grid.Row="1"
                   Grid.Column="0"
                   SelectedItem="{Binding Path=SelectedServer,
                                          Mode=TwoWay}">
@@ -132,7 +64,8 @@
                         <Button Command="{Binding RemoveCommand}"
                                 FontSize="20"
                                 CommandParameter="{Binding Path=((vm:MainWindowVm)DataContext).Servers,
-                                                   RelativeSource={RelativeSource AncestorType={x:Type TreeView}}}"
+                                                   RelativeSource={RelativeSource AncestorType={x:Type TreeView},
+                                                                                  Mode=FindAncestor}}"
                                 Classes="h1"
                                 Content="&#9003;" />
                     </StackPanel>
@@ -189,7 +122,8 @@
                                        VerticalAlignment="Center" />
                             <Button Command="{Binding AssignCommand}"
                                     CommandParameter="{Binding Path=((vm:MainWindowVm)DataContext).SelectedServer,
-                                                       RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                                       RelativeSource={RelativeSource AncestorType={x:Type ListBox},
+                                                                                      Mode=FindAncestor}}"
                                     FontSize="20"
                                     Classes="h1"
                                     Content="&#x1F517;" />
@@ -205,9 +139,11 @@
                                 <Button.CommandParameter>
                                     <MultiBinding>
                                         <Binding Path="((vm:MainWindowVm)DataContext)?.Servers"
-                                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBox}}" />
+                                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBox},
+                                                                                 Mode=FindAncestor}" />
                                         <Binding Path="((vm:MainWindowVm)DataContext)?.Clients"
-                                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBox}}" />
+                                                 RelativeSource="{RelativeSource AncestorType={x:Type ListBox},
+                                                                                 Mode=FindAncestor}" />
                                     </MultiBinding>
                                 </Button.CommandParameter>
                             </Button>

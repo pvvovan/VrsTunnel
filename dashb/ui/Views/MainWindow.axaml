@@ -11,7 +11,7 @@
 
     <Window.Styles>
         <Style Selector="Button.h1">
-            <Setter Property="Height" Value="38"/>
+            <Setter Property="Height" Value="38" />
         </Style>
     </Window.Styles>
 
@@ -83,7 +83,7 @@
             <TextBlock Text="Assigned Ntrip clients"
                        HorizontalAlignment="Center"
                        FontWeight="Bold"
-                       Padding="10 5 0 0"/>
+                       Padding="10 5 0 0" />
             <ListBox ItemsSource="{Binding AssignedClients}"
                      Grid.Row="1">
                 <ListBox.ItemTemplate>

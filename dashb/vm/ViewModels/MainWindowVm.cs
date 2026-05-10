@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Avalonia.Threading;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 
@@ -32,6 +33,7 @@ public partial class MainWindowVm : ObservableObject
 
     public MainWindowVm(IDialog dialog, Models.IConfig config, Dispatcher dispatcher)
     {
+        _dispatcher = dispatcher;
         _editClientCmd = new(EditClient);
         _editServerCmd = new(EditServer);
         _dialog = dialog;
@@ -44,17 +46,17 @@ public partial class MainWindowVm : ObservableObject
         {
             var (cfgClients, cfgServers) = cfg.Result;
 
-            Clients.Clear();
+            _dispatcher.Invoke(() => Clients.Clear());
             foreach (var cl in cfgClients)
             {
                 NtripClientVm clVm = new(cl)
                 {
                     EditCmd = _editClientCmd
                 };
-                Clients.Add(clVm);
+                _dispatcher.Invoke(() => Clients.Add(clVm));
             }
 
-            Servers.Clear();
+            _dispatcher.Invoke(() => Servers.Clear());
             foreach (var sv in cfgServers)
             {
                 NtripServerVm svVm = new(sv)
@@ -70,7 +72,7 @@ public partial class MainWindowVm : ObservableObject
                                           select cl).First());
                     }
                 }
-                Servers.Add(svVm);
+                _dispatcher.Invoke(() => Servers.Add(svVm));
             }
         };
 

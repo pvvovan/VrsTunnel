@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using vm.Models;
@@ -7,6 +8,10 @@ namespace vm.ViewModels;
 
 public partial class NtripClientVm : UserVm
 {
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(AssignCommand))]
+    public partial bool CanAssign { get; set; } = false;
+
     [SetsRequiredMembers]
     public NtripClientVm() : base()
     {
@@ -19,10 +24,10 @@ public partial class NtripClientVm : UserVm
         Model = model;
     }
 
-    [RelayCommand]
-    private void Assign(NtripServerVm? server)
+    [RelayCommand(CanExecute = nameof(CanAssign))]
+    private void Assign(object? item)
     {
-        if (server is not null && !server.Clients.Any(c => c.Model.Id == this.Model.Id))
+        if (item is NtripServerVm server && !server.Clients.Any(c => c.Model.Id == this.Model.Id))
         {
             server.Clients.Add(new(new NtripClient()
             {

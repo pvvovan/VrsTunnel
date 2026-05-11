@@ -41,7 +41,7 @@
         <TreeView ItemsSource="{Binding Servers}"
                   Grid.Row="1"
                   Grid.Column="0"
-                  SelectedItem="{Binding Path=SelectedServer,
+                  SelectedItem="{Binding Path=SelectedNode,
                                          Mode=TwoWay}">
             <TreeView.DataTemplates>
                 <TreeDataTemplate DataType="vm:NtripServerVm"
@@ -121,7 +121,7 @@
                                        Padding="0 0 8 0"
                                        VerticalAlignment="Center" />
                             <Button Command="{Binding AssignCommand}"
-                                    CommandParameter="{Binding Path=((vm:MainWindowVm)DataContext).SelectedServer,
+                                    CommandParameter="{Binding Path=((vm:MainWindowVm)DataContext).SelectedNode,
                                                        RelativeSource={RelativeSource AncestorType={x:Type ListBox},
                                                                                       Mode=FindAncestor}}"
                                     FontSize="20"

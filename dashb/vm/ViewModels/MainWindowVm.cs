@@ -10,19 +10,19 @@ public partial class MainWindowVm : ObservableObject
 {
     private readonly Dispatcher? _dispatcher;
     private InputVm? _inputVm;
-    private readonly Models.IConfig _config;
+    private readonly IConfig _config;
     private readonly IDialog _dialog;
-    readonly Action<Task<(IQueryable<Models.NtripClient> clients, IQueryable<Models.NtripServer> servers)>> _loadAction;
+    private readonly Action<Task<(IQueryable<NtripClient> clients, IQueryable<NtripServer> servers)>> _loadAction;
 
     public async Task StoreConfig(string file)
     {
-        var cls = Clients.Select(c => new Models.NtripClient()
+        var cls = Clients.Select(c => new NtripClient()
         {
             Name = c.Name,
             PasswordHash = c.PasswordHash,
             Id = c.Model.Id
         });
-        var srs = Servers.Select(s => new Models.NtripServer()
+        var srs = Servers.Select(s => new NtripServer()
         {
             Name = s.Name,
             PasswordHash = s.PasswordHash,
@@ -32,7 +32,7 @@ public partial class MainWindowVm : ObservableObject
         await _config.StoreAsync(cls.AsQueryable(), srs.AsQueryable(), file);
     }
 
-    public MainWindowVm(IDialog dialog, Models.IConfig config, Dispatcher? dispatcher = null)
+    public MainWindowVm(IDialog dialog, IConfig config, Dispatcher? dispatcher = null)
     {
         _dispatcher = dispatcher;
         _editClientCmd = new(EditClient);
@@ -41,7 +41,6 @@ public partial class MainWindowVm : ObservableObject
         _config = config;
         Clients = [];
         Servers = [];
-        Servers.CollectionChanged += Servers_CollectionChanged;
 
         _loadAction = cfg =>
         {
@@ -66,11 +65,6 @@ public partial class MainWindowVm : ObservableObject
         };
 
         _config.LoadAsync().ContinueWith(_loadAction);
-    }
-
-    private void Servers_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-    {
-        e.ToString();
     }
 
     [ObservableProperty]
@@ -112,14 +106,13 @@ public partial class MainWindowVm : ObservableObject
         _inputVm?.Close();
     }
 
-
-    private NtripServerVm? _selectedServer;
-    public NtripServerVm? SelectedServer
+    public object? SelectedNode
     {
-        get => _selectedServer;
+        get => field;
         set
         {
-            SetProperty(ref _selectedServer, value);
+            SetProperty(ref field, value);
+            Clients.ToList().ForEach(c => c.CanAssign = SelectedNode is NtripServerVm);
         }
     }
 
@@ -144,7 +137,6 @@ public partial class MainWindowVm : ObservableObject
         _clientToEdit!.PasswordHash = _editedClient!.PasswordHash;
         _inputVm?.Close();
     }
-
 
     private NtripServerVm? _serverToEdit;
     private NtripServerVm? _editedServer;

@@ -35,6 +35,9 @@ public partial class MainWindowVm : ViewModelBase
     [ObservableProperty]
     public partial ObservableCollection<OperationVm> Operations { get; set; } = [];
 
+    [ObservableProperty]
+    public partial string ErrorMsg { get; set; } = "Check";
+
     public MainWindowVm()
     {
         for (int i = 0; i < 25; i++)
@@ -42,7 +45,4 @@ public partial class MainWindowVm : ViewModelBase
             Operations.Add(new OperationVm());
         }
     }
-
-    [ObservableProperty]
-    public partial string ErrorMsg { get; set; } = "Check";
 }

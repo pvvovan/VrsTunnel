@@ -86,7 +86,6 @@ public partial class MainWindowVm : ObservableObject
         _inputVm?.Close();
     }
 
-
     [ObservableProperty]
     public partial ObservableCollection<NtripClientVm> Clients { get; set; }
 

@@ -1,41 +1,48 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:mul.ViewModels"
-        xmlns:wnd="using:mul.Views"
+        xmlns:vm="using:school_calc.ViewModels"
+        xmlns:wnd="using:school_calc.Views"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
-        x:Class="mul.Views.MainWindow"
+        mc:Ignorable="d"
+        d:DesignWidth="400"
+        d:DesignHeight="450"
+        x:Class="school_calc.Views.MainWindow"
         x:DataType="vm:MainWindowVm"
         Icon="/Assets/avalonia-logo.ico"
-        Title="mul" Width="400">
+        Title="school_calc">
 
     <Window.Resources>
-        <vm:MyIntConverter x:Key="myIntConverter"></vm:MyIntConverter>
+        <wnd:MyIntConverter x:Key="myIntConverter"></wnd:MyIntConverter>
         <wnd:MyBrushConverter x:Key="myBrushConverter"></wnd:MyBrushConverter>
     </Window.Resources>
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code
-             (look at App.axaml.cs) -->
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowVm />
     </Design.DataContext>
 
     <Grid RowDefinitions="Auto,*">
-        <Button Content="{Binding ErrorMsg}" Command="{Binding CheckCmd}" Margin="10" />
-        <ListBox Grid.Row="1" ItemsSource="{Binding Operations}">
+        <Button Content="{Binding ErrorMsg}"
+                Command="{Binding CheckCommand}"
+                Margin="10" />
+        <ListBox ItemsSource="{Binding Operations}"
+                 Grid.Row="1">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderBrush="{Binding Error, Converter={StaticResource myBrushConverter}}"
+                    <Border BorderBrush="{Binding Path=Error,
+                                                  Converter={StaticResource myBrushConverter}}"
                             BorderThickness="3"
                             CornerRadius="5">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Margin="7" Text="{Binding Left}" />
-                            <TextBlock Margin="7" Text="{Binding Operation}" />
-                            <TextBlock Margin="7" Text="{Binding Right}" />
-                            <TextBlock Margin="7" Text="=" />
-                            <TextBox Text="{Binding Result, Mode=TwoWay, Converter={StaticResource myIntConverter}}" />
+                            <TextBlock Text="{Binding Left}" Margin="7" />
+                            <TextBlock Text="{Binding Operation}" Margin="7" />
+                            <TextBlock Text="{Binding Right}" Margin="7" />
+                            <TextBlock Text="=" Margin="7" />
+                            <TextBox Text="{Binding Path=Result,
+                                                    Mode=TwoWay,
+                                                    Converter={StaticResource myIntConverter}}" />
                         </StackPanel>
                     </Border>
                 </DataTemplate>

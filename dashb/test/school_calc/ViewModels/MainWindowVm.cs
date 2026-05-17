@@ -40,7 +40,7 @@ public partial class MainWindowVm : ViewModelBase
 
     public MainWindowVm()
     {
-        for (int i = 0; i < 25; i++)
+        for (int i = 0; i < 24; i++)
         {
             Operations.Add(new OperationVm());
         }
